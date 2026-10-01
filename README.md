@@ -9,14 +9,20 @@ En interaktiv norsk læringsapp for farmakokinetikk og farmakodynamikk. Åpne `i
 - ADME og forenklede lever-/nyrescenarier.
 - PK/PD med direkte Emax-modell og forklaring av EC50.
 - Proteinbinding: fu, Cu, Ctot, CLint, QH, samt fm og hemming av en metabolismevei.
-- Variasjonsbånd og 36 egenformulerte quizoppgaver.
+- Kompartmentlab med én/to kompartments, 320 partikler og synkronisert kurve.
+- Første orden, nullte orden og Michaelis–Menten-metning i kompartmentlab.
+- Flytende lab i parameterverkstedet, sammenligning av distribusjon og C₀-forløp.
+- Variasjonsbånd og 108 egenformulerte quizoppgaver med temavalg og forklaringer.
+- 56 interaktive formelkort med klikkbare symboler, algebraisk omorganisering, enheter, proporsjonalitet og regneeksempler.
 - Lys/mørk modus, tastaturkontroller og lokal lagring av innstillinger.
 
 Appen er en pedagogisk modell med hypotetiske legemiddelparametre. Kliniske doseringsbeslutninger krever legemiddelspesifikk informasjon og klinisk vurdering.
 
-## Faglig grunnlag
+## Om appen
 
-Rowland and Tozer’s Clinical Pharmacokinetics and Pharmacodynamics: Concepts and Applications, 5. utgave, Hartmut Derendorf og Stephan Schmidt, særlig kapittel 4, 5, 8, 12 og 17. Oppgaver og forklaringer er nyformulerte. Læreboken, utdrag og originalfigurer distribueres ikke her. Anatomien er en generert generell illustrasjon.
+Laget av Mohanad Taiy, 2026 – til egen læring. Oppgaver og forklaringer er egenformulerte. Anatomien er en generert generell illustrasjon.
+
+Kompartmentlab bruker i.v. bolus og eliminasjon fra det sentrale rommet. Førsteordenskurven beregnes analytisk; metning og nullte orden beregnes med en positiv, massebevarende numerisk metode. Partiklene er en stokastisk illustrasjon og kan avvike litt fra den glatte forventningskurven. Kurve- og doseringsfanen bruker fortsatt oral, lineær førsteordens kinetikk.
 
 ## GitHub Pages
 
