@@ -106,23 +106,30 @@
  'use strict';
  const P=typeof module!=='undefined'?require('./pk-model.js'):global.PKModel;
  const oral=p=>({...p,F:p.F*p.S});
+ // Educational oral target: peak within the FIRST interval equals Css,max.
+ // A single oral loading dose cannot initialize both depot and central steady state.
+ function loadingDose(p){
+  if(p.route!=='oral')return p.dose/(-Math.expm1(-p.CL/p.V*p.tau));
+  const o=oral(p),t=Math.min(p.tau,P.peak(o,'single').t);
+  return p.dose*P.peak(o,'steady').c/P.single(t,o);
+ }
  function metrics(p){
   const k=p.CL/p.V,z=k*p.tau,d=-Math.expm1(-z),r=Math.exp(-z),input=p.F*p.S*p.dose;
   const avg=input/(p.CL*p.tau),auc=input/p.CL,rac=1/d;
   const o=p.route==='oral'?P.metrics(oral(p)):null;
   const max=o?o.max:input/p.V/d,min=o?o.min:max*r,tmax=o?o.tmax:0;
   const firstMax=o?P.peak(oral(p),'single').c:input/p.V;
-  return{k,half:Math.LN2/k,r,d,input,avg,auc,max,min,tmax,rac,rpeak:max/firstMax,rauc:o?o.acc:rac,fi:(max-min)/avg,amax:max*p.V,amin:min*p.V,loading:max*p.V/(p.F*p.S),t95:-Math.log(.05)/k};
+  return{k,half:Math.LN2/k,r,d,input,avg,auc,max,min,tmax,rac,rpeak:max/firstMax,rauc:o?o.acc:rac,fi:(max-min)/avg,amax:max*p.V,amin:min*p.V,loading:loadingDose(p),t95:-Math.log(.05)/k};
  }
  function steady(t,p){return p.route==='oral'?P.steady(t,oral(p)):metrics(p).max*Math.exp(-p.CL/p.V*(((t%p.tau)+p.tau)%p.tau));}
  function at(t,p,loading=false,before=false){
   if(t<0)return 0;
   const n=Math.max(0,Math.floor((t+(before?-1e-8:1e-8))/p.tau)+1);
-  if(p.route==='oral')return P.repeat(t,oral(p),n);
+  if(p.route==='oral')return P.repeat(t,oral(p),n)+(loading&&n?P.single(t,oral({...p,dose:loadingDose(p)-p.dose})):0);
   if(!n)return 0;
   const k=p.CL/p.V,u=t-(n-1)*p.tau,d=-Math.expm1(-k*p.tau);
   let c=p.F*p.S*p.dose/p.V*(-Math.expm1(-n*k*p.tau))/d*Math.exp(-k*u);
-  if(loading)c+=(metrics(p).loading-p.dose)*p.F*p.S/p.V*Math.exp(-k*t);
+  if(loading)c+=(loadingDose(p)-p.dose)*p.F*p.S/p.V*Math.exp(-k*t);
   return c;
  }
  function interval(n,p,loading=false){
@@ -1185,11 +1192,21 @@ const organPaths={
  entry:'M525 290 L547 290 L547 430 L560 515 L568 600 L600 688 L584 698 L550 605 L545 520 L527 431 Z'
 };
 const glowSvg=q('.organ-glows'),defs=glowSvg.querySelector('defs');defs.innerHTML='<filter id="organ-light" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="linear" slope="1.72"/><feFuncG type="linear" slope="1.72"/><feFuncB type="linear" slope="1.72"/></feComponentTransfer></filter>';
+// Resample the outline, soften corners locally, then close with a continuous tangent.
+// The original organ mask and anatomical pixels remain unchanged.
+function flowingContour(d){
+ const guide=el('path',{d,visibility:'hidden'},glowSvg),length=guide.getTotalLength(),n=Math.max(24,Math.ceil(length/8));
+ let pts=Array.from({length:n},(_,i)=>{const p=guide.getPointAtLength(i*length/n);return{x:p.x,y:p.y};});guide.remove();
+ for(let pass=0;pass<3;pass++)pts=pts.map((p,i)=>({x:(pts[(i+n-1)%n].x+2*p.x+pts[(i+1)%n].x)/4,y:(pts[(i+n-1)%n].y+2*p.y+pts[(i+1)%n].y)/4}));
+ const point=p=>p.x.toFixed(2)+' '+p.y.toFixed(2);let out='M'+point(pts[0]);
+ for(let i=0;i<n;i++){const a=pts[(i+n-1)%n],b=pts[i],c=pts[(i+1)%n],d=pts[(i+2)%n];out+=' C'+point({x:b.x+(c.x-a.x)/6,y:b.y+(c.y-a.y)/6})+' '+point({x:c.x-(d.x-b.x)/6,y:c.y-(d.y-b.y)/6})+' '+point(c);}
+ return out+' Z';
+}
 for(const [name,path] of Object.entries(organPaths)){
  const clip=el('clipPath',{id:'organ-clip-'+name,clipPathUnits:'userSpaceOnUse'},defs);el('path',{d:path},clip);
  const g=glowSvg.querySelector('[data-organ="'+name+'"]');g.replaceChildren();el('image',{class:'organ-lit-pixels',href:q('.anatomy-figure img').getAttribute('src'),x:0,y:0,width:1088,height:1456,'clip-path':'url(#organ-clip-'+name+')',filter:'url(#organ-light)'},g);
  // Separate closed contours let each kidney or tissue region have its own orbit.
- for(const contour of path.match(/M[^M]+/g)||[]){el('path',{class:'organ-aura',d:contour,pathLength:100},g);el('path',{class:'organ-orbit',d:contour,pathLength:100},g);}
+ for(const contour of path.match(/M[^M]+/g)||[]){const d=flowingContour(contour);el('path',{class:'organ-aura',d,pathLength:100},g);el('path',{class:'organ-orbit',d,pathLength:100},g);}
 }
 
 const definitions={
@@ -1639,7 +1656,7 @@ function update(force=false){
  if(view!=='multidose')return;const width=q('#md-chart').getBoundingClientRect().width,key=JSON.stringify([md,mdLang,Math.round(width)]);if(!force&&key===mdKey)return;mdKey=key;
  const m=MD.metrics(md),oral=md.route==='oral',d=MD.plan(md,md.lower,md.upper,md.target,md.step);
  try{localStorage.setItem('pk-lab-multidose-v1',JSON.stringify(md));}catch{}
- q('#md-ka-field').hidden=!oral;q('#md-loading').disabled=oral;
+ q('#md-ka-field').hidden=!oral;
  q('#md-assumptions').textContent=tx('Én-kompartmentmodell · lineær førsteordens eliminasjon. ','One-compartment model · linear first-order elimination. ','نموذج حجرة واحدة · إطراح خطي من المرتبة الأولى. ')+(oral?tx('Oral tilførsel har endelig absorpsjonstid: toppen kommer etter dosen. Bolusformlene for topp og bunn erstattes av absorpsjonsmodellen.','Oral input takes time: the peak follows the dose. Absorption equations replace bolus peak/trough formulas.','الإدخال الفموي يستغرق وقتاً؛ تأتي الذروة بعد الجرعة. تحل معادلات الامتصاص محل صيغ ذروة وقاع الدفعة.'):tx('Momentan systemisk tilførsel = F × S × Dₘ. For i.v. bolus er F = 1. Andre F-verdier representerer en idealisert momentan absorpsjon.','Instant systemic input = F × S × Dₘ. IV bolus uses F = 1. Other F values represent idealized instantaneous absorption.','الإدخال الجهازي الفوري = F × S × Dₘ. للدفعة الوريدية F = 1. تمثل قيم F الأخرى امتصاصاً فورياً مثالياً.'));
  q('#md-loading-note').textContent=oral?tx('En enkelt oral loading dose etablerer ikke generelt hele steady-state-mønsteret umiddelbart. Bryteren gjelder derfor bare momentan tilførsel.','A single oral loading dose does not generally establish the entire steady-state pattern immediately. The switch applies only to instant input.','لا تحقق جرعة تحميل فموية واحدة عادةً نمط الحالة المستقرة كاملاً فوراً. لذلك يخص المفتاح الإدخال الفوري فقط.'):tx('Loading dose erstatter første Dₘ. Senere doser er fortsatt Dₘ; første topp settes lik Css,max.','The loading dose replaces the first Dₘ. Later doses remain Dₘ; the first peak equals Css,max.','تحل جرعة التحميل محل Dₘ الأولى. تبقى الجرعات التالية Dₘ وتساوي الذروة الأولى Css,max.');
  q('#md-main-metrics').innerHTML=metric('C<sub>ss,max</sub>',nn(m.max)+' mg/L','pink')+metric('C<sub>ss,av</sub>',nn(m.avg)+' mg/L','green')+metric('C<sub>ss,min</sub>',nn(m.min)+' mg/L','blue')+metric('t½',nn(m.half)+' h','purple');
@@ -1871,8 +1888,9 @@ function render(kick=false){const d=derive(p),active=inputs.find(a=>a.key===sele
 #pk-lab .organ-glows g.active{fill:none;stroke:none;opacity:1;animation:none}
 #pk-lab .organ-glows .organ-lit-pixels{opacity:.55}
 #pk-lab .organ-glows g.active .organ-lit-pixels{animation:organPixelBreathe 3s ease-in-out infinite}
-#pk-lab .organ-glows .organ-aura{fill:none;stroke:var(--organ-tone);stroke-width:4;opacity:.78;filter:drop-shadow(0 0 7px var(--organ-tone));stroke-linejoin:round}
-#pk-lab .organ-glows .organ-orbit{fill:none;stroke:#f5fffc;stroke-width:6;stroke-dasharray:17 83;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px var(--organ-tone)) drop-shadow(0 0 12px var(--organ-tone))}
+#pk-lab .organ-glows{--glow-gold:#efbc58;--glow-light:#ffe1a0}
+#pk-lab .organ-glows .organ-aura{fill:none;stroke:var(--glow-gold);stroke-width:4;opacity:.78;filter:drop-shadow(0 0 7px var(--glow-gold));stroke-linejoin:round}
+#pk-lab .organ-glows .organ-orbit{fill:none;stroke:var(--glow-light);stroke-width:6;stroke-dasharray:17 83;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px var(--glow-gold)) drop-shadow(0 0 12px var(--glow-gold))}
 #pk-lab .organ-glows g.active .organ-orbit{animation:organOrbit 3.4s linear infinite}
 @keyframes organPixelBreathe{0%,100%{opacity:.4}50%{opacity:.88}}
 @keyframes organOrbit{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
