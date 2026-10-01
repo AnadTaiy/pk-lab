@@ -5,7 +5,9 @@ An interactive learning app in Norwegian, English and Arabic for pharmacokinetic
 ## Contents
 
 - Parameter workshop with relationships, definitions and before/after change markers.
+- Pulsing organ illumination with a brighter light traveling around each selected organ's contour.
 - Single-dose, repeated-dose and steady-state views with MEC/MTC thresholds and regimen comparison.
+- Multiple-dose regimen lab: oral or instantaneous input, accumulation curves, peak/trough/average concentrations, body amounts, loading dose, and step-by-step calculations. A therapeutic-window planner checks both concentration limits after rounding to a dose increment.
 - ADME and simplified liver- and kidney-function scenarios.
 - PK/PD with a direct Emax model and an explanation of EC₅₀.
 - Protein binding: fu, Cu, Ctot, CLint and QH, plus fm and inhibition of a metabolic pathway.

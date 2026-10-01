@@ -101,6 +101,48 @@
  const api={constants,state,particles,eventAt,counts,rate,removeAmount,solution,samplePaths};if(typeof module!=='undefined')module.exports=api;global.PKCompartments=api;
 })(typeof window!=='undefined'?window:globalThis);
 
+/* One-compartment, linear repeated dosing. Dose is salt/product mass; S is active fraction. */
+(function(global){
+ 'use strict';
+ const P=typeof module!=='undefined'?require('./pk-model.js'):global.PKModel;
+ const oral=p=>({...p,F:p.F*p.S});
+ function metrics(p){
+  const k=p.CL/p.V,z=k*p.tau,d=-Math.expm1(-z),r=Math.exp(-z),input=p.F*p.S*p.dose;
+  const avg=input/(p.CL*p.tau),auc=input/p.CL,rac=1/d;
+  const o=p.route==='oral'?P.metrics(oral(p)):null;
+  const max=o?o.max:input/p.V/d,min=o?o.min:max*r,tmax=o?o.tmax:0;
+  const firstMax=o?P.peak(oral(p),'single').c:input/p.V;
+  return{k,half:Math.LN2/k,r,d,input,avg,auc,max,min,tmax,rac,rpeak:max/firstMax,rauc:o?o.acc:rac,fi:(max-min)/avg,amax:max*p.V,amin:min*p.V,loading:max*p.V/(p.F*p.S),t95:-Math.log(.05)/k};
+ }
+ function steady(t,p){return p.route==='oral'?P.steady(t,oral(p)):metrics(p).max*Math.exp(-p.CL/p.V*(((t%p.tau)+p.tau)%p.tau));}
+ function at(t,p,loading=false,before=false){
+  if(t<0)return 0;
+  const n=Math.max(0,Math.floor((t+(before?-1e-8:1e-8))/p.tau)+1);
+  if(p.route==='oral')return P.repeat(t,oral(p),n);
+  if(!n)return 0;
+  const k=p.CL/p.V,u=t-(n-1)*p.tau,d=-Math.expm1(-k*p.tau);
+  let c=p.F*p.S*p.dose/p.V*(-Math.expm1(-n*k*p.tau))/d*Math.exp(-k*u);
+  if(loading)c+=(metrics(p).loading-p.dose)*p.F*p.S/p.V*Math.exp(-k*t);
+  return c;
+ }
+ function interval(n,p,loading=false){
+  const start=(n-1)*p.tau,end=n*p.tau;
+  let tm=start;
+  if(p.route==='oral'){let lo=start,hi=end;for(let i=0;i<55;i++){const a=lo+(hi-lo)/3,b=hi-(hi-lo)/3;if(at(a,p,loading)<at(b,p,loading))lo=a;else hi=b;}tm=(lo+hi)/2;}
+  const max=at(tm,p,loading),min=at(end,p,loading,true),m=metrics(p);
+  return{n,start,max,min,tmax:tm-start,fraction:max/m.max};
+ }
+ function plan(p,lower,upper,target,step){
+  const m=metrics(p),unit=metrics({...p,dose:1});
+  const low=lower/unit.min,high=upper/unit.max,feasible=low<=high*(1+1e-12);
+  const dose=target*p.CL*p.tau/(p.F*p.S),rounded=Math.max(step,Math.round(dose/step)*step);
+  const tauMax=Math.log(upper/lower)/m.k,doseMax=p.V*(upper-lower)/(p.F*p.S),scaled=doseMax*p.tau/tauMax;
+  const discreteLow=Math.ceil((low-1e-9)/step)*step,discreteHigh=Math.floor((high+1e-9)/step)*step;
+  return{low,high,feasible,dose,rounded,tauMax,doseMax,scaled,discreteLow,discreteHigh,practical:feasible&&discreteLow<=discreteHigh,preview:metrics({...p,dose:rounded}),scaledPreview:metrics({...p,dose:scaled})};
+ }
+ const api={metrics,at,steady,interval,plan};if(typeof module!=='undefined')module.exports=api;global.PKMultidose=api;
+})(typeof window!=='undefined'?window:globalThis);
+
 /* Small expression tree: no eval, shared by the formula library and algebra checks. */
 (function(host){
  const node=(op,a,b)=>({op,a,b}), num=v=>({op:'num',v}), variable=v=>({op:'var',v});
@@ -1009,7 +1051,7 @@ const therapeutic={lower:.5,upper:1.5};
 let p={...defaults},selected='CL',view='workshop',raf=0,ropeMotion=null;
 function concentration(t,v){const k=v.CL/v.V,a=v.ka;if(Math.abs(a-k)<1e-8)return v.F*v.dose/v.V*a*t*Math.exp(-k*t);return v.F*v.dose*a/v.V*(Math.exp(-k*t)-Math.exp(-a*t))/(a-k);}
 function derive(v){v=effective(v);const k=v.CL/v.V,tm=Math.abs(v.ka-k)<1e-8?1/k:Math.log(v.ka/k)/(v.ka-k);return{k,half:Math.LN2/k,auc:v.F*v.dose/v.CL,css:v.F*v.dose/(v.tau*v.CL),tm,cm:concentration(tm,v)};}
-function restore(state){const s=state?.modelContent?.parameters;if(s)for(const a of inputs)if(Number.isFinite(s[a.key]))p[a.key]=Math.max(a.min,Math.min(a.max,s[a.key]));if(effects[state?.privateContent?.selected])selected=state.privateContent.selected;view=['workshop','curve','adme','pd','binding','compartments','quiz','formulas'].includes(state?.privateContent?.view)?state.privateContent.view:'workshop';}
+function restore(state){const s=state?.modelContent?.parameters;if(s)for(const a of inputs)if(Number.isFinite(s[a.key]))p[a.key]=Math.max(a.min,Math.min(a.max,s[a.key]));if(effects[state?.privateContent?.selected])selected=state.privateContent.selected;view=['workshop','curve','multidose','adme','pd','binding','compartments','quiz','formulas'].includes(state?.privateContent?.view)?state.privateContent.view:'workshop';}
 function save(){persistExtra();window.openai?.setWidgetState({modelContent:{parameters:{...p},selected,derived:derive(p)},privateContent:{selected,view}}).catch(()=>{});}
 restore(window.openai?.widgetState);
 q('#input-list').innerHTML=inputs.map(a=>`<div class="input-row" data-input="${a.key}" style="--tone:${a.color}"><button class="symbol" type="button" aria-label="Vis forbindelser for ${a.name}" data-select="${a.key}">${a.symbol}</button><label for="control-${a.key}"><span class="track-label"><span>${a.name}</span><span class="drag-cue" aria-hidden="true">↔ Dra</span></span><input type="range" id="control-${a.key}" min="${a.min}" max="${a.max}" step="${a.step}" aria-label="${a.name}"><span class="range-extents" aria-hidden="true"><span>${fmt(a.key==='F'?a.min*100:a.min)}</span><span>${fmt(a.key==='F'?a.max*100:a.max)} ${a.unit}</span></span></label><output id="value-${a.key}" for="control-${a.key}"></output></div>`).join('');
@@ -1142,8 +1184,13 @@ const organPaths={
  tissue:'M301 490 C278 558 264 652 249 721 L273 723 C294 648 316 568 333 505 Z M779 494 C804 554 825 650 839 719 L812 727 C797 643 776 554 754 511 Z M374 1250 L457 1250 L458 1450 L359 1450 Z M631 1250 L708 1250 L727 1450 L631 1450 Z',
  entry:'M525 290 L547 290 L547 430 L560 515 L568 600 L600 688 L584 698 L550 605 L545 520 L527 431 Z'
 };
-const glowSvg=q('.organ-glows'),defs=glowSvg.querySelector('defs');defs.innerHTML='<filter id="organ-light" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="linear" slope="1.34"/><feFuncG type="linear" slope="1.34"/><feFuncB type="linear" slope="1.34"/></feComponentTransfer></filter>';
-for(const [name,path] of Object.entries(organPaths)){const clip=el('clipPath',{id:'organ-clip-'+name,clipPathUnits:'userSpaceOnUse'},defs);el('path',{d:path},clip);const g=glowSvg.querySelector('[data-organ="'+name+'"]');g.replaceChildren();el('image',{href:q('.anatomy-figure img').getAttribute('src'),x:0,y:0,width:1088,height:1456,'clip-path':'url(#organ-clip-'+name+')',filter:'url(#organ-light)'},g);}
+const glowSvg=q('.organ-glows'),defs=glowSvg.querySelector('defs');defs.innerHTML='<filter id="organ-light" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="linear" slope="1.72"/><feFuncG type="linear" slope="1.72"/><feFuncB type="linear" slope="1.72"/></feComponentTransfer></filter>';
+for(const [name,path] of Object.entries(organPaths)){
+ const clip=el('clipPath',{id:'organ-clip-'+name,clipPathUnits:'userSpaceOnUse'},defs);el('path',{d:path},clip);
+ const g=glowSvg.querySelector('[data-organ="'+name+'"]');g.replaceChildren();el('image',{class:'organ-lit-pixels',href:q('.anatomy-figure img').getAttribute('src'),x:0,y:0,width:1088,height:1456,'clip-path':'url(#organ-clip-'+name+')',filter:'url(#organ-light)'},g);
+ // Separate closed contours let each kidney or tissue region have its own orbit.
+ for(const contour of path.match(/M[^M]+/g)||[]){el('path',{class:'organ-aura',d:contour,pathLength:100},g);el('path',{class:'organ-orbit',d:contour,pathLength:100},g);}
+}
 
 const definitions={
  F:['F · Biotilgjengelighet','Andelen av en administrert dose som når systemisk sirkulasjon uendret. F = 0,6 betyr 60 %. Påvirkes blant annet av absorpsjon og førstepassasje.'],
@@ -1548,6 +1595,108 @@ q('#formula-search').oninput=fRender;q('#formula-group').onchange=fRender;
 const formulaBaseChart=chart;chart=function(){formulaBaseChart();root.classList.toggle('formula-wide',view==='formulas');};
 q('#formula-group').value='Grunnlag';fRender();
 
+{
+const MD=window.PKMultidose;
+const mdDefault={route:'instant',F:1,S:1,dose:480,CL:2,V:40,tau:12,ka:1,cycles:8,lower:12,upper:30,target:20,step:50,loading:false};
+let md={...mdDefault},mdLang='nb',mdTime=0,mdKey='',mdFrame=0,mdLast=0;
+try{mdLang=localStorage.getItem('pk-lab-language')||'nb';const saved=JSON.parse(localStorage.getItem('pk-lab-multidose-v1'));if(saved)md={...md,...saved};}catch{}
+const tx=(no,en,ar)=>mdLang==='en'?en:mdLang==='ar'?ar:no;
+const nn=(x,d=2)=>Number.isFinite(x)?new Intl.NumberFormat(mdLang==='en'?'en-GB':mdLang==='ar'?'ar-EG':'nb-NO',{maximumFractionDigits:d}).format(x):'∞';
+const eq=s=>'<div class="md-eq" dir="ltr">'+s.replaceAll('e⁻ᵏᵃᵗᵃᵘ','e<sup>−kₐτ</sup>').replaceAll('e⁻ᵏᵗᵃᵘ','e<sup>−kτ</sup>').replaceAll('e⁻ᵏᵃᵘ','e<sup>−kₐu</sup>').replaceAll('e⁻ᵏᵘ','e<sup>−ku</sup>').replace(/([CA])_ss,(max|min|av,target|av)/g,'$1<sub>ss,$2</sub>').replaceAll('C_ss(u)','C<sub>ss</sub>(u)').replace(/R_(peak|AUC|ac)/g,'R<sub>$1</sub>').replace(/D_(L|M,max|min|max)/g,'D<sub>$1</sub>').replace(/C_(upper|lower)/g,'C<sub>$1</sub>').replaceAll('τ_max','τ<sub>max</sub>')+'</div>';
+const metric=(label,value,tone='blue')=>`<div class="md-metric ${tone}"><span>${label}</span><strong dir="ltr">${value}</strong></div>`;
+const card=(title,body)=>'<article class="md-card"><h3>'+title+'</h3>'+body+'</article>';
+advancedPanels.splice(advancedPanels.indexOf('curve')+1,0,'multidose');
+q('#adme-tab').insertAdjacentHTML('beforebegin','<button class="tab" id="multidose-tab" type="button" role="tab" aria-controls="multidose-panel" aria-selected="false" data-no-translate>Flerdoseregime</button>');
+q('.workspace').insertAdjacentHTML('beforeend','<section id="multidose-panel" role="tabpanel" aria-labelledby="multidose-tab" data-no-translate hidden></section>');
+const panel=q('#multidose-panel');
+const fields=[['dose','Dₘ · mg',1,5000,1],['tau','τ · h',.25,72,.25],['CL','CL · L/h',.05,50,.05],['V','V · L',1,500,1],['F','F',.01,1,.01],['S','S',.01,1,.01],['ka','kₐ · h⁻¹',.01,10,.01],['cycles',null,2,20,1],['lower','C<sub>lower</sub> / MEC · mg/L',.01,1000,.01],['upper','C<sub>upper</sub> / MTC · mg/L',.02,1000,.01],['target','C<sub>ss,av</sub> '+tx('mål','target','المستهدف')+' · mg/L',.01,1000,.01],['step',null,1,1000,1]];
+function inputHTML([key,label,min,max,step]){label=key==='cycles'?tx('Antall intervaller','Number of intervals','عدد الفواصل'):key==='step'?tx('Dosetrinn / tablettstyrke · mg','Dose increment / tablet strength · mg','خطوة الجرعة / قوة القرص · ملغ'):key==='target'?'C<sub>ss,av</sub> '+tx('mål','target','المستهدف')+' · mg/L':label;return `<label class="field md-field" ${key==='ka'?'id="md-ka-field"':''}>${label}<input id="md-${key}" data-md="${key}" type="number" min="${min}" max="${max}" step="${step}" value="${md[key]}" required></label>`;}
+function shell(){
+ q('#multidose-tab').textContent=tx('Flerdoseregime','Multiple dosing','الجرعات المتعددة');
+ panel.innerHTML=`<header class="md-heading"><p class="comp-kicker">${tx('Fra første dose til et gjentakende mønster','From the first dose to a repeating pattern','من الجرعة الأولى إلى نمط متكرر')}</p><h2>${tx('Forstå steady state. Beregn doseregimet.','Understand steady state. Calculate the regimen.','افهم الحالة المستقرة واحسب نظام الجرعات.')}</h2><p>${tx('Forrige dose er ikke nødvendigvis eliminert når neste gis. Følg akkumuleringen, og se forskjellen på topp, bunn og gjennomsnitt.','A previous dose may remain when the next is given. Follow accumulation and distinguish peak, trough and average.','قد تبقى الجرعة السابقة عند إعطاء التالية. تابع التراكم وميّز بين الذروة والقاع والمتوسط.')}</p></header>
+ <div class="md-toolbar"><button type="button" class="chip" id="md-example">${tx('Eksempel: hver 12. time','Example: every 12 hours','مثال: كل 12 ساعة')}</button><button type="button" class="chip" id="md-import">${tx('Hent fra parameterverkstedet','Import from parameter workshop','استورد من ورشة المعلمات')}</button><span class="muted">${tx('Eget regneforsøk · hypotetisk legemiddel','Independent experiment · hypothetical drug','تجربة مستقلة · دواء افتراضي')}</span></div>
+ <form id="md-controls" class="md-controls"><label class="field">${tx('Tilførsel','Input','طريقة الإدخال')}<select id="md-route"><option value="instant">${tx('Momentan tilførsel / bolus','Instant input / bolus','إدخال فوري / دفعة')}</option><option value="oral">${tx('Oral · førsteordens absorpsjon','Oral · first-order absorption','فموي · امتصاص من المرتبة الأولى')}</option></select></label>${fields.slice(0,8).map(inputHTML).join('')}</form><p class="md-note" id="md-assumptions"></p><p class="md-error" id="md-error" role="alert"></p>
+ <div class="md-metrics" id="md-main-metrics"></div>
+ <article class="md-card md-plot-card"><div class="md-toolbar"><h3>${tx('Dose for dose','Dose by dose','جرعة بعد جرعة')}</h3><label><input type="checkbox" id="md-loading"> ${tx('Erstatt første dose med loading dose','Replace first dose with a loading dose','استبدل الجرعة الأولى بجرعة تحميل')}</label></div><p class="muted" id="md-loading-note"></p><div class="md-legend"><span style="--dot:#f4b86d">${tx('Oppbygging','Accumulation','التراكم')}</span><span style="--dot:#a996ff">${tx('Etter 4 eliminasjonshalveringstider','After 4 elimination half-lives','بعد 4 أنصاف عمر للإطراح')}</span><span style="--dot:#7ddbd0">${tx('Stiplet: teoretisk steady state','Dashed: theoretical steady state','متقطع: الحالة المستقرة النظرية')}</span></div><svg id="md-chart" class="md-chart" role="img" tabindex="0"></svg><div class="md-toolbar"><button type="button" class="chip" id="md-play">▶ ${tx('Følg kurven','Follow the curve','تابع المنحنى')}</button><button type="button" class="chip" id="md-reset-time">↺</button><label class="md-scrub">${tx('Tid','Time','الزمن')}<input type="range" id="md-time" min="0" max="96" step="0.05" value="0"></label></div><p id="md-readout" class="md-readout" aria-live="off"></p><p class="muted">${tx('Dosepiler viser doseringstidspunktene. De tre horisontale linjene er steady-state-verdier; oppstartskurven trenger ikke ligge mellom dem. C<sub>ss,av</sub> er areal/τ, ikke midtpunktet mellom topp og bunn.','Dose arrows mark administration times. The three horizontal lines are steady-state values; the startup curve need not lie between them. C<sub>ss,av</sub> equals area/τ, not the midpoint between peak and trough.','تشير الأسهم إلى أزمنة الجرعات. الخطوط الأفقية الثلاثة قيم الحالة المستقرة؛ ليس بالضرورة أن يقع منحنى البداية بينها. C<sub>ss,av</sub> يساوي المساحة/τ وليس منتصف الذروة والقاع.')}</p></article>
+ <div class="md-grid" id="md-results"></div>
+ <details class="md-card"><summary>${tx('Regn selv: trinnvis fra CL og V til Css','Work it out: from CL and V to Css, step by step','احسب بنفسك: من CL وV إلى Css خطوة بخطوة')}</summary><ol id="md-working" class="md-working"></ol></details>
+ <details class="md-card"><summary>${tx('Tabell: første dose → steady state','Table: first dose → steady state','جدول: الجرعة الأولى ← الحالة المستقرة')}</summary><div class="md-table-wrap"><table><thead><tr><th>${tx('Dose nr.','Dose no.','رقم الجرعة')}</th><th>${tx('Tid','Time','الزمن')} · h</th><th>C<sub>max,n</sub> · mg/L</th><th>C<sub>${tx('før neste','before next','قبل التالية')}</sub> · mg/L</th><th>${tx('Topp / Css,max','Peak / Css,max','الذروة / Css,max')}</th></tr></thead><tbody id="md-table"></tbody></table></div><p class="muted">${tx('Toppen søkes innen hvert intervall. Bunnkolonnen er verdien rett før neste dose; ved oral oppstart kan en lavere verdi finnes ved starten av intervallet.','The peak is found within each interval. The trough column is the value just before the next dose; during oral startup, the interval may start at a lower value.','تُبحث الذروة داخل كل فاصل. عمود القاع هو القيمة قبل الجرعة التالية مباشرة؛ وقد يبدأ فاصل الجرعة الفموية الأولى بقيمة أقل.')}</p></details>
+ <section class="md-plan"><p class="comp-kicker">${tx('Fra terapeutisk vindu til vedlikeholdsdose','From a therapeutic window to maintenance dosing','من المجال العلاجي إلى جرعة المداومة')}</p><h3>${tx('Bygg og kontroller et doseregime','Build and check a regimen','صمّم نظام الجرعات وتحقق منه')}</h3><p>${tx('1. Finn k → 2. velg τ → 3. beregn Dₘ → 4. tilpass dosetrinn → 5. kontroller topp og bunn → 6. vurder loading dose.','1. Find k → 2. choose τ → 3. calculate Dₘ → 4. round to a dose increment → 5. check peak and trough → 6. consider loading.','1. احسب k ← 2. اختر τ ← 3. احسب Dₘ ← 4. قرّب لخطوة الجرعة ← 5. تحقق من الذروة والقاع ← 6. قيّم جرعة التحميل.')}</p><div class="md-controls">${fields.slice(8).map(inputHTML).join('')}</div><div id="md-design"></div></section>
+ <details class="md-card"><summary>${tx('Huskereglene – og hvorfor de gjelder','Rules of thumb — and why they work','قواعد مختصرة وأسبابها')}</summary><ul class="md-tips"><li>${tx('Steady state betyr et gjentakende mønster. Mengde inn = mengde ut over ett helt intervall; konsentrasjonen er ikke konstant.','Steady state is a repeating pattern. Input equals output over a complete interval; concentration is not constant.','الحالة المستقرة نمط متكرر. تتساوى الكمية الداخلة والخارجة خلال فاصل كامل؛ التركيز ليس ثابتاً.')}</li><li>${tx('Etter 4 og 5 halveringstider er henholdsvis 93,75 % og 96,875 % av oppbyggingen oppnådd i en enkel førsteordens modell. Eksakt steady state nås asymptotisk. Langsom oral absorpsjon kan forlenge tilnærmingen.','After 4 and 5 half-lives, a simple first-order model has completed 93.75% and 96.875% of accumulation. Exact steady state is approached asymptotically. Slow oral absorption may prolong the approach.','بعد 4 و5 أنصاف عمر يكتمل 93.75% و96.875% من التراكم في نموذج بسيط من المرتبة الأولى. تُقارب الحالة المستقرة الدقيقة دون بلوغها في زمن محدود. قد يطيل الامتصاص الفموي البطيء هذا الاقتراب.')}</li><li>${tx('Kort τ relativt til t½ gir mindre svingninger. Samme Dose/τ gir samme Css,av når F, S og CL er uendret, men ikke samme topp og bunn.','A short τ relative to t½ reduces fluctuation. Equal Dose/τ gives equal Css,av when F, S and CL are unchanged, but not equal peaks and troughs.','الفاصل القصير نسبةً إلى نصف العمر يقلل التذبذب. تعطي Dose/τ المتساوية متوسطاً متساوياً عند ثبات F وS وCL، دون ضمان ذرى وقيعان متساوية.')}</li><li>${tx('Redusert CL øker Css,av ved samme doserate. En målrettet reduksjon av vedlikeholdsdosen må skilles fra loading dose, som også avhenger av V og valgt konsentrasjonsmål.','Reduced CL raises Css,av at the same dosing rate. Maintenance-dose adjustment differs from loading-dose calculation, which also depends on V and the concentration target.','انخفاض CL يرفع المتوسط عند ثبات معدل الجرعات. تعديل جرعة المداومة يختلف عن حساب التحميل الذي يعتمد أيضاً على V والتركيز المستهدف.')}</li><li>${tx('Bruk konsekvente enheter: mg, L og timer. F og S er fraksjoner 0–1. S = 1 når dosen allerede er oppgitt som aktiv substans. Hypotetiske terskler og dosetrinn her er til regneøving.','Use consistent units: mg, L and hours. F and S are fractions from 0 to 1. Use S = 1 when the dose already refers to active substance. Thresholds and dose increments here are hypothetical learning examples.','استخدم وحدات متسقة: ملغ ولتر وساعة. F وS نسب بين 0 و1. استخدم S = 1 إذا كانت الجرعة معبّراً عنها بالمادة الفعالة. الحدود وخطوات الجرعة هنا أمثلة تعليمية افتراضية.')}</li></ul><a href="https://pubmed.ncbi.nlm.nih.gov/1544286/" target="_blank" rel="noopener">${tx('Faglig bakgrunn: akkumulering ved gjentatte doser','Scientific background: accumulation with repeated dosing','الخلفية العلمية: التراكم مع الجرعات المتكررة')}</a></details>`;
+ q('#md-route').value=md.route;q('#md-loading').checked=md.loading;
+ q('#md-controls').onsubmit=e=>e.preventDefault();
+ panel.querySelectorAll('[data-md]').forEach(e=>e.addEventListener('input',change));
+ q('#md-route').onchange=e=>{md.route=e.target.value;if(md.route==='oral')md.loading=false;q('#md-loading').checked=md.loading;update(true);};
+ q('#md-loading').onchange=e=>{md.loading=e.target.checked;update(true);};
+ q('#md-example').onclick=()=>{stop();md={...mdDefault};mdTime=0;shell();update(true);};
+ q('#md-import').onclick=()=>{stop();const v=effective(p);md={...md,F:v.F,S:1,dose:v.dose,tau:v.tau,CL:v.CL,V:v.V,ka:v.ka,route:'oral',loading:false,lower:advanced.mec,upper:advanced.mtc,target:(advanced.mec+advanced.mtc)/2};mdTime=0;shell();update(true);};
+ q('#md-time').oninput=e=>{mdTime=+e.target.value;cursor();};q('#md-reset-time').onclick=()=>{stop();mdTime=0;cursor();};
+ q('#md-play').onclick=()=>{if(mdFrame){stop();return;}if(mdTime>=md.cycles*md.tau)mdTime=0;mdLast=performance.now();q('#md-play').textContent='Ⅱ '+tx('Pause','Pause','إيقاف مؤقت');mdFrame=requestAnimationFrame(tick);};
+ mdKey='';
+}
+function change(){const invalid=[...panel.querySelectorAll('[data-md]')].find(e=>!e.checkValidity());if(invalid){q('#md-error').textContent=tx('Fyll inn gyldige verdier innenfor de oppgitte grensene.','Enter valid values within the stated limits.','أدخل قيماً صالحة ضمن الحدود المحددة.');return;}const candidate={...md};panel.querySelectorAll('[data-md]').forEach(e=>candidate[e.dataset.md]=e.valueAsNumber);if(candidate.lower>=candidate.upper){q('#md-error').textContent=tx('Nedre grense må være mindre enn øvre grense. Forrige gyldige beregning vises.','The lower limit must be below the upper limit. The last valid calculation is shown.','يجب أن يكون الحد الأدنى أقل من الأعلى. تُعرض آخر عملية حساب صالحة.');return;}md=candidate;q('#md-error').textContent='';update(true);}
+function update(force=false){
+ if(view!=='multidose')return;const width=q('#md-chart').getBoundingClientRect().width,key=JSON.stringify([md,mdLang,Math.round(width)]);if(!force&&key===mdKey)return;mdKey=key;
+ const m=MD.metrics(md),oral=md.route==='oral',d=MD.plan(md,md.lower,md.upper,md.target,md.step);
+ try{localStorage.setItem('pk-lab-multidose-v1',JSON.stringify(md));}catch{}
+ q('#md-ka-field').hidden=!oral;q('#md-loading').disabled=oral;
+ q('#md-assumptions').textContent=tx('Én-kompartmentmodell · lineær førsteordens eliminasjon. ','One-compartment model · linear first-order elimination. ','نموذج حجرة واحدة · إطراح خطي من المرتبة الأولى. ')+(oral?tx('Oral tilførsel har endelig absorpsjonstid: toppen kommer etter dosen. Bolusformlene for topp og bunn erstattes av absorpsjonsmodellen.','Oral input takes time: the peak follows the dose. Absorption equations replace bolus peak/trough formulas.','الإدخال الفموي يستغرق وقتاً؛ تأتي الذروة بعد الجرعة. تحل معادلات الامتصاص محل صيغ ذروة وقاع الدفعة.'):tx('Momentan systemisk tilførsel = F × S × Dₘ. For i.v. bolus er F = 1. Andre F-verdier representerer en idealisert momentan absorpsjon.','Instant systemic input = F × S × Dₘ. IV bolus uses F = 1. Other F values represent idealized instantaneous absorption.','الإدخال الجهازي الفوري = F × S × Dₘ. للدفعة الوريدية F = 1. تمثل قيم F الأخرى امتصاصاً فورياً مثالياً.'));
+ q('#md-loading-note').textContent=oral?tx('En enkelt oral loading dose etablerer ikke generelt hele steady-state-mønsteret umiddelbart. Bryteren gjelder derfor bare momentan tilførsel.','A single oral loading dose does not generally establish the entire steady-state pattern immediately. The switch applies only to instant input.','لا تحقق جرعة تحميل فموية واحدة عادةً نمط الحالة المستقرة كاملاً فوراً. لذلك يخص المفتاح الإدخال الفوري فقط.'):tx('Loading dose erstatter første Dₘ. Senere doser er fortsatt Dₘ; første topp settes lik Css,max.','The loading dose replaces the first Dₘ. Later doses remain Dₘ; the first peak equals Css,max.','تحل جرعة التحميل محل Dₘ الأولى. تبقى الجرعات التالية Dₘ وتساوي الذروة الأولى Css,max.');
+ q('#md-main-metrics').innerHTML=metric('C<sub>ss,max</sub>',nn(m.max)+' mg/L','pink')+metric('C<sub>ss,av</sub>',nn(m.avg)+' mg/L','green')+metric('C<sub>ss,min</sub>',nn(m.min)+' mg/L','blue')+metric('t½',nn(m.half)+' h','purple');
+ q('#md-results').innerHTML=card(tx('1 · Grunnparametre','1 · Basic parameters','1 · المعلمات الأساسية'),eq('k = CL / V = '+nn(m.k,4)+' h⁻¹')+eq('t½ = ln(2) / k = '+nn(m.half)+' h')+eq('CL = k · V = '+nn(md.CL)+' L/h')+'<p>'+tx('k bestemmer andelen som elimineres mellom doser. CL og V kan påvirkes av blant annet organfunksjon, kroppssammensetning og interaksjoner.','k determines the fraction eliminated between doses. Organ function, body composition and interactions may affect CL and V.','تحدد k النسبة المطروحة بين الجرعات. قد تؤثر وظيفة الأعضاء وتركيب الجسم والتداخلات في CL وV.')+'</p>')+
+ card(tx('2 · Topp, bunn og gjennomsnitt','2 · Peak, trough and average','2 · الذروة والقاع والمتوسط'),oral?eq('C_ss(u) = F S Dₘ kₐ / [V(kₐ − k)]<br>× [e⁻ᵏᵘ/(1 − e⁻ᵏᵗᵃᵘ) − e⁻ᵏᵃᵘ/(1 − e⁻ᵏᵃᵗᵃᵘ)]')+'<p>'+tx('u er tid siden siste dose, 0 ≤ u < τ. Ved kₐ = k brukes grenseverdien. Tmax,ss','u is time since the last dose, 0 ≤ u < τ. The limit is used when kₐ = k. Tmax,ss','u الزمن منذ آخر جرعة، 0 ≤ u < τ. تُستخدم النهاية عندما kₐ = k. Tmax,ss')+' = '+nn(m.tmax)+' h.</p>'+eq('C_ss,av = F S Dₘ / (τ CL) = '+nn(m.avg)+' mg/L'):eq('C_ss,max = F S Dₘ / [V(1 − e⁻ᵏᵗᵃᵘ)] = '+nn(m.max))+eq('C_ss,min = C_ss,max · e⁻ᵏᵗᵃᵘ = '+nn(m.min))+eq('C_ss,av = F S Dₘ / (τ CL) = '+nn(m.avg)+' mg/L'))+
+ card(tx('3 · Mengde i kroppen','3 · Amount in the body','3 · الكمية في الجسم'),eq('A_ss,max = V · C_ss,max = '+nn(m.amax)+' mg')+eq('A_ss,min = V · C_ss,min = '+nn(m.amin)+' mg')+(oral?'<p>'+tx('Dette er systemisk mengde i modellrommet, uten absorpsjonsdepotet. Oral dose gir ikke et momentant hopp på F·S·Dₘ.','This is systemic amount in the model compartment, excluding the absorption depot. An oral dose does not cause an instantaneous F·S·Dₘ jump.','هذه كمية الدواء الجهازية في الحجرة دون مستودع الامتصاص. لا تسبب الجرعة الفموية قفزة فورية بمقدار F·S·Dₘ.')+'</p>':eq('A_ss,max = F S Dₘ / (1 − e⁻ᵏᵗᵃᵘ)')+eq('A_ss,min = A_ss,max · e⁻ᵏᵗᵃᵘ')+eq('A_ss,min = A_ss,max − F S Dₘ')+'<p>'+tx('Bare ved F·S = 1 er forskjellen mellom mengdene lik administrert dose.','Only when F·S = 1 does the amount difference equal the administered dose.','فقط عندما F·S = 1 يساوي فرق الكميتين الجرعة المعطاة.')+'</p>'))+
+ card(tx('4 · Akkumulering og fluktuasjon','4 · Accumulation and fluctuation','4 · التراكم والتذبذب'),(oral?eq('R_peak = C_ss,max / C_max,1 = '+nn(m.rpeak))+eq('R_AUC = AUC_ss,0–τ / AUC_1,0–τ = '+nn(m.rauc)):eq('R_ac = 1 / (1 − e⁻ᵏᵗᵃᵘ) = '+nn(m.rac)))+eq('FI = (C_ss,max − C_ss,min) / C_ss,av = '+nn(m.fi))+'<p>'+tx('FI er dimensjonsløs. 100 × FI er verdien i prosent. ','FI is dimensionless. Multiply by 100 for percent. ','FI بلا وحدة. اضربه في 100 للتعبير كنسبة مئوية. ')+(oral?tx('Ved oral tilførsel er topp- og AUC-akkumulering ulike størrelser.','With oral input, peak and AUC accumulation are different measures.','في الإدخال الفموي يختلف تراكم الذروة عن تراكم AUC.'):tx('Ved bolus er FI = kτ. R_ac sammenligner steady-state-toppen med første topp uten loading dose.','For bolus input, FI = kτ. R_ac compares the steady-state peak with the first peak without a loading dose.','للإدخال الفوري FI = kτ. يقارن R_ac ذروة الحالة المستقرة بالذروة الأولى دون تحميل.'))+'</p>')+
+ card(tx('5 · Loading dose','5 · Loading dose','5 · جرعة التحميل'),eq('D_L = C_ss,max · V / (F S)')+eq('D_L = '+nn(m.loading)+' mg')+'<p>'+tx('Verdien setter en momentan første topp lik valgt Css,max. For bolus er D_L = R_ac · Dₘ. Å sikte mot Css,av ville gitt en annen loading dose. Ved oral absorpsjon er dette ikke en generell formel for den orale toppkonsentrasjonen.','This amount sets an instantaneous first peak equal to the selected Css,max. For bolus input, D_L = R_ac · Dₘ. Targeting Css,av gives a different loading dose. With oral absorption, this is not a general formula for the oral peak.','تجعل هذه الكمية الذروة الفورية الأولى مساوية لـ Css,max المختار. للدفعة D_L = R_ac · Dₘ. استهداف المتوسط يعطي جرعة تحميل مختلفة. مع الامتصاص الفموي ليست هذه صيغة عامة لحساب الذروة الفموية.')+'</p>')+
+ card(tx('6 · Mengde inn = mengde ut','6 · Amount in = amount out','6 · الكمية الداخلة = الخارجة'),eq('AUC_ss,0–τ = F S Dₘ / CL = '+nn(m.auc)+' mg·h/L')+eq('F S Dₘ = CL · AUC_ss,0–τ = '+nn(m.input)+' mg')+'<p>'+tx('Balansen gjelder over hele intervallet ved steady state. Konsentrasjonen kan likevel svinge betydelig.','Balance holds over the entire steady-state interval. Concentration may still fluctuate substantially.','يتحقق التوازن خلال فاصل الحالة المستقرة الكامل، رغم أن التركيز قد يتذبذب كثيراً.')+'</p>');
+ q('#md-working').innerHTML=[tx('Finn eliminasjonskonstanten.','Find the elimination constant.','احسب ثابت الإطراح.')+eq('k = '+nn(md.CL)+' / '+nn(md.V)+' = '+nn(m.k,4)+' h⁻¹'),tx('Finn andelen som er igjen etter ett intervall.','Find the fraction remaining after one interval.','احسب الجزء المتبقي بعد فاصل واحد.')+eq('r = e^(−'+nn(m.k,4)+' × '+nn(md.tau)+') = '+nn(m.r,4)),tx('Finn systemisk mengde fra hver dose.','Find the systemic amount from each dose.','احسب الكمية الجهازية من كل جرعة.')+eq('F S Dₘ = '+nn(md.F)+' × '+nn(md.S)+' × '+nn(md.dose)+' = '+nn(m.input)+' mg'),oral?tx('Beregn oral Css(u) og finn høyeste verdi i 0 ≤ u < τ. Bunn ved steady state er Css(0).','Evaluate oral Css(u) and find its maximum in 0 ≤ u < τ. The steady-state trough is Css(0).','احسب Css(u) الفموي وحدد أعلى قيمة خلال 0 ≤ u < τ. القاع المستقر هو Css(0).')+eq('Tmax,ss = '+nn(m.tmax)+' h; C_ss,max = '+nn(m.max)+'; C_ss,min = '+nn(m.min)+' mg/L'):tx('Beregn topp og deretter bunn.','Calculate peak, then trough.','احسب الذروة ثم القاع.')+eq('C_ss,max = '+nn(m.input)+' / ['+nn(md.V)+' × (1 − '+nn(m.r,4)+')] = '+nn(m.max))+eq('C_ss,min = '+nn(m.max)+' × '+nn(m.r,4)+' = '+nn(m.min)),tx('Beregn gjennomsnittet fra doseringsraten.','Calculate the average from the dosing rate.','احسب المتوسط من معدل الجرعات.')+eq('C_ss,av = ('+nn(m.input)+' / '+nn(md.tau)+') / '+nn(md.CL)+' = '+nn(m.avg)+' mg/L')].map(s=>'<li>'+s+'</li>').join('');
+ q('#md-table').innerHTML=Array.from({length:md.cycles},(_,i)=>MD.interval(i+1,md,md.loading)).map(v=>'<tr><td>'+v.n+'</td><td>'+nn(v.start)+'</td><td>'+nn(v.max)+'</td><td>'+nn(v.min)+'</td><td>'+nn(100*v.fraction,1)+' %</td></tr>').join('');
+ design(d,m);draw(m);cursor();
+}
+function design(d,m){
+ const oral=md.route==='oral',inside=v=>v.max<=md.upper+1e-9&&v.min>=md.lower-1e-9;
+ const status=v=>inside(v)?tx('Innenfor begge eksempelgrenser','Within both example limits','ضمن الحدّين التوضيحيين'):tx('Utenfor minst én eksempelgrense','Outside at least one example limit','خارج حد توضيحي واحد على الأقل');
+ q('#md-design').innerHTML=`<div class="md-grid">${card(tx('A · Finn et mulig intervall','A · Find a feasible interval','أ · اختر فاصلاً ممكناً'),oral?'<p>'+tx('τmax-formelen gjelder momentan tilførsel. For oral absorpsjon kontrolleres i stedet doseområdet direkte ved valgt τ, F, S og kₐ.','The τmax equation assumes instant input. With oral absorption, the allowed dose range is checked directly at the chosen τ, F, S and kₐ.','تفترض معادلة τmax إدخالاً فورياً. للامتصاص الفموي يُفحص مجال الجرعة مباشرة عند τ وF وS وkₐ المختارة.')+'</p>':eq('τ_max = ln(C_upper / C_lower) / k')+eq('τ_max = ln('+nn(md.upper)+' / '+nn(md.lower)+') / '+nn(m.k,4)+' = '+nn(d.tauMax)+' h')+eq('D_M,max = V (C_upper − C_lower) / (F S) = '+nn(d.doseMax)+' mg')+'<p>'+tx('D_M,max hører til τmax og berører begge grenser. Ved F·S = 1 reduseres dette til V × (Cupper − Clower). Bruk margin ved et praktisk regime.','D_M,max belongs to τmax and touches both limits. If F·S = 1, it reduces to V × (Cupper − Clower). A practical regimen needs margin.','ترتبط D_M,max بـ τmax وتلامس الحدّين. عندما F·S = 1 تختزل إلى V × (Cupper − Clower). يحتاج النظام العملي إلى هامش.')+'</p>')}
+ ${card(tx('B · Dose for valgt gjennomsnitt','B · Dose for a target average','ب · جرعة لمتوسط مستهدف'),eq('Dₘ = C_ss,av,target · CL · τ / (F S)')+eq('Dₘ = '+nn(md.target)+' × '+nn(md.CL)+' × '+nn(md.tau)+' / ('+nn(md.F)+' × '+nn(md.S)+') = '+nn(d.dose)+' mg')+'<p>'+tx('Avrundet til nærmeste dosetrinn: ','Rounded to the nearest dose increment: ','مقربة إلى أقرب خطوة جرعة: ')+nn(d.rounded)+' mg.</p>'+eq('C_ss,max = '+nn(d.preview.max)+'; C_ss,min = '+nn(d.preview.min)+'; C_ss,av = '+nn(d.preview.avg)+' mg/L')+'<p class="md-status '+(inside(d.preview)?'pass':'fail')+'">'+status(d.preview)+'</p><button type="button" class="chip" id="md-apply" '+(d.rounded>5000?'disabled':'')+'>'+tx('Prøv avrundet dose i kurven','Try rounded dose in the curve','جرّب الجرعة المقربة في المنحنى')+'</button>')}
+ ${card(tx('C · Kontroller begge grensene','C · Check both limits','ج · تحقق من الحدّين'),'<p>'+tx('Tillatt kontinuerlig doseområde ved valgt τ:','Allowed continuous dose range at the selected τ:','مجال الجرعات المستمر المسموح عند τ المختارة:')+'</p>'+eq('D_min = '+nn(d.low)+' mg; D_max = '+nn(d.high)+' mg')+(d.feasible?'<p>'+tx('Beregnet fra Clower/Css,min per mg og Cupper/Css,max per mg.','Calculated from Clower/Css,min per mg and Cupper/Css,max per mg.','محسوب من Clower/Css,min لكل ملغ وCupper/Css,max لكل ملغ.')+'</p><p>'+ (d.practical?tx('Med valgt dosetrinn: ','At the selected dose increment: ','عند خطوة الجرعة المختارة: ')+nn(d.discreteLow)+'–'+nn(d.discreteHigh)+' mg.':tx('Ingen dose med dette dosetrinnet passer innenfor begge grenser.','No dose at this increment fits both limits.','لا توجد جرعة بهذه الخطوة تقع ضمن الحدّين.'))+'</p>':'<p class="md-status fail">'+tx('Ingen dose kan oppfylle begge grenser ved dette intervallet. Prøv kortere τ.','No dose can satisfy both limits at this interval. Try a shorter τ.','لا توجد جرعة تحقق الحدّين عند هذا الفاصل. جرّب τ أقصر.')+'</p>')+'<p class="md-status '+(inside(m)?'pass':'fail')+'">'+tx('Nåværende regime: ','Current regimen: ','النظام الحالي: ')+status(m)+'</p>')}</div>
+ ${!oral?`<details class="md-card"><summary>${tx('Hva med snarveien Dₘ = D_M,max × τ/τmax?','What about the shortcut Dₘ = D_M,max × τ/τmax?','ماذا عن الاختصار Dₘ = D_M,max × τ/τmax؟')}</summary><p>${tx('Dette bevarer doseringsraten fra grenseregimet. Det er ikke den eksakte største tillatte dosen ved det nye intervallet. Kontroller alltid det beregnede resultatet.','This preserves the dosing rate of the boundary regimen. It is not the exact maximum allowed dose at the new interval. Always check the resulting concentrations.','يحافظ هذا على معدل الجرعات للنظام الحدّي. لكنه ليس أكبر جرعة مسموحة دقيقة للفاصل الجديد. تحقق دائماً من التراكيز الناتجة.')}</p>${eq('Dₘ = '+nn(d.doseMax)+' × '+nn(md.tau)+' / '+nn(d.tauMax)+' = '+nn(d.scaled)+' mg')}${eq('C_ss,max = '+nn(d.scaledPreview.max)+'; C_ss,min = '+nn(d.scaledPreview.min)+' mg/L')}<p class="md-status ${inside(d.scaledPreview)?'pass':'fail'}">${status(d.scaledPreview)}</p><p>${tx('Eksakt ved momentan tilførsel: Dmin = V·Clower·(e^(kτ) − 1)/(FS), Dmax = V·Cupper·(1 − e^(−kτ))/(FS).','Exact for instant input: Dmin = V·Clower·(e^(kτ) − 1)/(FS), Dmax = V·Cupper·(1 − e^(−kτ))/(FS).','بدقة للإدخال الفوري: Dmin = V·Clower·(e^(kτ) − 1)/(FS)، Dmax = V·Cupper·(1 − e^(−kτ))/(FS).')}</p></details>`:''}`;
+ q('#md-apply').onclick=()=>{md.dose=d.rounded;q('#md-dose').value=md.dose;update(true);};
+}
+let mdAxes;
+function draw(m){
+ const svg=q('#md-chart'),w=Math.max(280,svg.clientWidth),h=w<600?330:360,L=48,R=w<600?80:118,T=30,B=50,end=md.cycles*md.tau,max=Math.max(m.max,md.upper)*1.18;
+ svg.replaceChildren();svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.setAttribute('aria-label',tx('Gjentatte doser fra oppstart til steady state. Bruk piltaster for avlesning.','Repeated doses from startup towards steady state. Use arrow keys to read values.','جرعات متكررة من البداية نحو الحالة المستقرة. استخدم مفاتيح الأسهم لقراءة القيم.'));
+ const x=t=>L+t/end*(w-L-R),y=c=>h-B-c/max*(h-T-B);mdAxes={x,y,w,h,L,R,T,B,end};
+ el('rect',{x:L,y:y(md.upper),width:w-L-R,height:y(md.lower)-y(md.upper),fill:'#65d6a0',opacity:.08},svg);
+ const boundary=4*m.half;if(boundary<end)el('rect',{x:x(boundary),y:T,width:x(end)-x(boundary),height:h-T-B,fill:'#a996ff',opacity:.07},svg);
+ for(let i=0;i<=4;i++){const value=max*i/4;el('line',{x1:L,x2:w-R,y1:y(value),y2:y(value),stroke:'var(--grid)'},svg);el('text',{x:L-7,y:y(value)+4,'text-anchor':'end'},svg,nn(value,1));}
+ const ticks=w<600?3:6;for(let i=0;i<=ticks;i++)el('text',{x:x(end*i/ticks),y:h-B+34,'text-anchor':i===0?'start':i===ticks?'end':'middle'},svg,nn(end*i/ticks,1));
+ el('text',{x:L,y:16},svg,tx('Konsentrasjon · mg/L','Concentration · mg/L','التركيز · ملغ/لتر'));el('text',{x:w/2,y:h-2,'text-anchor':'middle'},svg,tx('Tid · timer','Time · hours','الزمن · ساعة'));
+ for(const[value,label,color]of [[m.max,'Css,max','#ff92b0'],[m.avg,'Css,av','#80e0ad'],[m.min,'Css,min','#75baff']]){el('line',{x1:L,x2:w-R,y1:y(value),y2:y(value),stroke:color,'stroke-dasharray':'4 5',opacity:.75},svg);el('text',{x:w-R+6,y:y(value)+4,fill:color},svg,label);}
+ const line=points=>points.map((v,i)=>(i?'L':'M')+x(v.t).toFixed(2)+','+y(v.c).toFixed(2)).join(' ');
+ let actual=[],reference=[];
+ for(let j=0;j<md.cycles;j++){
+  el('path',{d:`M${x(j*md.tau)},${h-B+17}v-12m-4,4l4,-4l4,4`,stroke:'#75baff',fill:'none','stroke-width':1.7},svg);
+  for(let i=0;i<=70;i++){const t=(j+i/70)*md.tau,u=i/70*md.tau;actual.push({t,c:MD.at(t,md,md.loading,i===70)});reference.push({t,c:md.route==='instant'?m.max*Math.exp(-m.k*u):MD.steady(i===70?md.tau-1e-9:u,md)});}
+ }
+ el('path',{d:line(reference),stroke:'#7ddbd0','stroke-width':1.5,'stroke-dasharray':'5 6',fill:'none',opacity:.65},svg);
+ const early=actual.filter(v=>v.t<=boundary),late=actual.filter(v=>v.t>boundary);if(early.length&&late.length)late.unshift(early.at(-1));
+ for(const[points,color]of [[early,'#f4b86d'],[late,'#a996ff']])el('path',{d:line(points),stroke:color,'stroke-width':2.8,fill:'none','stroke-linejoin':'round'},svg);
+ el('line',{id:'md-guide',x1:L,x2:L,y1:T,y2:h-B,stroke:'var(--ink)','stroke-dasharray':'2 4'},svg);el('circle',{id:'md-dot',cx:L,cy:y(MD.at(0,md,md.loading)),r:5,fill:'var(--ink)',stroke:'var(--surface)','stroke-width':2},svg);
+ q('#md-time').max=end;mdTime=Math.min(mdTime,end);
+ const pick=e=>{const r=svg.getBoundingClientRect();mdTime=Math.min(end-1e-8,Math.max(0,((e.clientX-r.left)*w/r.width-L)/(w-L-R)*end));cursor();};svg.onpointerdown=pick;svg.onpointermove=e=>{if(e.buttons===1)pick(e);};
+ svg.onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();mdTime=e.key==='Home'?0:e.key==='End'?end:Math.min(end,Math.max(0,mdTime+(e.key==='ArrowRight'?1:-1)*md.tau/12));cursor();}};
+}
+function cursor(){if(!mdAxes)return;const c=MD.at(mdTime,md,md.loading,mdTime>=mdAxes.end),{x,y}=mdAxes;q('#md-guide').setAttribute('x1',x(mdTime));q('#md-guide').setAttribute('x2',x(mdTime));q('#md-dot').setAttribute('cx',x(mdTime));q('#md-dot').setAttribute('cy',y(c));q('#md-time').value=mdTime;
+ q('#md-readout').innerHTML='<b dir="ltr">t = '+nn(mdTime)+' h · C = '+nn(c,3)+' mg/L · A = '+nn(c*md.V)+' mg</b><span>'+tx('Verdier ved markøren. Ved bolustidspunkt vises verdien rett etter dose; ytterst til høyre vises verdien før neste dose.','Values at the cursor. At a bolus time, the post-dose value is shown; the right endpoint shows the value before the next dose.','قيم عند المؤشر. عند وقت الدفعة تظهر القيمة بعدها؛ وعند نهاية الرسم تظهر القيمة قبل الجرعة التالية.')+'</span>';
+}
+function stop(){if(mdFrame)cancelAnimationFrame(mdFrame);mdFrame=0;if(q('#md-play'))q('#md-play').textContent='▶ '+tx('Følg kurven','Follow the curve','تابع المنحنى');}
+function tick(now){if(view!=='multidose'){stop();return;}mdTime=Math.min(md.cycles*md.tau,mdTime+Math.min(.1,(now-mdLast)/1000)*md.cycles*md.tau/24);mdLast=now;cursor();if(mdTime>=md.cycles*md.tau){stop();return;}mdFrame=requestAnimationFrame(tick);}
+window.addEventListener('pk-language',e=>{stop();mdLang=e.detail;shell();update(true);});
+const multiBaseChart=chart;chart=function(){multiBaseChart();root.classList.toggle('multidose-wide',view==='multidose');if(view==='multidose')update();else stop();};
+shell();
+}
+
 // Translation operates on presentation text; calculation keys and option values stay stable.
 const localePairs=new Map(window.PKLocalePairs||[]);
 function localeAdd(no,en,ar){if(no)localePairs.set(no,[en,ar]);}
@@ -1633,7 +1782,7 @@ function translateDOM(){
  translationObserver.observe(root,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-label','title','placeholder','alt']});translateScheduled=false;
 }
 const translationObserver=new MutationObserver(()=>{if(!translateScheduled){translateScheduled=true;queueMicrotask(translateDOM);}});
-q('#language-select').onchange=e=>{language=e.target.value;localeCache.clear();try{localStorage.setItem('pk-lab-language',language);}catch{}translateDOM();if(compVisible())compDraw();};
+q('#language-select').onchange=e=>{language=e.target.value;localeCache.clear();try{localStorage.setItem('pk-lab-language',language);}catch{}translateDOM();if(compVisible())compDraw();window.dispatchEvent(new CustomEvent('pk-language',{detail:language}));};
 translateDOM();
 
 function render(kick=false){const d=derive(p),active=inputs.find(a=>a.key===selected);for(const a of inputs){const input=q('#control-'+a.key);input.value=p[a.key];input.style.setProperty('--fill',((p[a.key]-a.min)/(a.max-a.min)*100)+'%');q('#value-'+a.key).textContent=(a.key==='F'?fmt(p.F*100):fmt(p[a.key]))+' '+a.unit;q(`[data-input="${a.key}"]`).classList.toggle('active',a.key===selected);q(`[data-select="${a.key}"]`).setAttribute('aria-pressed',String(a.key===selected));}
@@ -1719,7 +1868,15 @@ function render(kick=false){const d=derive(p),active=inputs.find(a=>a.key===sele
 @media(max-width:560px){body{padding:8px}#pk-lab .header{gap:10px}#pk-lab .theme-toggle{font-size:12px;padding:8px}#pk-lab .tabs .tab{font-size:12px;padding:9px 10px}#pk-lab .controls{padding:12px;gap:10px}#pk-lab .scenario-grid{grid-template-columns:1fr}#pk-lab .adme-flow{grid-template-columns:1fr 1fr}#pk-lab .metric-grid{grid-template-columns:1fr 1fr}#pk-lab .quiz-card{padding:16px}#pk-lab .quiz-choices{grid-template-columns:1fr}#pk-lab .pk-chart{height:320px}}
 
 #pk-lab .organ-glows g{fill:none;stroke:none;filter:none;transition:opacity .4s;opacity:0}
-#pk-lab .organ-glows g.active{fill:none;stroke:none;opacity:1;animation:organLightBreathe 3s ease-in-out infinite}
+#pk-lab .organ-glows g.active{fill:none;stroke:none;opacity:1;animation:none}
+#pk-lab .organ-glows .organ-lit-pixels{opacity:.55}
+#pk-lab .organ-glows g.active .organ-lit-pixels{animation:organPixelBreathe 3s ease-in-out infinite}
+#pk-lab .organ-glows .organ-aura{fill:none;stroke:var(--organ-tone);stroke-width:4;opacity:.78;filter:drop-shadow(0 0 7px var(--organ-tone));stroke-linejoin:round}
+#pk-lab .organ-glows .organ-orbit{fill:none;stroke:#f5fffc;stroke-width:6;stroke-dasharray:17 83;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px var(--organ-tone)) drop-shadow(0 0 12px var(--organ-tone))}
+#pk-lab .organ-glows g.active .organ-orbit{animation:organOrbit 3.4s linear infinite}
+@keyframes organPixelBreathe{0%,100%{opacity:.4}50%{opacity:.88}}
+@keyframes organOrbit{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
+@media(prefers-reduced-motion:reduce){#pk-lab .organ-glows g.active .organ-lit-pixels,#pk-lab .organ-glows g.active .organ-orbit{animation:none!important}#pk-lab .organ-glows g.active .organ-lit-pixels{opacity:.6}#pk-lab .organ-glows g.active .organ-orbit{stroke-dasharray:none;opacity:.8}}
 @keyframes organLightBreathe{0%,100%{opacity:.06}50%{opacity:.85}}
 #pk-lab .organ-glows{pointer-events:none}
 #pk-lab .parameter-help{position:fixed;z-index:1000;width:290px;max-width:calc(100vw - 24px);padding:14px 16px;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 30px #0003;font-size:13px;line-height:1.6;pointer-events:none;animation:helpReveal .16s ease-out}
@@ -1757,7 +1914,7 @@ function render(kick=false){const d=derive(p),active=inputs.find(a=>a.key===sele
 #pk-lab .explanation-grid h3{margin-bottom:8px}
 #pk-lab .definition-index{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 @media(max-width:650px){#pk-lab .binding-controls,#pk-lab .binding-pair,#pk-lab .mini-charts,#pk-lab .explanation-grid{grid-template-columns:1fr}#pk-lab .binding-steps{grid-template-columns:1fr}#pk-lab .parameter-help{font-size:12px}}
-@media(prefers-reduced-motion:reduce){#pk-lab .organ-glows g.active{animation:none!important;opacity:.48}#pk-lab .parameter-help{animation:none}}
+@media(prefers-reduced-motion:reduce){#pk-lab .organ-glows g.active{animation:none!important;opacity:1}#pk-lab .parameter-help{animation:none}}
 
 #pk-lab.compartment-wide .app-body{grid-template-columns:minmax(0,1fr)}
 #pk-lab.compartment-wide .anatomy-panel{display:none}
@@ -1910,4 +2067,32 @@ function render(kick=false){const d=derive(p),active=inputs.find(a=>a.key===sele
 #pk-lab[dir=rtl] .formula-answer{text-align:right}#pk-lab[dir=rtl] .formula-definition,#pk-lab[dir=rtl] .comp-reading{text-align:right}
 #pk-lab .comp-canvas{direction:ltr}
 @media(max-width:600px){#pk-lab .language-control{margin-inline-start:0;align-self:flex-start}}
+
+#pk-lab.multidose-wide .app-body{grid-template-columns:minmax(0,1fr)}
+#pk-lab.multidose-wide .anatomy-panel{display:none}
+#multidose-panel{min-width:0;line-height:1.6}
+#multidose-panel .md-heading{padding:8px 0 18px;max-width:950px}
+#multidose-panel h2{font-size:clamp(26px,3vw,38px);line-height:1.15;margin:8px 0 16px}
+#multidose-panel h3{font-size:19px;line-height:1.35;margin:0 0 14px}
+.md-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:14px 0}.md-toolbar h3{margin:0;flex:1}
+.md-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;background:var(--soft);padding:18px;border-radius:16px;border:1px solid var(--border)}
+.md-controls .field{min-width:0;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.md-controls input,.md-controls select{width:100%;box-sizing:border-box;min-height:43px;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:9px;padding:8px;font:inherit}
+.md-controls input{direction:ltr}.md-controls .field:has(select){grid-column:span 2}
+#multidose-panel .md-field[hidden]{display:none}
+.md-note{padding:12px 16px;border-inline-start:3px solid var(--teal);background:var(--soft);border-radius:0 9px 9px 0;font-size:14px}
+.md-error{color:var(--danger);font-size:14px}.md-error:empty{display:none}
+.md-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}
+.md-metric{padding:18px;background:var(--soft);border:1px solid var(--border);border-radius:13px;border-top:3px solid #75baff}.md-metric strong{display:block;font-size:clamp(21px,2.1vw,29px);font-weight:650;margin-top:7px}.md-metric.pink{border-top-color:#ff92b0}.md-metric.green{border-top-color:#80e0ad}.md-metric.purple{border-top-color:#a996ff}
+.md-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:20px 0}
+.md-card{border:1px solid var(--border);border-radius:16px;padding:20px;background:var(--surface);min-width:0}.md-card p{font-size:14px;line-height:1.7}.md-card summary{font-size:16px;font-weight:650;cursor:pointer}.md-card+details{margin-top:14px}
+.md-eq{font-family:Cambria,Georgia,serif;font-size:18px;line-height:1.6;background:#0c1425;color:#f3f6ff;border:1px solid #364561;padding:13px;border-radius:9px;overflow-x:auto;margin:12px 0;unicode-bidi:isolate;text-align:left;overflow-wrap:anywhere}.md-eq sup{font-size:.7em}
+.md-chart{display:block;width:100%;height:360px;direction:ltr;unicode-bidi:isolate}.md-chart text{font-family:'Segoe UI',Tahoma,sans-serif;font-size:12px;fill:var(--muted-ink)}
+.md-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;margin:12px 0}.md-legend span:before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--dot);margin-inline-end:6px}
+.md-scrub{flex:1;min-width:160px;display:flex;align-items:center;gap:12px}.md-scrub input{flex:1;direction:ltr;accent-color:#a996ff}
+.md-readout{background:var(--soft);border-radius:9px;padding:12px}.md-readout span{display:block;font-size:12px;color:var(--muted-ink);margin-top:8px}.md-working li{margin:16px 0;padding-inline-start:8px}.md-working .md-eq{max-width:780px}
+.md-table-wrap{overflow:auto;margin-top:20px}.md-table-wrap table{width:100%;border-collapse:collapse;white-space:nowrap;font-variant-numeric:tabular-nums}.md-table-wrap th,.md-table-wrap td{padding:10px 14px;border-bottom:1px solid var(--border);text-align:start}.md-table-wrap th{color:var(--muted-ink);font-size:13px}.md-table-wrap tr:last-child{background:var(--soft)}
+.md-plan{margin:28px 0;padding-top:20px;border-top:1px solid var(--border)}.md-status{padding:10px 12px;border-radius:9px;font-weight:600}.md-status.pass{background:#12372e;color:#9aebc1}.md-status.fail{background:#3f2230;color:#ffb4c1}.md-tips li{margin:15px 0}.md-card a{color:var(--blue)}
+@media(max-width:1050px){.md-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.md-grid{grid-template-columns:minmax(0,1fr)}.md-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.md-controls{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px}.md-card{padding:14px}.md-chart{height:330px}.md-metric{padding:12px}.md-eq{font-size:17px}.md-toolbar .chip{font-size:12px}}
 </style></body></html>
