@@ -1616,7 +1616,7 @@ for(const[start,en,ar]of[
 ]){const paragraph=[...root.querySelectorAll('p,.model-note')].find(e=>e.textContent.startsWith(start));if(paragraph)localeAdd(paragraph.textContent,en,ar);}
 
 let language='nb';try{const saved=localStorage.getItem('pk-lab-language');if(['nb','en','ar'].includes(saved))language=saved;}catch{}
-const localeCache=new Map(),localeKeys=[...localePairs.keys()].filter(k=>!/^\s*[\d.,+−–≈=]/.test(k)).sort((a,b)=>b.length-a.length);
+const localeCache=new Map(),localeKeys=[...localePairs.keys()].filter(k=>!/^\s*[\d.,+−–≈=]/.test(k)||/orden|kompartment/.test(k)).sort((a,b)=>b.length-a.length);
 function T(text){if(language==='nb'||!text)return text;const raw=String(text),key=language+'|'+raw;if(localeCache.has(key))return localeCache.get(key);const trimmed=raw.trim(),pair=localePairs.get(trimmed);let result;if(pair)result=raw.replace(trimmed,pair[language==='en'?0:1]);else{
  // Longest matching phrases are consumed once, never retranslated recursively.
  let pos=0;result='';while(pos<raw.length){let best=null,index=raw.length;for(const k of localeKeys){let at=raw.indexOf(k,pos);const word=c=>!!c&&/[\p{L}\p{N}_]/u.test(c);while(at>=0&&((word(k[0])&&word(raw[at-1]))||(word(k[k.length-1])&&word(raw[at+k.length]))))at=raw.indexOf(k,at+1);if(at>=0&&(at<index||(at===index&&k.length>(best?.length||0)))){best=k;index=at;}}if(best===null){result+=raw.slice(pos);break;}result+=raw.slice(pos,index)+localePairs.get(best)[language==='en'?0:1];pos=index+best.length;}
