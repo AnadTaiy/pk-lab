@@ -17,12 +17,12 @@ An interactive learning app in Norwegian, English and Arabic for pharmacokinetic
 - Uncertainty bands and 108 original quiz questions with topic filters and explanations.
 - 56 interactive formula cards with clickable symbols, algebraic rearrangement, units, proportionality, numerical examples and step-by-step derivations.
 - Always-on dark mode, keyboard controls and local settings saved in the browser.
-- A purple browser-tab icon, softer gold organ outlines and a subtle 30-second light tracing the logo's letter contours.
-- Basic and advanced views, a guided clearance example, and up to 12 saved workshop scenarios with a two-scenario comparison.
+- A purple browser-tab icon, translucent gold organ outlines and a black line tracing the logo's letter contours before fading out after 30 seconds. The logo returns to the parameter workshop.
+- All advanced controls are available directly, without a level switch. Workshop connections have a damped spring motion and a single, crisp light pulse each time a parameter is selected.
 - A shared linear/semi-log graph setting. The compartment lab defaults to a single plasma concentration curve; a particle-derived curve and the full comparison are optional.
-- Eliminated particles flow through a channel into a separate collection box. Volume of distribution illuminates the body silhouette while excluding the organs.
-- Local PNG and PDF graph/result exports under **My experiments & export**. Prepare the export, then select its download link.
-- An About me tab with a compact portrait and the story behind the app.
+- Eliminated particles flow through a channel into a separate collection box. Volume of distribution softly illuminates the illustration's own outline from the neck down, with separate organ masks excluded; the contour animation takes 40 seconds per circuit. Other organ effects retain their existing appearance.
+- Kinetic-order labels on concentration graphs. The compartment curve distinguishes zero-order, first-order and the continuous saturation transition. Under Michaelis–Menten elimination the approximate boundaries are C/Km ≥ 10 and C/Km ≤ 0.1; absorption and distribution can still affect the observed curve shape.
+- An About me tab at the far right, with a compact portrait and the story behind the app.
 
 The app is an educational model using hypothetical drug parameters. Clinical dosing decisions require drug-specific information and clinical judgment.
 
@@ -38,7 +38,7 @@ Choose **Settings → Pages → Deploy from a branch → main → /(root)**. The
 
 There is no analytics service or app backend. Settings are stored in the browser's `localStorage`. GitHub handles the web hosting.
 
-Scenario storage covers the six workshop parameters and renal/hepatic function settings; it does not save every lab's independent controls. Exports capture the visible charts and numeric summaries as an image; PDF text is therefore not selectable. Export files are created locally, without a server upload. A browser must permit downloads to save them.
+Named scenario storage, file exports and introductory workshop shortcuts have been removed. Ordinary parameter and language preferences are still remembered locally.
 
 See [SECURITY.md](SECURITY.md) for the security scope and limitations. The standalone file uses a restrictive Content Security Policy with hashes for its bundled scripts. Rebuilding or editing scripts requires regenerating those hashes.
 
