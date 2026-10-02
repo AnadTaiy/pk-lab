@@ -17,13 +17,18 @@ An interactive learning app in Norwegian, English and Arabic for pharmacokinetic
 - Uncertainty bands and 108 original quiz questions with topic filters and explanations.
 - 56 interactive formula cards with clickable symbols, algebraic rearrangement, units, proportionality, numerical examples and step-by-step derivations.
 - Always-on dark mode, keyboard controls and local settings saved in the browser.
-- A purple browser-tab icon, softer gold organ outlines and flowing particle movement with gradual elimination fades.
+- A purple browser-tab icon, softer gold organ outlines and a subtle 30-second light tracing the logo's letter contours.
+- Basic and advanced views, a guided clearance example, and up to 12 saved workshop scenarios with a two-scenario comparison.
+- A shared linear/semi-log graph setting. The compartment lab defaults to a single plasma concentration curve; a particle-derived curve and the full comparison are optional.
+- Eliminated particles flow through a channel into a separate collection box. Volume of distribution illuminates the body silhouette while excluding the organs.
+- Local PNG and PDF graph/result exports under **My experiments & export**. Prepare the export, then select its download link.
+- An About me tab with a compact portrait and the story behind the app.
 
 The app is an educational model using hypothetical drug parameters. Clinical dosing decisions require drug-specific information and clinical judgment.
 
 ## About the app
 
-Created by Mohanad Taiy, 2026 – For personal learning. Questions and explanations are independently written. The anatomy is a generated general illustration.
+Created by Mohanad Taiy, a pharmacist living in Norway, 2026 – For personal learning. The app began during master's studies in pharmacy at UiT, in connection with FAR-3203, to make central pharmacokinetic models visual and intuitive. Questions and explanations are independently written. The anatomy is a generated general illustration.
 
 The compartment lab offers an IV bolus or oral dose with first-order absorption (F and kₐ), and elimination from the central compartment. First-order curves are calculated analytically; saturation and zero-order kinetics use a positive, mass-conserving numerical method. The particles are a stochastic illustration and may differ slightly from the smooth expected curve. The curve and dosing tab uses oral, linear first-order kinetics.
 
@@ -32,6 +37,10 @@ The compartment lab offers an IV bolus or oral dose with first-order absorption 
 Choose **Settings → Pages → Deploy from a branch → main → /(root)**. The site entry point is `index.html`. The `.nojekyll` file makes it serve as a regular static site.
 
 There is no analytics service or app backend. Settings are stored in the browser's `localStorage`. GitHub handles the web hosting.
+
+Scenario storage covers the six workshop parameters and renal/hepatic function settings; it does not save every lab's independent controls. Exports capture the visible charts and numeric summaries as an image; PDF text is therefore not selectable. Export files are created locally, without a server upload. A browser must permit downloads to save them.
+
+See [SECURITY.md](SECURITY.md) for the security scope and limitations. The standalone file uses a restrictive Content Security Policy with hashes for its bundled scripts. Rebuilding or editing scripts requires regenerating those hashes.
 
 The initial language is inferred locally from the browser time zone: Norwegian for Norway, Arabic for time zones in Arab countries, and English elsewhere. If the time zone is unavailable, the browser locale is used. This is a regional hint, not verified residence. A manual choice in the 🌐 selector takes priority and is remembered. No geolocation permission or IP lookup is used. Arabic uses right-to-left layout, while formulas and graphs keep their mathematical left-to-right direction. The distribution comparison shows phases and AUC contributions; its phase boundary is an educational marker, not a biological switch.
 
