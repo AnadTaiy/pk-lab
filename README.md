@@ -17,6 +17,7 @@ An interactive learning app in Norwegian, English and Arabic for pharmacokinetic
 - Uncertainty bands and 108 original quiz questions with topic filters and explanations.
 - 56 interactive formula cards with clickable symbols, algebraic rearrangement, units, proportionality, numerical examples and step-by-step derivations.
 - Always-on dark mode, keyboard controls and local settings saved in the browser.
+- A purple browser-tab icon, softer gold organ outlines and flowing particle movement with gradual elimination fades.
 
 The app is an educational model using hypothetical drug parameters. Clinical dosing decisions require drug-specific information and clinical judgment.
 
@@ -32,4 +33,6 @@ Choose **Settings → Pages → Deploy from a branch → main → /(root)**. The
 
 There is no analytics service or app backend. Settings are stored in the browser's `localStorage`. GitHub handles the web hosting.
 
-Choose the language with the 🌐 selector at the top. Arabic uses right-to-left layout, while formulas and graphs keep their mathematical left-to-right direction. The distribution comparison shows phases and AUC contributions; its phase boundary is an educational marker, not a biological switch.
+The initial language is inferred locally from the browser time zone: Norwegian for Norway, Arabic for time zones in Arab countries, and English elsewhere. If the time zone is unavailable, the browser locale is used. This is a regional hint, not verified residence. A manual choice in the 🌐 selector takes priority and is remembered. No geolocation permission or IP lookup is used. Arabic uses right-to-left layout, while formulas and graphs keep their mathematical left-to-right direction. The distribution comparison shows phases and AUC contributions; its phase boundary is an educational marker, not a biological switch.
+
+Search metadata, author information, structured learning-resource data, a canonical URL and `sitemap.xml` are included. These help discovery but do not guarantee indexing or ranking. To request indexing, verify the URL-prefix property `https://anadtaiy.github.io/pk-lab/` in Google Search Console, submit the sitemap and inspect the homepage URL. Bing Webmaster Tools supports a corresponding sitemap submission. A `robots.txt` in this repository's `/pk-lab/` subpath would not control the host, so none is added here.

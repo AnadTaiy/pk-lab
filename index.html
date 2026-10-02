@@ -1,4 +1,41 @@
-<!doctype html><html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>PK-lab · interaktiv farmakokinetikk</title></head><body><script>window.openai={widgetState:null,setWidgetState:async function(state){this.widgetState=state;try{localStorage.setItem('pk-lab-state-v2',JSON.stringify(state));}catch{}}};try{window.openai.widgetState=JSON.parse(localStorage.getItem('pk-lab-state-v2')||'null');}catch{}
+<!doctype html><html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
+<meta name="author" content="Mohanad Taiy">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#7655dc">
+<link rel="canonical" href="https://anadtaiy.github.io/pk-lab/">
+<link rel="sitemap" type="application/xml" href="https://anadtaiy.github.io/pk-lab/sitemap.xml">
+<link rel="shortcut icon" type="image/svg+xml" href="https://anadtaiy.github.io/pk-lab/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiM3NjU1ZGMiLz48cGF0aCBkPSJNMTUgNDdWMTltMCAyOGgzNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZGVkNGZmIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTE4IDQzQzIzIDQzIDIzIDIwIDMxIDIwUzM3IDM3IDUwIDQwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGNpcmNsZSBjeD0iMzEiIGN5PSIyMCIgcj0iNCIgZmlsbD0iI2YxYzY2ZCIvPjwvc3ZnPgo=">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PK-lab — Pharmacokinetics by Mohanad Taiy">
+<meta property="og:description" content="Explore pharmacokinetics through interactive models, dosing curves, formulas and quizzes. Free, in Norwegian, English and Arabic.">
+<meta property="og:url" content="https://anadtaiy.github.io/pk-lab/">
+<meta property="og:site_name" content="PK-lab">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"PK-lab","url":"https://anadtaiy.github.io/pk-lab/","description":"An interactive pharmacokinetics and pharmacodynamics learning app with compartment models, dosing calculators, formulas and quizzes.","inLanguage":["nb","en","ar"],"isAccessibleForFree":true,"learningResourceType":"Interactive simulation","educationalLevel":"Higher education","about":["Pharmacokinetics","Pharmacodynamics","Pharmacy"],"author":{"@type":"Person","name":"Mohanad Taiy","url":"https://github.com/AnadTaiy"},"dateCreated":"2026"}</script>
+</head><body><script>window.openai={widgetState:null,setWidgetState:async function(state){this.widgetState=state;try{localStorage.setItem('pk-lab-state-v2',JSON.stringify(state));}catch{}}};try{window.openai.widgetState=JSON.parse(localStorage.getItem('pk-lab-state-v2')||'null');}catch{}
+/* Local preference inference only: no location permission or IP lookup. */
+(function(g){
+ const arabRegions=new Set('DZ BH KM DJ EG IQ JO KW LB LY MR MA OM PS QA SA SO SD SY TN AE YE'.split(' '));
+ const arabZones=new Set('Africa/Algiers Africa/Cairo Africa/Casablanca Africa/El_Aaiun Africa/Tripoli Africa/Tunis Africa/Khartoum Africa/Nouakchott Africa/Djibouti Africa/Mogadishu Indian/Comoro Asia/Aden Asia/Amman Asia/Baghdad Asia/Bahrain Asia/Beirut Asia/Damascus Asia/Dubai Asia/Gaza Asia/Hebron Asia/Kuwait Asia/Muscat Asia/Qatar Asia/Riyadh Egypt Libya'.split(' '));
+ function choose(saved,zone,languages=[]){
+  if(['nb','en','ar'].includes(saved))return saved;
+  if(zone==='Europe/Oslo'||zone==='Arctic/Longyearbyen')return 'nb';
+  if(arabZones.has(zone))return 'ar';
+  // A recognized non-target time zone defaults to English. UTC has no country.
+  if(zone&&zone!=='UTC'&&zone!=='Etc/UTC'&&zone!=='GMT')return 'en';
+  const locale=String(languages[0]||'').replace(/_/g,'-'),region=locale.match(/-([A-Za-z]{2})(?:-|$)/)?.[1]?.toUpperCase();
+  if(region)return region==='NO'?'nb':arabRegions.has(region)?'ar':'en';
+  return /^(nb|nn|no)(-|$)/i.test(locale)?'nb':/^ar(-|$)/i.test(locale)?'ar':'en';
+ }
+ if(typeof module!=='undefined')module.exports={choose};
+ if(typeof window!=='undefined'){
+  let saved=null,zone='';try{saved=localStorage.getItem('pk-lab-language');}catch{}
+  try{zone=Intl.DateTimeFormat().resolvedOptions().timeZone;}catch{}
+  g.PKInitialLanguage=choose(saved,zone,navigator.languages||[navigator.language]);
+ }
+})(typeof window!=='undefined'?window:globalThis);
+
 /* Linear oral one-compartment teaching model. All times h, concentrations mg/L. */
 (function(global){
  'use strict';
@@ -466,7 +503,7 @@ Lav konsentrasjon: nær første orden.|Low concentration: near first order.|تر
 Overgangsområde: verken ren første eller nullte orden.|Transition range: neither purely first nor zero order.|مجال انتقالي: ليس من المرتبة الأولى أو الصفرية بشكل خالص.
 Oral absorpsjon:|Oral absorption:|الامتصاص الفموي:
 Nå|Now|الآن
-320 symbolpartikler med lik masse. Overganger følger modellens rater; tilfeldige utslag gir litt avvik fra den glatte kurven. Sprettingen inne i boksene er visuell, og boksarealene er ikke i volumskala. Dra tidslinjen eller bruk piltastene for avlesning.|320 equal-mass symbolic particles. Transfers follow model rates; randomness causes small deviations from the smooth curve. Bouncing is decorative and box areas are not volume-scaled. Drag the timeline or use arrow keys.|320 جسيماً رمزياً متساوي الكتلة. تتبع الانتقالات معدلات النموذج؛ وتسبب العشوائية انحرافات صغيرة عن المنحنى الأملس. الارتداد بصري ومساحات الصناديق لا تمثل الأحجام بمقياس موحد. اسحب الخط الزمني أو استخدم الأسهم.
+320 symbolpartikler med lik masse. Overganger følger modellens rater; tilfeldige utslag gir litt avvik fra den glatte kurven. Strømbevegelsen er visuell; eliminerte partikler tones gradvis ut. Tall og kurve følger hendelsestidspunktet. Boksarealene er ikke i volumskala. Dra tidslinjen eller bruk piltastene for avlesning.|320 equal-mass symbolic particles. Transfers follow model rates; randomness causes small deviations from the smooth curve. Flow is decorative; eliminated particles fade out gradually. Counts and curves follow the event time. Box areas are not volume-scaled. Drag the timeline or use arrow keys.|320 جسيماً رمزياً متساوي الكتلة. تتبع الانتقالات معدلات النموذج؛ وتسبب العشوائية انحرافات صغيرة عن المنحنى الأملس. التدفق بصري؛ تتلاشى الجسيمات المطروحة تدريجياً. تتبع الأعداد والمنحنيات وقت الحدث. مساحات الصناديق لا تمثل الأحجام بمقياس موحد. اسحب الخط الزمني أو استخدم الأسهم.
 `.trim().split('\n').map(line=>{const [no,en,ar]=line.split('|');return[no,[en,ar]];});
 
 window.PKFormulaLocales={
@@ -996,6 +1033,8 @@ ikke systemisk tilgjengelig|not systemically available|غير متاح جهاز�
   <div class="organ-names" id="organ-names"></div><p class="organ-detail" id="organ-detail" aria-live="polite"></p>
   <p class="anatomy-note">Glød = relevant prosess, ikke organsvikt. Generell illustrasjon; betydningen varierer mellom legemidler.</p>
 </aside></div>
+<footer class="app-credit">Laget av Mohanad Taiy, 2026 – Til egen læring.</footer>
+<noscript><p>PK-lab by Mohanad Taiy is a free pharmacokinetics and pharmacodynamics learning app with compartment models, dosing calculations, formulas and quizzes. Enable JavaScript to use the interactive models in Norwegian, English or Arabic.</p></noscript>
 <div id="live" class="sr" aria-live="polite"></div>
 <style>
   #pk-lab {max-width:1600px;}
@@ -1421,11 +1460,10 @@ advancedPanels.splice(1,0,'compartments');
 q('#curve-tab').insertAdjacentHTML('beforebegin','<button class="tab" id="compartments-tab" type="button" role="tab" aria-selected="false" aria-controls="compartments-panel">Kompartmentlab</button>');
 q('.workspace').insertAdjacentHTML('beforeend',`<section id="compartments-panel" role="tabpanel" aria-labelledby="compartments-tab" hidden><div class="comp-heading"><div><p class="comp-kicker">Se molekylene • forstå kurven</p><h2>Én dose. To måter å fordele den på.</h2><p class="muted">Velg i.v. bolus eller oral dose. Følg absorpsjon, distribusjon og eliminasjon på samme tidsakse.</p></div></div><div id="comp-home"></div><div class="comp-section"><h3>Rask eller langsom distribusjon?</h3><p class="muted">Samme dose, CL og volum. Bare utvekslingsclearance Q endres. Her sammenlignes alltid førsteordens eliminasjon på en logaritmisk y-akse.</p><div class="comp-comparison" id="comp-comparison"></div><p class="muted">f₁ og f₂ er bidrag til total AUC fra hvert eksponentialledd. De er ikke andeler av to avgrensede tidsperioder. Areal kan ikke leses direkte fra en logaritmisk graf.</p></div><div class="comp-section"><h3>C₀ avhenger av hvordan du starter</h3><p class="muted">Fire startforløp med førsteordens eliminasjon og uten restkonsentrasjon. Den stiplete linjen viser en verdi, ikke en ekstra dose. Én-kompartmenteksemplene bruker V = V₁ + V₂ i to-romsvisningen.</p><div class="comp-c0-grid" id="comp-c0-grid"></div></div></section>`);
 q('#workshop-panel').insertAdjacentHTML('afterbegin','<div class="comp-launch"><div><h3>Fra parametre til partikler</h3><p class="muted">Juster verkstedet og prøv dosen i et flytende kompartmentlab.</p></div><button class="reset" type="button" id="comp-launch">Åpne flytende lab ↗</button></div>');
-root.insertAdjacentHTML('beforeend','<footer class="app-credit">Laget av Mohanad Taiy, 2026 – Til egen læring.</footer>');
 const comp={two:true,route:'iv',F:p.F,ka:p.ka,kinetics:'first',dose:p.dose,CL:effective(p).CL,V1:Math.max(5,p.V*.25),V2:Math.max(5,p.V*.75),Q:8,k0:8,vmax:12,Km:2,end:24,speed:1,t:0,playing:false,float:false,log:false,particles:true};
 let compSol,compPaths,compFrame=0,compLast=0,compPaint=0,compChartNodes=null,compSignature='',compSize='',compGraphRows=[];
 const cn=(id,label,value,min,max,step=1)=>`<label class="field" for="comp-${id}">${label}<input type="number" id="comp-${id}" value="${value}" min="${min}" max="${max}" step="${step}"></label>`;
-q('#comp-home').innerHTML=`<section class="comp-lab" id="comp-lab" aria-label="Interaktivt kompartmentlaboratorium"><div class="comp-dragbar" id="comp-dragbar"><div><strong>Kompartmentlab</strong><span class="float-hint">Dra her for å flytte</span></div><div class="comp-tools"><button type="button" class="chip" id="comp-float">Flyt i verkstedet ↗</button><button type="button" class="chip" id="comp-close" hidden>Lukk</button></div></div><div class="comp-content"><div class="comp-controls"><label class="field" for="comp-route">Administrasjon<select id="comp-route"><option value="iv">I.v. bolus</option><option value="oral">Oral dose</option></select></label><label class="field" for="comp-model">Modell<select id="comp-model"><option value="two">2 kompartments</option><option value="one">1 kompartment</option></select></label><label class="field" for="comp-kinetics">Eliminasjon<select id="comp-kinetics"><option value="first">1. orden · konstant CL</option><option value="zero">0. orden · konstant mengde/time</option><option value="mm">Metning · Michaelis–Menten</option></select></label><label class="field" for="comp-preset">Utforsk et eksempel<select id="comp-preset"><option value="custom">Egne innstillinger</option><option value="fast">Rask distribusjon</option><option value="slow">Langsom distribusjon</option><option value="saturated">Høy dose og metning</option></select></label></div><details id="comp-settings" open><summary>Parametre for dette forsøket</summary><div class="comp-parameters">${cn('F','F · andel',comp.F,.05,1,.05)}${cn('ka','kₐ · time⁻¹',comp.ka,.02,5,.02)}${cn('dose','Dose · mg',comp.dose,10,1000,10)}${cn('CL','CL · L/time',comp.CL,.1,20,.1)}${cn('V1','V₁ / V · L',comp.V1,5,100,1)}${cn('V2','V₂ · L',comp.V2,5,150,1)}${cn('Q','Q · L/time',comp.Q,.2,80,.2)}${cn('k0','k₀ · mg/time',8,.1,50,.1)}${cn('vmax','Vmax · mg/time',12,.1,60,.1)}${cn('Km','Km · mg/L',2,.1,20,.1)}</div><button class="chip" type="button" id="comp-import">Hent dose, CL, volum, F og kₐ fra verkstedet</button><p class="muted" id="comp-import-note"></p></details><p class="comp-status" id="comp-order-note"></p><canvas id="comp-canvas" class="comp-canvas" role="img" aria-label="Partikler i sentralt og perifert kompartment. Tallene under viser mengdebalansen."></canvas><p class="comp-transport" id="comp-transport"></p><div class="comp-playback"><button class="reset" id="comp-play" type="button">▶ Start</button><button class="chip" id="comp-restart" type="button">↺ Nullstill tid</button><button class="chip" id="comp-step" type="button">+ 1 time</button><label>Fart<select id="comp-speed"><option value="0.5">0,5×</option><option value="1" selected>1×</option><option value="3">3×</option></select></label><label>Tidsrom<select id="comp-end"><option value="12">12 t</option><option value="24" selected>24 t</option><option value="48">48 t</option><option value="96">96 t</option></select></label><output class="comp-time" id="comp-time"></output></div><label class="sr-only" for="comp-time-slider">Tid i simuleringen, timer</label><input id="comp-time-slider" class="comp-timeline" type="range" min="0" max="24" value="0" step="0.01"><div class="comp-legend"><span style="--series:var(--blue)">Sentralt · analytisk/numerisk modell</span><span id="comp-peripheral-legend" style="--series:var(--teal)">Perifert · modell</span><label><input id="comp-show-particles" type="checkbox" checked>Stiplet: partikkelestimat sentralt</label><label><input id="comp-log" type="checkbox">Logaritmisk y-akse</label></div><svg id="comp-chart" class="comp-chart" role="img" aria-label="Konsentrasjon over tid, synkronisert med partiklene"></svg><p class="comp-status" id="comp-readout"></p><div class="comp-metrics" id="comp-metrics"></div><p class="muted">320 symbolpartikler med lik masse. Overganger følger modellens rater; tilfeldige utslag gir litt avvik fra den glatte kurven. Sprettingen inne i boksene er visuell, og boksarealene er ikke i volumskala. Dra tidslinjen eller bruk piltastene for avlesning.</p><details class="comp-extra"><summary>Likninger og hvordan fasene henger sammen</summary><div class="comp-reading" id="comp-equations"></div></details></div></section>`;
+q('#comp-home').innerHTML=`<section class="comp-lab" id="comp-lab" aria-label="Interaktivt kompartmentlaboratorium"><div class="comp-dragbar" id="comp-dragbar"><div><strong>Kompartmentlab</strong><span class="float-hint">Dra her for å flytte</span></div><div class="comp-tools"><button type="button" class="chip" id="comp-float">Flyt i verkstedet ↗</button><button type="button" class="chip" id="comp-close" hidden>Lukk</button></div></div><div class="comp-content"><div class="comp-controls"><label class="field" for="comp-route">Administrasjon<select id="comp-route"><option value="iv">I.v. bolus</option><option value="oral">Oral dose</option></select></label><label class="field" for="comp-model">Modell<select id="comp-model"><option value="two">2 kompartments</option><option value="one">1 kompartment</option></select></label><label class="field" for="comp-kinetics">Eliminasjon<select id="comp-kinetics"><option value="first">1. orden · konstant CL</option><option value="zero">0. orden · konstant mengde/time</option><option value="mm">Metning · Michaelis–Menten</option></select></label><label class="field" for="comp-preset">Utforsk et eksempel<select id="comp-preset"><option value="custom">Egne innstillinger</option><option value="fast">Rask distribusjon</option><option value="slow">Langsom distribusjon</option><option value="saturated">Høy dose og metning</option></select></label></div><details id="comp-settings" open><summary>Parametre for dette forsøket</summary><div class="comp-parameters">${cn('F','F · andel',comp.F,.05,1,.05)}${cn('ka','kₐ · time⁻¹',comp.ka,.02,5,.02)}${cn('dose','Dose · mg',comp.dose,10,1000,10)}${cn('CL','CL · L/time',comp.CL,.1,20,.1)}${cn('V1','V₁ / V · L',comp.V1,5,100,1)}${cn('V2','V₂ · L',comp.V2,5,150,1)}${cn('Q','Q · L/time',comp.Q,.2,80,.2)}${cn('k0','k₀ · mg/time',8,.1,50,.1)}${cn('vmax','Vmax · mg/time',12,.1,60,.1)}${cn('Km','Km · mg/L',2,.1,20,.1)}</div><button class="chip" type="button" id="comp-import">Hent dose, CL, volum, F og kₐ fra verkstedet</button><p class="muted" id="comp-import-note"></p></details><p class="comp-status" id="comp-order-note"></p><canvas id="comp-canvas" class="comp-canvas" role="img" aria-label="Partikler i sentralt og perifert kompartment. Tallene under viser mengdebalansen."></canvas><p class="comp-transport" id="comp-transport"></p><div class="comp-playback"><button class="reset" id="comp-play" type="button">▶ Start</button><button class="chip" id="comp-restart" type="button">↺ Nullstill tid</button><button class="chip" id="comp-step" type="button">+ 1 time</button><label>Fart<select id="comp-speed"><option value="0.5">0,5×</option><option value="1" selected>1×</option><option value="3">3×</option></select></label><label>Tidsrom<select id="comp-end"><option value="12">12 t</option><option value="24" selected>24 t</option><option value="48">48 t</option><option value="96">96 t</option></select></label><output class="comp-time" id="comp-time"></output></div><label class="sr-only" for="comp-time-slider">Tid i simuleringen, timer</label><input id="comp-time-slider" class="comp-timeline" type="range" min="0" max="24" value="0" step="0.01"><div class="comp-legend"><span style="--series:var(--blue)">Sentralt · analytisk/numerisk modell</span><span id="comp-peripheral-legend" style="--series:var(--teal)">Perifert · modell</span><label><input id="comp-show-particles" type="checkbox" checked>Stiplet: partikkelestimat sentralt</label><label><input id="comp-log" type="checkbox">Logaritmisk y-akse</label></div><svg id="comp-chart" class="comp-chart" role="img" aria-label="Konsentrasjon over tid, synkronisert med partiklene"></svg><p class="comp-status" id="comp-readout"></p><div class="comp-metrics" id="comp-metrics"></div><p class="muted">320 symbolpartikler med lik masse. Overganger følger modellens rater; tilfeldige utslag gir litt avvik fra den glatte kurven. Strømbevegelsen er visuell; eliminerte partikler tones gradvis ut. Tall og kurve følger hendelsestidspunktet. Boksarealene er ikke i volumskala. Dra tidslinjen eller bruk piltastene for avlesning.</p><details class="comp-extra"><summary>Likninger og hvordan fasene henger sammen</summary><div class="comp-reading" id="comp-equations"></div></details></div></section>`;
 const compLab=q('#comp-lab'),compCanvas=q('#comp-canvas'),compCtx=compCanvas.getContext('2d');
 q('#comp-model option[value="two"]').textContent='2-kompartmentmodell';q('#comp-model option[value="one"]').textContent='1-kompartmentmodell';
 const compImportButton=q('#comp-import');q('#comp-settings').insertAdjacentElement('afterend',compImportButton);compImportButton.classList.add('comp-sync-button');
@@ -1463,7 +1501,7 @@ function compDrawChart(rebuild=false){
  a.central.setAttribute('d',compLine(rows,'c1',a.x,a.y));a.peripheral.setAttribute('d',comp.two?compLine(rows,'c2',a.x,a.y):'');a.estimate.setAttribute('d',comp.particles?compLine(rows,'estimate',a.x,a.y):'');a.guide.setAttribute('x1',a.x(comp.t));a.guide.setAttribute('x2',a.x(comp.t));a.dot.setAttribute('cx',a.x(comp.t));a.dot.setAttribute('cy',a.y(now.c1));
  q('#comp-readout').textContent=`t = ${fmt(comp.t,2)} t · Csentral ${fmt(now.c1,3)} mg/L${comp.two?' · Cperifer '+fmt(now.c2,3)+' mg/L':''}. ${comp.log?'Null og verdier under '+fmt(a.floor,4)+' mg/L vises ved nedre aksegrense.':''}`;
 }
-const reflect=v=>{v=((v%2)+2)%2;return v>1?2-v:v;};
+const flowEase=v=>{const u=Math.max(0,Math.min(1,v));return u*u*u*(u*(u*6-15)+10);};
 function compDrawParticles(){
  const w=compCanvas.clientWidth,stack=w<430&&comp.two,h=stack?365:comp.float?180:245,offset=comp.route==='oral'?100:0,canvasH=h+offset;compCanvas.style.height=canvasH+'px';const dpr=Math.min(2,devicePixelRatio||1);if(compCanvas.width!==Math.round(w*dpr)||compCanvas.height!==canvasH*dpr){compCanvas.width=Math.round(w*dpr);compCanvas.height=canvasH*dpr;}
  const ctx=compCtx;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,canvasH);ctx.translate(0,offset);const style=getComputedStyle(root),ink=style.getPropertyValue('--ink').trim(),muted=style.getPropertyValue('--muted-ink').trim(),blue=style.getPropertyValue('--blue').trim(),teal=style.getPropertyValue('--teal').trim(),coral=style.getPropertyValue('--coral').trim(),soft=style.getPropertyValue('--soft').trim();
@@ -1474,12 +1512,19 @@ function compDrawParticles(){
  drawBox(box1,comp.two?'Sentralt · V₁ '+fmt(comp.V1)+' L':'Ett kompartment · V '+fmt(comp.V1)+' L',blue,n[0]);if(comp.two)drawBox(box2,'Perifert · V₂ '+fmt(comp.V2)+' L',teal,n[1]);
  const arrow=(x1,y1,x2,y2,color)=>{ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();const angle=Math.atan2(y2-y1,x2-x1);ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-7*Math.cos(angle-.5),y2-7*Math.sin(angle-.5));ctx.lineTo(x2-7*Math.cos(angle+.5),y2-7*Math.sin(angle+.5));ctx.fill();};
  if(comp.two){if(stack){arrow(w*.4,150,w*.4,188,blue);arrow(w*.6,188,w*.6,150,teal);text('Q · ⇄',w*.45,175,muted,11);}else{arrow(box1.x+box1.w+4,89,box2.x-5,89,blue);arrow(box2.x-5,120,box1.x+box1.w+4,120,teal);text('Q',w/2-4,73,muted,12);}}
- const sink={x:w/2,y:h-13};arrow(box1.x+box1.w*.2,box1.y+box1.h+3,box1.x+box1.w*.2,box1.y+box1.h+20,coral);text('Eliminert: '+n[2]+' / 320 · '+fmt(n[2]*comp.dose/320,1)+' mg',Math.max(10,w/2-120),h-7,coral,12);
+ arrow(box1.x+box1.w*.2,box1.y+box1.h+3,box1.x+box1.w*.2,box1.y+box1.h+20,coral);text('Eliminert: '+n[2]+' / 320 · '+fmt(n[2]*comp.dose/320,1)+' mg',Math.max(10,w/2-120),h-7,coral,12);
  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
- const pos=(part,s,time)=>{if(s===2||s===4)return sink;if(s===3)return{x:18+part.x*(w-36),y:-60+part.y*24};const b=s===0?box1:box2;const movement=reduced?0:time;return{x:b.x+9+reflect(part.x+movement*part.vx)*(b.w-18),y:b.y+34+reflect(part.y+movement*part.vy)*(b.h-61)};};
- for(const part of compPaths){const ei=CM.eventAt(part.events,comp.t),ev=part.events[ei];if((ev.s===2||ev.s===4)&&comp.t-ev.t>.35)continue;let xy=pos(part,ev.s,comp.t),a=1;
-  if(ei>0&&comp.t-ev.t<.22&&!reduced){const before=pos(part,part.events[ei-1].s,ev.t),f=(comp.t-ev.t)/.22;xy={x:before.x+(xy.x-before.x)*f,y:before.y+(xy.y-before.y)*f};}
-  if(ev.s===2||ev.s===4)a=Math.max(0,1-(comp.t-ev.t)/.35);ctx.globalAlpha=a*.8;ctx.fillStyle=ev.s===0?blue:ev.s===1?teal:ev.s===3?'#b896ff':coral;ctx.beginPath();ctx.arc(xy.x,xy.y,2.4,0,Math.PI*2);ctx.fill();
+ const pos=(part,s,time)=>{const t=reduced?0:time,phase=part.phase;
+  const u=.13+.74*part.x+.075*Math.sin(.36*t+phase)+.02*Math.sin(.17*t+part.y*6),v=.13+.74*part.y+.075*Math.cos(.36*t+phase)+.02*Math.cos(.19*t+part.x*6);
+  if(s===3)return{x:18+u*(w-36),y:-60+v*24};const b=s===0?box1:box2;return{x:b.x+9+u*(b.w-18),y:b.y+34+v*(b.h-61)};};
+ // The stochastic PK events stay exact; only their visual transitions are eased.
+ for(const part of compPaths){const ei=CM.eventAt(part.events,comp.t),ev=part.events[ei],age=comp.t-ev.t,exit=ev.s===2||ev.s===4;
+  if(exit&&(reduced||age>=.9))continue;
+  const state=exit?part.events[Math.max(0,ei-1)].s:ev.s;let xy=pos(part,state,comp.t),a=1,radius=2.25;
+  if(exit){const f=flowEase(age/.9);a=1-f;radius*=1-.4*f;xy.y+=4*f;}
+  else if(ei>0&&!reduced){const duration=Math.min(.8,Math.max(.001,((part.events[ei+1]?.t??Infinity)-ev.t)*.8)),f=flowEase(age/duration);
+   if(f<1){const before=pos(part,part.events[ei-1].s,ev.t),bend=10*Math.sin(Math.PI*f);xy={x:before.x+(xy.x-before.x)*f,y:before.y+(xy.y-before.y)*f-bend};}}
+  ctx.globalAlpha=a*.67;ctx.fillStyle=state===0?blue:state===1?teal:'#b896ff';ctx.beginPath();ctx.arc(xy.x,xy.y,radius,0,Math.PI*2);ctx.fill();
  }ctx.globalAlpha=1;
  compCanvas.setAttribute('aria-label',`Ved ${fmt(comp.t,1)} timer: ${n[0]} partikler sentralt, ${n[1]} perifert, ${n[2]} eliminert${comp.route==='oral'?', '+n[3]+' i depot, '+n[4]+' ikke systemisk tilgjengelig':''}. Sum 320.`);
 }
@@ -1497,7 +1542,7 @@ function compDrawInfo(){
  }
 }
 function compDraw(force=false){if(!compVisible()||!compSol)return;compDrawParticles();compDrawChart(force);compDrawInfo();}
-function compTick(now){if(!comp.playing)return;const dt=Math.min(.1,(now-compLast)/1000);compLast=now;if(!document.hidden){comp.t=Math.min(comp.end,comp.t+dt*comp.speed);if(now-compPaint>40){compPaint=now;compDraw();}}if(comp.t>=comp.end){compPause();compDraw();q('#comp-play').textContent='▶ Spill på nytt';return;}compFrame=requestAnimationFrame(compTick);}
+function compTick(now){if(!comp.playing)return;const dt=Math.min(.1,(now-compLast)/1000);compLast=now;if(!document.hidden){comp.t=Math.min(comp.end,comp.t+dt*comp.speed);if(now-compPaint>16){compPaint=now;compDraw();}}if(comp.t>=comp.end){compPause();compDraw();q('#comp-play').textContent='▶ Spill på nytt';return;}compFrame=requestAnimationFrame(compTick);}
 q('#comp-play').onclick=()=>{if(comp.playing){compPause();return;}if(comp.t>=comp.end)comp.t=0;comp.playing=true;compLast=performance.now();q('#comp-play').textContent='Ⅱ Pause';compFrame=requestAnimationFrame(compTick);};
 q('#comp-restart').onclick=()=>{compPause();comp.t=0;compDraw();};q('#comp-step').onclick=()=>{compPause();comp.t=Math.min(comp.end,comp.t+1);compDraw();};q('#comp-time-slider').oninput=e=>{compPause();comp.t=+e.target.value;compDraw();};
 q('#comp-speed').onchange=e=>{comp.speed=+e.target.value;};q('#comp-end').onchange=e=>{comp.end=+e.target.value;compBuild();};
@@ -1615,8 +1660,8 @@ q('#formula-group').value='Grunnlag';fRender();
 {
 const MD=window.PKMultidose;
 const mdDefault={route:'instant',F:1,S:1,dose:480,CL:2,V:40,tau:12,ka:1,cycles:8,lower:12,upper:30,target:20,step:50,loading:false};
-let md={...mdDefault},mdLang='nb',mdTime=0,mdKey='',mdFrame=0,mdLast=0;
-try{mdLang=localStorage.getItem('pk-lab-language')||'nb';const saved=JSON.parse(localStorage.getItem('pk-lab-multidose-v1'));if(saved)md={...md,...saved};}catch{}
+let md={...mdDefault},mdLang=window.PKInitialLanguage||'en',mdTime=0,mdKey='',mdFrame=0,mdLast=0;
+try{const saved=JSON.parse(localStorage.getItem('pk-lab-multidose-v1'));if(saved)md={...md,...saved};}catch{}
 const tx=(no,en,ar)=>mdLang==='en'?en:mdLang==='ar'?ar:no;
 const nn=(x,d=2)=>Number.isFinite(x)?new Intl.NumberFormat(mdLang==='en'?'en-GB':mdLang==='ar'?'ar-EG':'nb-NO',{maximumFractionDigits:d}).format(x):'∞';
 const eq=s=>'<div class="md-eq" dir="ltr">'+s.replaceAll('e⁻ᵏᵃᵗᵃᵘ','e<sup>−kₐτ</sup>').replaceAll('e⁻ᵏᵗᵃᵘ','e<sup>−kτ</sup>').replaceAll('e⁻ᵏᵃᵘ','e<sup>−kₐu</sup>').replaceAll('e⁻ᵏᵘ','e<sup>−ku</sup>').replace(/([CA])_ss,(max|min|av,target|av)/g,'$1<sub>ss,$2</sub>').replaceAll('C_ss(u)','C<sub>ss</sub>(u)').replace(/R_(peak|AUC|ac)/g,'R<sub>$1</sub>').replace(/D_(L|M,max|min|max)/g,'D<sub>$1</sub>').replace(/C_(upper|lower)/g,'C<sub>$1</sub>').replaceAll('τ_max','τ<sub>max</sub>')+'</div>';
@@ -1781,7 +1826,7 @@ for(const[start,en,ar]of[
 ['Omorganisering viser','Rearrangement shows mathematical dependence with the other symbols held constant. In the body, several parameters may change together. When no simple explicit solution is available, a residual equation and numerical example are shown. A numerical root is not automatically physiologically valid.','تُظهر إعادة الترتيب الاعتماد الرياضي مع تثبيت الرموز الأخرى. قد تتغير عدة معلمات معاً في الجسم. عند تعذر حل صريح بسيط تظهر معادلة الباقي ومثال عددي. الجذر العددي ليس بالضرورة صالحاً فسيولوجياً.']
 ]){const paragraph=[...root.querySelectorAll('p,.model-note')].find(e=>e.textContent.startsWith(start));if(paragraph)localeAdd(paragraph.textContent,en,ar);}
 
-let language='nb';try{const saved=localStorage.getItem('pk-lab-language');if(['nb','en','ar'].includes(saved))language=saved;}catch{}
+let language=window.PKInitialLanguage||'en';
 const localeCache=new Map(),localeKeys=[...localePairs.keys()].filter(k=>!/^\s*[\d.,+−–≈=]/.test(k)||/orden|kompartment/.test(k)).sort((a,b)=>b.length-a.length);
 function T(text){if(language==='nb'||!text)return text;const raw=String(text),key=language+'|'+raw;if(localeCache.has(key))return localeCache.get(key);const trimmed=raw.trim(),pair=localePairs.get(trimmed);let result;if(pair)result=raw.replace(trimmed,pair[language==='en'?0:1]);else{
  // Longest matching phrases are consumed once, never retranslated recursively.
@@ -1889,8 +1934,8 @@ function render(kick=false){const d=derive(p),active=inputs.find(a=>a.key===sele
 #pk-lab .organ-glows .organ-lit-pixels{opacity:.55}
 #pk-lab .organ-glows g.active .organ-lit-pixels{animation:organPixelBreathe 3s ease-in-out infinite}
 #pk-lab .organ-glows{--glow-gold:#efbc58;--glow-light:#ffe1a0}
-#pk-lab .organ-glows .organ-aura{fill:none;stroke:var(--glow-gold);stroke-width:4;opacity:.78;filter:drop-shadow(0 0 7px var(--glow-gold));stroke-linejoin:round}
-#pk-lab .organ-glows .organ-orbit{fill:none;stroke:var(--glow-light);stroke-width:6;stroke-dasharray:17 83;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px var(--glow-gold)) drop-shadow(0 0 12px var(--glow-gold))}
+#pk-lab .organ-glows .organ-aura{fill:none;stroke:var(--glow-gold);stroke-width:3;opacity:.38;filter:drop-shadow(0 0 5px var(--glow-gold));stroke-linejoin:round}
+#pk-lab .organ-glows .organ-orbit{fill:none;stroke:var(--glow-light);stroke-width:4.5;opacity:.6;stroke-dasharray:17 83;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px var(--glow-gold)) drop-shadow(0 0 8px var(--glow-gold))}
 #pk-lab .organ-glows g.active .organ-orbit{animation:organOrbit 3.4s linear infinite}
 @keyframes organPixelBreathe{0%,100%{opacity:.4}50%{opacity:.88}}
 @keyframes organOrbit{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
@@ -2077,8 +2122,10 @@ function render(kick=false){const d=derive(p),active=inputs.find(a=>a.key===sele
 #pk-lab .formula-workings li{margin:18px 0;font-size:13px;line-height:1.6}
 #pk-lab .formula-workings .formula-equation{font-size:20px;padding:12px}
 
-#pk-lab .language-control{display:flex;align-items:center;gap:8px;margin-inline-start:auto;padding:8px 12px;border:1px solid var(--border);border-radius:12px;background:var(--soft);font-size:21px}
-#pk-lab .language-control select{font:600 14px 'Segoe UI',Tahoma,sans-serif;background:var(--soft);color:var(--ink);border:0;padding:7px;max-width:135px}
+#pk-lab .language-control{display:flex;align-items:center;gap:6px;margin-inline-start:auto;padding:4px 0;border:0;background:transparent;font-size:21px}
+#pk-lab .language-control select{font:600 14px 'Segoe UI',Tahoma,sans-serif;background:transparent;color:var(--ink);border:0;padding:10px 5px;min-height:44px;max-width:135px;cursor:pointer}
+#pk-lab .language-control select:focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:5px}
+#pk-lab .language-control option{background:var(--surface);color:var(--ink)}
 #pk-lab[dir=rtl]{font-family:'Segoe UI',Tahoma,Arial,sans-serif}
 #pk-lab[dir=rtl] .formula-equation,#pk-lab[dir=rtl] svg,#pk-lab[dir=rtl] canvas,#pk-lab[dir=rtl] input[type=number],#pk-lab[dir=rtl] input[type=range]{direction:ltr;unicode-bidi:isolate}
 #pk-lab[dir=rtl] .workshop{direction:ltr}#pk-lab[dir=rtl] .input-row,#pk-lab[dir=rtl] .result{direction:rtl}
