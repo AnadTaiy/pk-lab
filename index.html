@@ -1,4 +1,4 @@
-<!doctype html><html lang="nb"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-/LRDWoNoOuGyhP1lTuVmU5mwILbFXS55+pzi4f1JOCg=' 'sha256-ttU66mxflFgxFA1Rz8UuDNrv/fa7QuMCvAnvM1wjJSA='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
+<!doctype html><html lang="nb"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-/LRDWoNoOuGyhP1lTuVmU5mwILbFXS55+pzi4f1JOCg=' 'sha256-jrIGKZwg+efJDHyRparg4WtGTCypxa5GPZlDkt5Ji4o='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
 <meta name="author" content="Mohanad Taiy">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#7655dc">
@@ -184,20 +184,18 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 @media(max-width:1200px){#pk-lab .plots.compare,#pk-lab .pd-grid{grid-template-columns:1fr}#pk-lab .compare .plot-card+.plot-card{border-left:0;border-top:1px solid var(--border);padding-left:0}}
 @media(max-width:560px){body{padding:8px}#pk-lab .header{gap:10px}#pk-lab .theme-toggle{font-size:12px;padding:8px}#pk-lab .tabs .tab{font-size:12px;padding:9px 10px}#pk-lab .controls{padding:12px;gap:10px}#pk-lab .scenario-grid{grid-template-columns:1fr}#pk-lab .adme-flow{grid-template-columns:1fr 1fr}#pk-lab .metric-grid{grid-template-columns:1fr 1fr}#pk-lab .quiz-card{padding:16px}#pk-lab .quiz-choices{grid-template-columns:1fr}#pk-lab .pk-chart{height:320px}}
 
-#pk-lab .organ-glows g{fill:none;stroke:none;filter:none;transition:opacity .4s;opacity:0}
-#pk-lab .organ-glows g.active{fill:none;stroke:none;opacity:1;animation:none}
-#pk-lab .organ-glows .organ-lit-pixels{opacity:.55}
-#pk-lab .organ-glows g.active .organ-lit-pixels{animation:organPixelBreathe 3s ease-in-out infinite}
+#pk-lab .organ-glows g{fill:none;stroke:none;filter:none;transition:opacity .65s ease;opacity:0}
+#pk-lab .organ-glows g.active{fill:none;stroke:none;fill-opacity:1;stroke-opacity:1;opacity:1;animation:none}
+#pk-lab .organ-glows .organ-lit-pixels{opacity:.3;animation:organPixelBreathe 5s ease-in-out infinite}
 #pk-lab .organ-glows{--glow-gold:#efbc58;--glow-light:#ffe1a0}
-#pk-lab .organ-glows .organ-aura{fill:none;stroke:var(--glow-gold);stroke-width:3;opacity:.38;filter:drop-shadow(0 0 5px var(--glow-gold));stroke-linejoin:round}
-#pk-lab .organ-glows .organ-orbit{fill:none;stroke:var(--glow-light);stroke-width:4.5;opacity:.6;stroke-dasharray:17 83;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px var(--glow-gold)) drop-shadow(0 0 8px var(--glow-gold))}
-#pk-lab .organ-glows g.active .organ-orbit{animation:organOrbit 3.4s linear infinite}
-#pk-lab .organ-glows g[data-organ=tissue] .organ-aura{opacity:.08;stroke-width:2;filter:none}
-#pk-lab .organ-glows g[data-organ=tissue] .organ-orbit{opacity:.24;stroke-width:3;stroke-dasharray:7 93;filter:drop-shadow(0 0 2px var(--glow-gold))}
-#pk-lab .organ-glows g[data-organ=tissue].active .organ-orbit{animation-duration:40s}
-#pk-lab .organ-glows g[data-organ=tissue].active .organ-lit-pixels{animation:bodyPixelBreathe 7s ease-in-out infinite}
-@keyframes organPixelBreathe{0%,100%{opacity:.4}50%{opacity:.88}}
-@keyframes bodyPixelBreathe{0%,100%{opacity:.04}50%{opacity:.1}}
+#pk-lab .organ-glows .organ-aura{fill:none;stroke:var(--glow-gold);stroke-width:3.5;opacity:.28;filter:drop-shadow(0 0 3px var(--glow-gold));stroke-linejoin:round}
+#pk-lab .organ-glows .organ-orbit{fill:none;stroke:var(--glow-light);stroke-width:5;opacity:.52;stroke-dasharray:17 83;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px var(--glow-gold));animation:organOrbit 5s linear infinite}
+/* Keep the animation phase running while the parent fades: selection never resets the light. */
+#pk-lab .organ-glows g[data-organ=tissue] .organ-orbit{stroke-dasharray:9 41;animation-duration:32s}
+#pk-lab .organ-glows g[data-organ=tissue] .organ-orbit.inner-contour{animation-duration:22s;animation-delay:-8s}
+#pk-lab .organ-glows g[data-organ=tissue] .organ-lit-pixels{animation:bodyPixelBreathe 7s ease-in-out infinite}
+@keyframes organPixelBreathe{0%,100%{opacity:.18}50%{opacity:.42}}
+@keyframes bodyPixelBreathe{0%,100%{opacity:.03}50%{opacity:.07}}
 @keyframes organOrbit{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
 @media(prefers-reduced-motion:reduce){#pk-lab .organ-glows g.active .organ-lit-pixels,#pk-lab .organ-glows g.active .organ-orbit{animation:none!important}#pk-lab .organ-glows g.active .organ-lit-pixels{opacity:.15}#pk-lab .organ-glows g.active .organ-orbit{stroke-dasharray:none;opacity:.35}}
 @keyframes organLightBreathe{0%,100%{opacity:.06}50%{opacity:.85}}
@@ -443,6 +441,17 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 #pk-lab .kinetic-legend span{display:inline-flex;align-items:center;gap:6px}
 #pk-lab .kinetic-legend i{width:18px;height:3px;border-radius:4px;background:var(--kinetic-color)}
 #pk-lab .kinetic-note{font-size:12px;line-height:1.6;margin:7px 0}
+#pk-lab .order-examples{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+#pk-lab .order-example{background:var(--surface);border:1px solid var(--line);border-inline-start:3px solid #82b9ff;border-radius:12px;padding:12px 14px;color:var(--ink);text-align:start;cursor:pointer}
+#pk-lab .order-example.zero{border-inline-start-color:#efbc58}
+#pk-lab .order-example strong,#pk-lab .order-example span{display:block}
+#pk-lab .order-example span{font-size:15px;color:var(--muted-ink);margin-top:5px}
+#pk-lab .order-example:hover,#pk-lab .order-example:focus-visible{border-color:var(--purple);outline:1px solid var(--purple)}
+#pk-lab .order-hint{font-size:12px;margin:7px 0}
+#pk-lab #comp-order-note{border-inline-start:3px solid #82b9ff;padding-inline-start:12px;line-height:1.65}
+#pk-lab #comp-order-note[data-order=zero]{border-inline-start-color:#efbc58}
+#pk-lab .kinetic-details{margin:9px 0;font-size:12px;line-height:1.6}
+@media(max-width:600px){#pk-lab .order-examples{grid-template-columns:1fr}}
 @media(max-width:650px){#pk-lab .about-card{grid-template-columns:1fr;padding:23px;gap:12px}#pk-lab .about-portrait{width:130px}}
 @media(prefers-reduced-motion:reduce){#pk-lab .rope-light,#pk-lab .logo-letter-light{display:none}}
 </style></head><body class="dark"><script>window.openai={widgetState:null,setWidgetState:async function(state){this.widgetState=state;try{localStorage.setItem('pk-lab-state-v2',JSON.stringify(state));}catch{}}};try{window.openai.widgetState=JSON.parse(localStorage.getItem('pk-lab-state-v2')||'null');}catch{}
@@ -1856,13 +1865,16 @@ function compDrawChart(rebuild=false){
  q('#comp-readout').textContent=`t = ${fmt(comp.t,2)} t · Csentral ${fmt(now.c1,3)} mg/L${comp.two?' · Cperifer '+fmt(now.c2,3)+' mg/L':''}. ${comp.log?'Null og verdier under '+fmt(a.floor,4)+' mg/L vises ved nedre aksegrense.':''}`;
 }
 const flowEase=v=>{const u=Math.max(0,Math.min(1,v));return u*u*u*(u*(u*6-15)+10);};
+// Gather at one outlet, follow a smooth channel, then disperse inside the destination.
+function channelFlow(start,target,outlet,c1,c2,inlet,f){const mix=(a,b,u)=>({x:a.x+(b.x-a.x)*u,y:a.y+(b.y-a.y)*u});if(f<.3)return mix(start,outlet,flowEase(f/.3));if(f>=.7)return mix(inlet,target,flowEase((f-.7)/.3));const u=flowEase((f-.3)/.4),v=1-u;return{x:v*v*v*outlet.x+3*v*v*u*c1.x+3*v*u*u*c2.x+u*u*u*inlet.x,y:v*v*v*outlet.y+3*v*v*u*c1.y+3*v*u*u*c2.y+u*u*u*inlet.y};}
 function compDrawParticles(){
  const w=compCanvas.clientWidth,stack=w<430&&comp.two,h=stack?495:comp.float?310:370,offset=comp.route==='oral'?100:0,canvasH=h+offset;compCanvas.style.height=canvasH+'px';const dpr=Math.min(2,devicePixelRatio||1);if(compCanvas.width!==Math.round(w*dpr)||compCanvas.height!==canvasH*dpr){compCanvas.width=Math.round(w*dpr);compCanvas.height=canvasH*dpr;}
  const ctx=compCtx;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,canvasH);ctx.translate(0,offset);const style=getComputedStyle(root),ink=style.getPropertyValue('--ink').trim(),muted=style.getPropertyValue('--muted-ink').trim(),blue=style.getPropertyValue('--blue').trim(),teal=style.getPropertyValue('--teal').trim(),coral=style.getPropertyValue('--coral').trim(),soft=style.getPropertyValue('--soft').trim();
  const bh=comp.float?100:150;const box1=comp.two?(stack?{x:50,y:28,w:w-60,h:115}:{x:8,y:30,w:(w-82)/2,h:bh}):{x:w*.14,y:30,w:w*.72,h:bh};const box2=stack?{x:50,y:195,w:w-60,h:115}:{x:w/2+34,y:30,w:(w-82)/2,h:bh};const n=CM.counts(compPaths,comp.t);
  const text=(str,x,y,color=ink,size=13)=>{ctx.fillStyle=color;ctx.font=`600 ${size}px 'Segoe UI',sans-serif`;ctx.fillText(window.PKTranslate?window.PKTranslate(str):str,x,y);};
  const drawBox=(b,title,color,count)=>{ctx.fillStyle=soft;ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect(b.x,b.y,b.w,b.h,14);ctx.fill();ctx.stroke();text(title,b.x+12,b.y+22,color);text(count+' partikler · '+fmt(count*comp.dose/320,1)+' mg',b.x+12,b.y+b.h-12,muted,11);};
- if(offset){ctx.fillStyle=soft;ctx.strokeStyle='#b896ff';ctx.beginPath();ctx.roundRect(8,-94,w-16,69,12);ctx.fill();ctx.stroke();text('Oralt depot · '+n[3]+' partikler · '+fmt(compSol.at(comp.t).depot,1)+' mg',18,-73,'#c6b2ff',12);text('kₐ = '+fmt(comp.ka)+' · F = '+fmt(comp.F)+' · systemisk tilførsel ↓',18,-10,muted,11);}
+ const oralX=box1.x+box1.w*.55,oralOut={x:oralX,y:-25},oralIn={x:oralX,y:box1.y+5},oralC1={x:oralX,y:-5},oralC2={x:oralX,y:box1.y-15};
+ if(offset){ctx.strokeStyle='#b896ff';ctx.globalAlpha=.22;ctx.lineWidth=14;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(oralOut.x,oralOut.y);ctx.bezierCurveTo(oralC1.x,oralC1.y,oralC2.x,oralC2.y,oralIn.x,oralIn.y);ctx.stroke();ctx.globalAlpha=1;ctx.lineWidth=1.5;ctx.fillStyle=soft;ctx.beginPath();ctx.roundRect(8,-94,w-16,69,12);ctx.fill();ctx.stroke();text('Oralt depot · '+n[3]+' partikler · '+fmt(compSol.at(comp.t).depot,1)+' mg',18,-73,'#c6b2ff',12);text('kₐ = '+fmt(comp.ka)+' · F = '+fmt(comp.F)+' · systemisk tilførsel ↓',18,-10,muted,11);}
  drawBox(box1,comp.two?'Sentralt · V₁ '+fmt(comp.V1)+' L':'Ett kompartment · V '+fmt(comp.V1)+' L',blue,n[0]);if(comp.two)drawBox(box2,'Perifert · V₂ '+fmt(comp.V2)+' L',teal,n[1]);
  const arrow=(x1,y1,x2,y2,color)=>{ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();const angle=Math.atan2(y2-y1,x2-x1);ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-7*Math.cos(angle-.5),y2-7*Math.sin(angle-.5));ctx.lineTo(x2-7*Math.cos(angle+.5),y2-7*Math.sin(angle+.5));ctx.fill();};
  if(comp.two){if(stack){arrow(w*.4,150,w*.4,188,blue);arrow(w*.6,188,w*.6,150,teal);text('Q · ⇄',w*.45,175,muted,11);}else{arrow(box1.x+box1.w+4,89,box2.x-5,89,blue);arrow(box2.x-5,120,box1.x+box1.w+4,120,teal);text('Q',w/2-4,73,muted,12);}}
@@ -1878,10 +1890,10 @@ function compDrawParticles(){
  for(const part of compPaths){const ei=CM.eventAt(part.events,comp.t),ev=part.events[ei],age=comp.t-ev.t,exit=ev.s===2||ev.s===4;
   if(ev.s===4&&(reduced||age>=.9))continue;
   const state=exit?part.events[Math.max(0,ei-1)].s:ev.s;let xy=pos(part,state,comp.t),a=1,radius=2.25;
-  if(ev.s===2){const target=pos(part,2,comp.t),f=reduced?1:Math.min(1,age/.9);if(f<.3){const u=flowEase(f/.3),start=pos(part,state,ev.t);xy={x:start.x+(outX-start.x)*u,y:start.y+(outY-start.y)*u};}else if(f<.7){const u=flowEase((f-.3)/.4),v=1-u;xy={x:v*v*v*outX+3*v*v*u*bendX+3*v*u*u*channelX+u*u*u*channelX,y:v*v*v*outY+3*v*v*u*(outY+25)+3*v*u*u*(bin.y-22)+u*u*u*(bin.y+5)};}else{const u=flowEase((f-.7)/.3);xy={x:channelX+(target.x-channelX)*u,y:bin.y+5+(target.y-bin.y-5)*u};}a=.7;radius=2;}
+  if(ev.s===2){const target=pos(part,2,comp.t),f=reduced?1:Math.min(1,age/.9);xy=channelFlow(pos(part,state,ev.t),target,{x:outX,y:outY},{x:bendX,y:outY+25},{x:channelX,y:bin.y-22},{x:channelX,y:bin.y+5},f);a=.7;radius=2;}
   else if(exit){const f=flowEase(age/.9);a=1-f;radius*=1-.4*f;xy.y+=4*f;}
   else if(ei>0&&!reduced){const duration=Math.min(.8,Math.max(.001,((part.events[ei+1]?.t??Infinity)-ev.t)*.8)),f=flowEase(age/duration);
-   if(f<1){const before=pos(part,part.events[ei-1].s,ev.t),bend=10*Math.sin(Math.PI*f);xy={x:before.x+(xy.x-before.x)*f,y:before.y+(xy.y-before.y)*f-bend};}}
+   if(f<1){const previous=part.events[ei-1].s,before=pos(part,previous,ev.t);if(previous===3&&ev.s===0){xy=channelFlow(before,xy,oralOut,oralC1,oralC2,oralIn,age/duration);radius=2;}else{const bend=10*Math.sin(Math.PI*f);xy={x:before.x+(xy.x-before.x)*f,y:before.y+(xy.y-before.y)*f-bend};}}}
   ctx.globalAlpha=a*.67;ctx.fillStyle=ev.s===2?coral:state===0?blue:state===1?teal:'#b896ff';ctx.beginPath();ctx.arc(xy.x,xy.y,radius,0,Math.PI*2);ctx.fill();
  }ctx.globalAlpha=1;
  compCanvas.setAttribute('aria-label',`Ved ${fmt(comp.t,1)} timer: ${n[0]} partikler sentralt, ${n[1]} perifert, ${n[2]} eliminert${comp.route==='oral'?', '+n[3]+' i depot, '+n[4]+' ikke systemisk tilgjengelig':''}. Sum 320.`);
@@ -2148,20 +2160,22 @@ const kineticColors={zero:'#efbc58',first:'#82b9ff',mixed:'#c5a0ed',empty:'#98a4
 const kineticNames={
  first:exText('1. orden','1st order','المرتبة الأولى'),
  zero:exText('0. orden','Zero order','المرتبة الصفرية'),
- mixed:exText('Overgang','Transition','مرحلة انتقالية'),
+ mixed:exText('Metning','Saturation','التشبع'),
  empty:exText('Ingen eliminasjon','No elimination','لا يوجد إطراح')
 };
 const kineticLegend=ex('div',null,{class:'kinetic-legend'});
-for(const key of ['zero','mixed','first']){const span=ex('span');span.append(ex('i',null,{style:'--kinetic-color:'+kineticColors[key]}),ex('span',kineticNames[key]));kineticLegend.append(span);}
+for(const key of ['zero','first']){const span=ex('span');span.append(ex('i',null,{style:'--kinetic-color:'+kineticColors[key]}),ex('span',kineticNames[key]));kineticLegend.append(span);}
 q('#comp-chart').after(kineticLegend);
-kineticLegend.after(ex('p',exText('Fargene beskriver eliminasjonen, ikke hele kurvens helning: absorpsjon og utveksling mellom rom påvirker også formen. Ved metning: gull ≈ 0. orden når C/Km ≥ 10, lilla = overgang, blå ≈ 1. orden når C/Km ≤ 0,1. Dette er omtrentlige grenser; overgangen er kontinuerlig.','Colours describe elimination, not the slope of the whole curve: absorption and exchange between compartments also shape it. Under saturation: gold ≈ zero order for C/Km ≥ 10, purple = transition, blue ≈ first order for C/Km ≤ 0.1. These are approximate boundaries; the transition is continuous.','تصف الألوان الإطراح لا ميل المنحنى كله؛ فالامتصاص والتبادل بين الحجرات يؤثران في شكله أيضاً. عند التشبع: الذهبي ≈ المرتبة الصفرية عندما C/Km ≥ 10، والبنفسجي مرحلة انتقالية، والأزرق ≈ المرتبة الأولى عندما C/Km ≤ 0.1. هذه حدود تقريبية والانتقال مستمر.'),{class:'muted kinetic-note'}));
+kineticLegend.after(ex('p',exText('Gull: fast mengde per time. Blått: fast andel per time. Ved metning glir fargen gradvis mellom dem. Absorpsjon og distribusjon påvirker også kurvens form.','Gold: fixed amount per hour. Blue: fixed fraction per hour. Under saturation, the colour blends gradually between them. Absorption and distribution also shape the curve.','الذهبي: كمية ثابتة كل ساعة. الأزرق: نسبة ثابتة كل ساعة. عند التشبع يتدرج اللون بينهما. ويؤثر الامتصاص والتوزيع أيضاً في شكل المنحنى.'),{class:'muted kinetic-note'}));
+const kineticsDetails=ex('details',null,{class:'kinetic-details'});
+kineticsDetails.append(ex('summary',exText('Mer om metning','More about saturation','المزيد عن التشبع')),ex('p',exText('Metning er ikke et brått bytte mellom to ordener. Ved høy konsentrasjon nærmer eliminasjonen seg fast mengde; ved lav konsentrasjon nærmer den seg fast andel. ≈ 0. orden vises når C/Km ≥ 10, og ≈ 1. orden når C/Km ≤ 0,1. Mellom disse står det «Metning». Fargen følger metningsgraden C/(Km + C), uten en egen overgangsfarge.','Saturation is not an abrupt switch between two orders. At high concentration, elimination approaches a fixed amount; at low concentration, it approaches a fixed fraction. ≈ zero order is shown when C/Km ≥ 10, and ≈ 1st order when C/Km ≤ 0.1. Between these, the label is “Saturation”. Colour follows saturation C/(Km + C), without a separate transition colour.','التشبع ليس انتقالاً مفاجئاً بين مرتبتين. عند التركيز العالي يقترب الإطراح من كمية ثابتة، وعند التركيز المنخفض يقترب من نسبة ثابتة. تظهر ≈ المرتبة الصفرية عندما C/Km ≥ 10، و≈ المرتبة الأولى عندما C/Km ≤ 0.1. وبينهما تظهر «التشبع». يتبع اللون درجة التشبع C/(Km + C)، دون لون انتقالي مستقل.')));
+q('.kinetic-note').after(kineticsDetails);
+function kineticColor(p,c){if(c<=1e-9)return kineticColors.empty;if(p.kinetics!=='mm')return kineticColors[kineticRegion(p,c)];const s=c/(p.Km+c);return 'rgb('+[130,185,255].map((v,i)=>Math.round(v+([239,188,88][i]-v)*s)).join(',')+')';}
 function drawKineticRegions(a){
  if(!a.kinetic){
   const svg=q('#comp-chart'),defs=el('defs',{},svg),gradient=el('linearGradient',{id:'comp-kinetic-gradient',gradientUnits:'userSpaceOnUse',x1:a.x(0),x2:a.x(comp.end),y1:0,y2:0},defs);
-  const ranges=[];let region=kineticRegion(comp,compGraphRows[0].c1),start=0;
-  for(let i=1;i<compGraphRows.length;i++){const row=compGraphRows[i],next=kineticRegion(comp,row.c1);if(next!==region){const t=(row.t+compGraphRows[i-1].t)/2;ranges.push({region,start,end:t});start=t;region=next;}}
-  ranges.push({region,start,end:comp.end});
-  const strips=ranges.map(r=>{for(const t of [r.start,r.end])el('stop',{offset:t/comp.end,'stop-color':kineticColors[r.region]},gradient);return{...r,node:el('rect',{x:a.x(r.start),y:a.T-5,width:0,height:2,fill:kineticColors[r.region],opacity:.65},svg)};});
+  for(const row of compGraphRows)el('stop',{offset:row.t/comp.end,'stop-color':kineticColor(comp,row.c1)},gradient);
+  const strips=[{start:0,end:comp.end,node:el('rect',{x:a.x(0),y:a.T-5,width:0,height:2,fill:'url(#comp-kinetic-gradient)',opacity:.65},svg)}];
   const label=el('text',{x:a.w-a.R,y:a.T+14,'text-anchor':'end',class:'kinetic-current',style:'font-size:11px;font-weight:600'},svg);
   a.kinetic={strips,label};
  }
@@ -2169,12 +2183,31 @@ function drawKineticRegions(a){
  if(graphSelect.value==='particles')a.estimate.setAttribute('stroke','url(#comp-kinetic-gradient)');
  const state=kineticRegion(comp,compSol.at(comp.t).c1),label=(comp.kinetics==='mm'&&['zero','first'].includes(state)?'≈ ':'')+kineticNames[state];
  a.kinetic.label.textContent=window.PKTranslate?window.PKTranslate(label):label;
- a.kinetic.label.style.fill=kineticColors[state];a.dot.setAttribute('fill',kineticColors[state]);
+ a.kinetic.label.style.fill=kineticColor(comp,compSol.at(comp.t).c1);a.dot.setAttribute('fill',kineticColor(comp,compSol.at(comp.t).c1));
  for(const r of a.kinetic.strips)r.node.setAttribute('width',Math.max(0,a.x(Math.min(comp.t,r.end))-a.x(r.start)));
 }
 const compOldDraw=compDrawChart;compDrawChart=function(rebuild){compOldDraw(rebuild);const a=compChartNodes,mode=graphSelect.value;const single=mode!=='all';a.central.style.display=mode==='particles'?'none':'';a.peripheral.style.display=single?'none':'';a.estimate.style.display=mode==='particles'||mode==='all'&&comp.particles?'':'none';if(mode==='particles'){a.estimate.setAttribute('stroke-width','3');a.estimate.removeAttribute('stroke-dasharray');a.dot.setAttribute('cy',a.y(CM.counts(compPaths,comp.t)[0]/320*comp.dose/comp.V1));}else{a.estimate.setAttribute('stroke','var(--muted-ink)');a.estimate.setAttribute('stroke-width','1.5');a.estimate.setAttribute('stroke-dasharray','3 5');}q('.comp-legend').hidden=single;drawKineticRegions(a);};
 
 graphSelect.onchange=()=>{if(graphSelect.value==='particles')comp.particles=true;compDraw(true);};
+// Two explicit, exact examples isolate elimination from absorption and distribution.
+const orderExamples=ex('div',null,{class:'order-examples','aria-label':exText('Prøv forskjellen mellom 0. og 1. orden','Try the difference between zero and first order','جرّب الفرق بين المرتبتين الصفرية والأولى')});
+const orderCopy={
+ first:exText('1. orden: en fast andel elimineres per tidsenhet. Når mengden synker, blir det færre mg å eliminere.','1st order: a fixed fraction is eliminated per unit time. As the amount falls, fewer mg are eliminated.','المرتبة الأولى: تُطرح نسبة ثابتة في كل وحدة زمن. كلما انخفضت الكمية، قل عدد الملليغرامات المطروحة.'),
+ zero:exText('0. orden: en fast mengde elimineres per tidsenhet, så lenge det er stoff tilgjengelig.','Zero order: a fixed amount is eliminated per unit time, while drug remains available.','المرتبة الصفرية: تُطرح كمية ثابتة في كل وحدة زمن، ما دامت المادة متاحة.'),
+ mm:exText('Metning: høy konsentrasjon → omtrent fast mengde. Lav konsentrasjon → omtrent fast andel.','Saturation: high concentration → approximately fixed amount. Low concentration → approximately fixed fraction.','التشبع: تركيز عالٍ ← كمية ثابتة تقريباً. تركيز منخفض ← نسبة ثابتة تقريباً.'),
+ rate:exText('Eliminasjonsrate nå:','Current elimination rate:','معدل الإطراح الآن:'),
+ hourly:exText('Eliminert siste hele time:','Eliminated during the last complete hour:','المطروح خلال آخر ساعة مكتملة:'),
+ fixed:exText('Eksemplene setter 100 mg i ett kompartment, i.v. bolus. Bruk + 1 time og sammenlign mengdene.','Examples set a 100 mg IV bolus in one compartment. Use + 1 hour and compare the amounts.','تضبط الأمثلة دفعة وريدية مقدارها 100 ملغ في حجرة واحدة. استخدم + ساعة وقارن الكميات.')
+};
+for(const [kind,title,sequence] of [
+ ['first',exText('Prøv 1. orden · 20 % per time','Try 1st order · 20% per hour','جرّب المرتبة الأولى · 20٪ كل ساعة'),'100 → 80 → 64 mg'],
+ ['zero',exText('Prøv 0. orden · 20 mg per time','Try zero order · 20 mg per hour','جرّب المرتبة الصفرية · 20 ملغ كل ساعة'),'100 → 80 → 60 mg']
+]){
+ const button=ex('button',null,{type:'button',class:'order-example '+kind});button.append(ex('strong',title),ex('span',sequence,{dir:'ltr'}));
+ button.onclick=()=>{Object.assign(comp,{two:false,route:'iv',kinetics:kind,dose:100,V1:20,CL:-Math.log(.8)*20,k0:20,end:12});q('#comp-end').value='12';q('#comp-preset').value='custom';q('#comp-import-note').textContent='';compBuild();};orderExamples.append(button);
+}
+q('#comp-order-note').before(orderExamples,ex('p',orderCopy.fixed,{class:'muted order-hint'}));
+const originalOrderInfo=compDrawInfo;compDrawInfo=function(){originalOrderInfo();const s=compSol.at(comp.t),rate=CM.rate(s.c1,compModelParams()),hour=Math.floor(comp.t+1e-9);let text=orderCopy[comp.kinetics]+' '+orderCopy.rate+' '+fmt(rate,2)+' mg/t.';if(hour>=1){const lost=Math.max(0,compSol.at(hour).eliminated-compSol.at(hour-1).eliminated);text+=' '+orderCopy.hourly+' '+fmt(lost,2)+' mg.';}q('#comp-order-note').textContent=text;q('#comp-order-note').dataset.order=comp.kinetics;kineticsDetails.hidden=comp.kinetics!=='mm';};
 const curveHelp=ex('p',exText('Standardkurven viser modellens plasmakonsentrasjon; de samme ratene styrer partiklene. Velg «Én kurve fra partiklene» for faktisk sentralt partikkelantall × masse per partikkel / V₁. Tilfeldig variasjon gjør den kurven mindre glatt. Ved to kompartments og i.v. bolus er det tidlige fallet raskere (α), mens den terminale halen følger β. Semilog gjør halens helning lettere å se.','The default curve shows model plasma concentration; the same rates drive the particles. Select “One curve from particles” for actual central count × mass per particle / V₁. Random variation makes this curve less smooth. After a two-compartment IV bolus the early decline is faster (α), while the terminal tail follows β. Semi-log makes the terminal slope easier to see.','يعرض المنحنى الافتراضي تركيز البلازما في النموذج؛ وتحكم المعدلات نفسها حركة الجسيمات. اختر «منحنى واحد من الجسيمات» لعرض العدد المركزي الفعلي × كتلة الجسيم / V₁. يجعل التباين العشوائي هذا المنحنى أقل سلاسة. بعد دفعة وريدية في نموذج الحجرتين يكون الانخفاض المبكر أسرع (α)، ويتبع الذيل النهائي β. يوضح المقياس شبه اللوغاريتمي الميل النهائي.'),{class:'muted'});q('#comp-chart').after(curveHelp);
 // Replace the explanatory text in all languages without changing the underlying events.
 q('#comp-metrics').nextElementSibling.textContent=exText('320 partikler med lik masse. Eliminerte partikler går via kanalen til boksen utenfor kroppen. Forflytningen er animert med kort forsinkelse; telling og kurve følger modellens hendelsestidspunkt. Oralt tap før systemisk tilførsel tones ut ved depotet og er ikke renal eliminasjon.','320 equal-mass particles. Eliminated particles travel through the channel into the box outside the body. Travel has a short visual delay; counts and curves follow model event times. Oral loss before systemic entry fades at the depot and is not renal elimination.','320 جسيماً متساوي الكتلة. تمر الجسيمات المطروحة عبر القناة إلى صندوق خارج الجسم. للحركة تأخير بصري قصير؛ أما العد والمنحنيات فتتبع توقيت أحداث النموذج. يتلاشى الفقد الفموي قبل الوصول إلى الدوران عند المستودع ولا يمثل طرحاً كلوياً.');
@@ -2182,10 +2215,14 @@ q('#comp-comparison').previousElementSibling.textContent=exText('Samme dose, CL 
 
 // Trace the whole silhouette and brighten tissue pixels while excluding organ masks.
 const silhouette="M460 332 L628 332 L628 340 L644 356 L652 356 L656 364 L692 376 L696 384 L720 392 L724 400 L732 400 L732 404 L740 404 L756 416 L776 416 L784 424 L796 424 L796 428 L828 440 L848 460 L848 468 L860 476 L860 484 L868 492 L868 504 L872 504 L872 516 L876 516 L876 528 L880 528 L880 552 L884 552 L884 600 L880 600 L876 640 L880 640 L880 652 L888 660 L896 704 L900 704 L900 776 L904 776 L908 804 L912 804 L912 812 L916 812 L916 820 L920 820 L920 828 L924 828 L924 836 L928 836 L928 844 L940 860 L940 872 L948 880 L952 908 L956 908 L956 928 L960 928 L968 1052 L972 1052 L980 1116 L984 1116 L984 1128 L988 1128 L988 1140 L992 1140 L992 1152 L996 1152 L996 1236 L1000 1236 L1000 1256 L1004 1256 L1004 1272 L1008 1272 L1008 1292 L1004 1292 L1004 1304 L1000 1304 L1000 1316 L996 1316 L988 1356 L936 1408 L916 1404 L912 1376 L924 1368 L920 1348 L952 1316 L948 1276 L940 1268 L932 1268 L920 1320 L912 1328 L900 1328 L892 1320 L892 1288 L896 1288 L896 1272 L900 1272 L900 1216 L904 1216 L904 1204 L908 1204 L912 1188 L924 1180 L924 1160 L920 1160 L916 1132 L908 1124 L908 1112 L904 1112 L892 1080 L884 1076 L876 1052 L868 1048 L868 1040 L852 1024 L852 1016 L848 1016 L848 1008 L844 1008 L844 1000 L840 1000 L840 992 L828 976 L828 964 L824 964 L824 952 L820 952 L820 940 L816 940 L816 920 L812 920 L804 832 L800 832 L796 812 L788 804 L788 792 L780 784 L776 756 L768 752 L760 792 L756 792 L756 804 L752 804 L752 816 L748 816 L748 832 L744 832 L744 844 L740 844 L736 904 L740 904 L740 920 L744 920 L744 936 L748 936 L748 952 L752 952 L748 1020 L752 1020 L756 1040 L760 1040 L764 1060 L768 1060 L772 1100 L776 1100 L776 1132 L780 1132 L784 1164 L788 1164 L796 1204 L800 1204 L800 1216 L804 1216 L812 1276 L816 1276 L816 1376 L812 1376 L812 1416 L808 1416 L804 1456 L576 1456 L564 1404 L560 1404 L560 1384 L556 1384 L556 1364 L552 1364 L552 1340 L540 1336 L536 1340 L536 1364 L532 1364 L532 1388 L528 1388 L528 1404 L524 1404 L524 1420 L520 1420 L520 1436 L516 1436 L512 1456 L284 1456 L280 1416 L276 1416 L276 1376 L272 1376 L272 1284 L276 1284 L276 1256 L280 1256 L284 1220 L288 1220 L292 1192 L296 1192 L304 1152 L308 1152 L308 1136 L312 1136 L320 1064 L324 1064 L324 1052 L328 1052 L336 1020 L340 1020 L336 956 L340 956 L340 940 L344 940 L344 924 L348 924 L348 908 L352 908 L352 860 L348 860 L344 828 L340 828 L340 816 L336 816 L336 804 L332 804 L332 792 L328 792 L324 756 L312 760 L304 796 L300 796 L300 804 L292 812 L292 824 L284 832 L284 864 L280 864 L276 924 L272 924 L268 956 L260 964 L260 976 L256 976 L236 1024 L228 1028 L228 1036 L220 1040 L220 1048 L208 1060 L204 1076 L196 1080 L196 1088 L192 1088 L192 1096 L180 1112 L180 1124 L172 1132 L168 1160 L164 1160 L164 1180 L176 1188 L176 1196 L184 1204 L184 1216 L188 1216 L188 1276 L192 1276 L192 1292 L196 1292 L196 1320 L188 1328 L176 1328 L168 1320 L156 1268 L148 1268 L140 1276 L136 1316 L168 1348 L164 1368 L176 1376 L172 1404 L152 1408 L100 1356 L92 1316 L88 1316 L88 1304 L80 1296 L80 1272 L84 1272 L88 1236 L92 1236 L92 1152 L96 1152 L96 1140 L100 1140 L100 1128 L104 1128 L104 1116 L108 1116 L108 1100 L112 1100 L112 1080 L116 1080 L132 908 L136 908 L136 892 L140 892 L140 880 L148 872 L148 860 L152 860 L152 852 L156 852 L156 844 L160 844 L160 836 L164 836 L164 828 L168 828 L168 820 L180 804 L180 792 L184 792 L184 776 L188 776 L188 704 L192 704 L200 660 L204 660 L208 640 L212 640 L208 600 L204 600 L204 556 L208 556 L208 532 L212 532 L220 492 L232 480 L232 472 L240 468 L240 460 L260 440 L268 440 L268 436 L276 436 L276 432 L284 432 L300 420 L332 416 L332 412 L364 400 L368 392 L400 380 L404 372 L416 372 L416 368 L440 360 L444 352 L456 348 L460 332 Z";
+// The reference's inner boundary surrounds the organ cavity, rather than outlining each organ.
+const organCavity='M548 469 C515 420 475 402 440 434 C394 484 356 549 349 631 C340 684 343 716 368 736 C353 772 360 812 385 832 C412 846 393 882 400 907 C383 951 389 984 393 1010 C378 1055 389 1098 421 1108 C459 1101 466 1160 479 1203 C487 1244 502 1264 522 1280 C526 1300 526 1320 542 1320 C560 1320 563 1293 571 1276 C590 1252 609 1227 610 1190 C623 1157 652 1163 673 1140 C711 1108 716 1069 705 1034 C715 1004 704 976 704 951 C709 918 696 894 704 870 C726 835 718 793 716 769 C708 749 713 739 731 717 C751 679 737 602 720 550 C692 476 648 416 611 427 C582 430 562 458 548 469 Z';
 const tissueGroup=glowSvg.querySelector('[data-organ="tissue"]');tissueGroup.replaceChildren();
 const bodyMask=el('mask',{id:'tissue-body-mask',maskUnits:'userSpaceOnUse',x:0,y:0,width:1088,height:1456},defs);el('path',{d:silhouette,fill:'white'},bodyMask);for(const key of ['liver','kidneys','stomach','gut','entry'])el('path',{d:organPaths[key],fill:'black',stroke:'black','stroke-width':16},bodyMask);
 el('ellipse',{cx:540,cy:118,rx:112,ry:96,fill:'black'},bodyMask);el('path',{d:'M370 440 Q461 405 509 510 L508 666 Q407 693 355 741 Q313 574 370 440Z M610 443 Q702 439 731 512 Q777 614 717 744 L609 683 L571 528Z M574 532 Q652 568 639 645 Q576 696 524 625Z',fill:'black'},bodyMask);
-el('image',{class:'organ-lit-pixels',href:q('.anatomy-figure img').getAttribute('src'),x:0,y:0,width:1088,height:1456,mask:'url(#tissue-body-mask)',filter:'url(#organ-light)'},tissueGroup);for(const cl of ['organ-aura','organ-orbit'])el('path',{class:cl,d:flowingContour(silhouette),pathLength:100},tissueGroup);
+el('path',{d:organCavity,fill:'black'},bodyMask);
+el('image',{class:'organ-lit-pixels',href:q('.anatomy-figure img').getAttribute('src'),x:0,y:0,width:1088,height:1456,mask:'url(#tissue-body-mask)',filter:'url(#organ-light)'},tissueGroup);
+for(const [d,name] of [[silhouette,'outer-contour'],[organCavity,'inner-contour']])for(const cl of ['organ-aura','organ-orbit'])el('path',{class:cl+' '+name,d:flowingContour(d),pathLength:100},tissueGroup);
 // A short outline shimmer follows the existing lettering, then disappears.
 const logo=q('.header h1');logo.classList.add('intro-logo');logo.setAttribute('aria-label','PK-lab');logo.replaceChildren();const logoHome=ex('button',null,{class:'logo-home',type:'button','aria-label':exText('Til parameterverkstedet','Go to parameter workshop','العودة إلى ورشة المعلمات')});logo.append(logoHome);logoHome.onclick=()=>{view='workshop';render();save();};const logoSvg=el('svg',{viewBox:'0 0 166 60',class:'logo-lettering','aria-hidden':'true'},logoHome),letterAttrs={x:1,y:47,'font-family':'Segoe UI, sans-serif','font-weight':750,'font-size':50,'letter-spacing':-2,textLength:163,lengthAdjust:'spacingAndGlyphs'};el('text',{...letterAttrs,fill:'var(--ink)'},logoSvg,'PK-lab');const logoOverlay=el('text',{...letterAttrs,class:'logo-letter-light',fill:'none',stroke:'#000','stroke-width':.7,'stroke-dasharray':'18 125','stroke-linecap':'round','stroke-linejoin':'round'},logoSvg,'PK-lab');setTimeout(()=>logoOverlay.remove(),30000);
 

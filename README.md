@@ -20,8 +20,10 @@ An interactive learning app in Norwegian, English and Arabic for pharmacokinetic
 - A purple browser-tab icon, translucent gold organ outlines and a black line tracing the logo's letter contours before fading out after 30 seconds. The logo returns to the parameter workshop.
 - All advanced controls are available directly, without a level switch. Workshop connections have a damped spring motion and a single, crisp light pulse each time a parameter is selected.
 - A shared linear/semi-log graph setting. The compartment lab defaults to a single plasma concentration curve; a particle-derived curve and the full comparison are optional.
-- Eliminated particles flow through a channel into a separate collection box. Volume of distribution softly illuminates the illustration's own outline from the neck down, with separate organ masks excluded; the contour animation takes 40 seconds per circuit. Other organ effects retain their existing appearance.
-- Kinetic-order labels on concentration graphs. The compartment curve distinguishes zero-order, first-order and the continuous saturation transition. Under Michaelis–Menten elimination the approximate boundaries are C/Km ≥ 10 and C/Km ≤ 0.1; absorption and distribution can still affect the observed curve shape.
+- Oral absorption and elimination use the same smooth particle movement: gather at an outlet, follow a channel, then disperse in the destination box. The underlying kinetic events are unchanged.
+- Vd and D illuminate the body from the neck down and the boundary around the organ cavity, excluding the face and organs. All contours share translucent gold styling and keep their animation phase when switching selections.
+- Simple kinetic-order experiments compare 100 → 80 → 64 mg (20% per hour) with 100 → 80 → 60 mg (20 mg per hour). Each uses one compartment and an IV bolus, with the amount eliminated during the last complete hour shown alongside the simulation.
+- Gold and blue distinguish zero- and first-order elimination. Under Michaelis–Menten elimination the colour blends continuously with saturation; approximate labels use C/Km ≥ 10 and C/Km ≤ 0.1. The detailed explanation is collapsible. Absorption and distribution can still affect the observed curve shape.
 - An About me tab at the far right, with a compact portrait and the story behind the app.
 
 The app is an educational model using hypothetical drug parameters. Clinical dosing decisions require drug-specific information and clinical judgment.
