@@ -1,4 +1,4 @@
-<!doctype html><html lang="nb"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-/LRDWoNoOuGyhP1lTuVmU5mwILbFXS55+pzi4f1JOCg=' 'sha256-jrIGKZwg+efJDHyRparg4WtGTCypxa5GPZlDkt5Ji4o='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
+<!doctype html><html lang="nb"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-AF/wT5XP0BksML5SrmUdTWooa+GNKEX9pxGXg91f7Sw=' 'sha256-Ku3y2tENj8K16zl0ewi2Pz+07ccMOT6bKErXAdvDHp0='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
 <meta name="author" content="Mohanad Taiy">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#7655dc">
@@ -197,7 +197,7 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 #pk-lab .organ-glows g[data-organ=tissue] .organ-orbit.inner-contour{animation-duration:22s;animation-delay:-8s}
 #pk-lab .organ-glows g[data-organ=tissue] .organ-lit-pixels{animation:bodyPixelBreathe 7s ease-in-out infinite}
 @keyframes organPixelBreathe{0%,100%{opacity:.18}50%{opacity:.42}}
-@keyframes bodyPixelBreathe{0%,100%{opacity:.03}50%{opacity:.07}}
+@keyframes bodyPixelBreathe{0%,100%{opacity:.12}50%{opacity:.28}}
 @keyframes organOrbit{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
 @media(prefers-reduced-motion:reduce){#pk-lab .organ-glows g.active .organ-lit-pixels,#pk-lab .organ-glows g.active .organ-orbit{animation:none!important}#pk-lab .organ-glows g.active .organ-lit-pixels{opacity:.15}#pk-lab .organ-glows g.active .organ-orbit{stroke-dasharray:none;opacity:.35}}
 @keyframes organLightBreathe{0%,100%{opacity:.06}50%{opacity:.85}}
@@ -456,6 +456,26 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 @media(max-width:600px){#pk-lab .order-examples{grid-template-columns:1fr}}
 @media(max-width:650px){#pk-lab .about-card{grid-template-columns:1fr;padding:23px;gap:12px}#pk-lab .about-portrait{width:130px}}
 @media(prefers-reduced-motion:reduce){#pk-lab .rope-light,#pk-lab .logo-letter-light{display:none}}
+#pk-lab .heart-secret{position:absolute;left:47.7%;top:36.5%;width:11.5%;height:9.2%;z-index:3;border:0;padding:0;background:transparent;box-shadow:none;cursor:pointer;border-radius:45%}
+#pk-lab .heart-secret:focus-visible{outline:1px dashed #fff9;outline-offset:3px}
+#pk-lab .heart-celebration{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;opacity:0}
+#pk-lab .heart-celebration.playing{opacity:1}
+#pk-lab .heart-beat,#pk-lab .heart-shock{transform-box:view-box;transform-origin:53.3% 41.2%}
+#pk-lab .playing .heart-beat{animation:heartBeat 1.3s ease-in-out 4}
+#pk-lab .heart-shock,#pk-lab .heart-air{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;opacity:0}
+#pk-lab .playing .heart-shock{animation:heartShock 1.3s ease-out 4;animation-delay:var(--delay)}
+#pk-lab .playing .heart-air{animation:heartAir 1.3s ease-in-out 4;animation-delay:var(--delay)}
+.heart-sky{position:fixed;inset:0;pointer-events:none;z-index:1500;overflow:hidden}
+.floating-heart{position:absolute;font-size:24px;line-height:1;opacity:0;animation:heartFloat var(--duration) ease-out both;will-change:transform,opacity}
+.heart-letter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:700 10px/1 Arial,sans-serif;color:rgba(255,255,255,.68);pointer-events:none}
+.face-reaction{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;z-index:0}
+.face-playing>.face-reaction{opacity:1}
+.face-playing>img{opacity:0}
+@keyframes heartBeat{0%,45%,100%{transform:scale(1)}10%{transform:scale(1.055)}20%{transform:scale(1)}30%{transform:scale(1.04)}}
+@keyframes heartShock{0%{transform:scale(.95);opacity:0}12%{opacity:.65}100%{transform:scale(1.8);opacity:0}}
+@keyframes heartAir{0%,100%{opacity:0;transform:translateY(5px)}25%{opacity:.6}70%{opacity:.15;transform:translateY(-13px)}}
+@keyframes heartFloat{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}12%{opacity:.85}45%{transform:translate(calc(-50% + var(--drift)),calc(-50% + var(--dy)*.45)) scale(.65)}75%{opacity:.7}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.2)}}
+@media(prefers-reduced-motion:reduce){#pk-lab .playing .heart-beat,.floating-heart{animation:none;display:none}#pk-lab .playing .heart-shock,#pk-lab .playing .heart-air{animation:none}#pk-lab .playing .heart-shock:first-of-type{opacity:.3}}
 </style></head><body class="dark"><script>window.openai={widgetState:null,setWidgetState:async function(state){this.widgetState=state;try{localStorage.setItem('pk-lab-state-v2',JSON.stringify(state));}catch{}}};try{window.openai.widgetState=JSON.parse(localStorage.getItem('pk-lab-state-v2')||'null');}catch{}
 /* Local preference inference only: no location permission or IP lookup. */
 (function(g){
@@ -580,6 +600,21 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
  }
  const api={constants,state,particles,eventAt,counts,rate,removeAmount,solution,samplePaths};if(typeof module!=='undefined')module.exports=api;global.PKCompartments=api;
 })(typeof window!=='undefined'?window:globalThis);
+
+(function(g){
+ const base={two:true,route:'iv',F:.6,ka:1,kinetics:'first',dose:100,CL:4,V1:10,V2:30,Q:8,k0:8,vmax:12,Km:2,end:24,speed:1,particles:true};
+ const cases={
+  fast:{Q:40},slow:{Q:2},
+  first:{two:false,V1:20,CL:-Math.log(.8)*20,end:12},
+  zero:{two:false,V1:20,kinetics:'zero',k0:20,end:12},
+  saturated:{two:false,kinetics:'mm',dose:200,V1:10,vmax:15,Km:1},
+  'saturated-oral':{two:false,route:'oral',F:1,ka:2,kinetics:'mm',dose:200,V1:10,vmax:15,Km:1},
+  'low-mm':{two:false,kinetics:'mm',dose:10,V1:20,vmax:5,Km:10},
+  'slow-absorption':{two:false,route:'oral',F:.8,ka:.03,V1:40},
+  renal:{two:false,route:'oral',F:.8,V1:40,CL:1.2}
+ };
+ g.PKCompartmentPresets={get:key=>({...base,...(cases[key]||{})}),keys:Object.keys(cases)};
+})(typeof window==='undefined'?globalThis:window);
 
 /* One-compartment, linear repeated dosing. Dose is salt/product mass; S is active fraction. */
 (function(global){
@@ -1846,10 +1881,12 @@ function compBuild(){
  compGraphRows=Array.from({length:481},(_,i)=>{const t=i*comp.end/480,s=compSol.at(t),n=CM.counts(compPaths,t);return{t,...s,estimate:n[0]/320*comp.dose/comp.V1};});compSize='';compSignature='';compDraw(true);
 }
 function compAxis(svg,end,max,log=window.PKScale.log,height=265){
- const w=Math.max(260,svg.getBoundingClientRect().width),h=height,L=56,R=16,T=28,B=42,floor=max/1000;
+ const w=Math.max(260,svg.getBoundingClientRect().width),h=height,L=56,R=16,T=28,B=42;
+ const tail=svg.id==='comp-chart'&&comp.kinetics==='mm'&&compSol?compSol.at(end).c1:max;
+ const floor=log?Math.max(max/1e8,Math.min(max/1000,tail>1e-9?tail*.5:max/1000)):max/1000,logSpan=Math.log10(max/floor);
  svg.replaceChildren();svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
- const x=t=>L+t/end*(w-L-R),y=c=>h-B-(log?(Math.log10(Math.max(floor,c))-Math.log10(floor))/3:c/max)*(h-B-T);
- const ys=log?[floor,floor*10,floor*100,max]:[0,max/3,2*max/3,max];
+ const x=t=>L+t/end*(w-L-R),y=c=>h-B-(log?(Math.log10(Math.max(floor,c))-Math.log10(floor))/logSpan:c/max)*(h-B-T);
+ const ys=log?Array.from({length:5},(_,i)=>floor*Math.pow(max/floor,i/4)):[0,max/3,2*max/3,max];
  for(const v of ys){el('line',{x1:L,x2:w-R,y1:y(v),y2:y(v),stroke:'var(--grid)'},svg);el('text',{x:L-7,y:y(v)+4,'text-anchor':'end'},svg,v<.01&&v>0?v.toExponential(0):fmt(v,2));}
  for(let i=0;i<=3;i++)el('text',{x:x(end*i/3),y:h-B+19,'text-anchor':i===0?'start':i===3?'end':'middle'},svg,fmt(end*i/3,1));
  el('text',{x:L,y:15},svg,'Konsentrasjon · mg/L'+(log?' · log':''));el('text',{x:(L+w-R)/2,y:h-4,'text-anchor':'middle'},svg,'Tid · timer');
@@ -2158,7 +2195,7 @@ scaleSelect.onchange=()=>setScale(scaleSelect.value==='log');q('#comp-log').onch
 const originalCompAxis=compAxis;compAxis=function(svg,end,max,log,height){return originalCompAxis(svg,end,max,window.PKScale.log,height);};
 const graphSelect=ex('select',null,{id:'comp-graph-mode','aria-label':exText('Kurver i kompartmentlab','Compartment lab curves','منحنيات مختبر الحجرات')});for(const[v,no,en,ar]of [['plasma','Plasmakonsentrasjon','Plasma concentration','تركيز البلازما'],['particles','Én kurve fra partiklene','One curve from particles','منحنى واحد من الجسيمات'],['all','Alle kurver · sammenligning','All curves · comparison','كل المنحنيات · مقارنة']])graphSelect.append(ex('option',exText(no,en,ar),{value:v}));q('.comp-legend').before(graphSelect);
 function kineticRegion(p,c){if(c<=1e-9)return 'empty';if(p.kinetics==='mm')return c/p.Km>=10?'zero':c/p.Km<=.1?'first':'mixed';return p.kinetics==='zero'?'zero':'first';}
-const kineticColors={zero:'#efbc58',first:'#82b9ff',mixed:'#c5a0ed',empty:'#98a4b9'};
+const kineticColors={zero:'#ffb000',first:'#26c6ff',mixed:'#c5a0ed',empty:'#98a4b9'};
 const kineticNames={
  first:exText('1. orden','1st order','المرتبة الأولى'),
  zero:exText('0. orden','Zero order','المرتبة الصفرية'),
@@ -2172,7 +2209,7 @@ kineticLegend.after(ex('p',exText('Gull: fast mengde per time. Blått: fast ande
 const kineticsDetails=ex('details',null,{class:'kinetic-details'});
 kineticsDetails.append(ex('summary',exText('Mer om metning','More about saturation','المزيد عن التشبع')),ex('p',exText('Metning er ikke et brått bytte mellom to ordener. Ved høy konsentrasjon nærmer eliminasjonen seg fast mengde; ved lav konsentrasjon nærmer den seg fast andel. ≈ 0. orden vises når C/Km ≥ 10, og ≈ 1. orden når C/Km ≤ 0,1. Mellom disse står det «Metning». Fargen følger metningsgraden C/(Km + C), uten en egen overgangsfarge.','Saturation is not an abrupt switch between two orders. At high concentration, elimination approaches a fixed amount; at low concentration, it approaches a fixed fraction. ≈ zero order is shown when C/Km ≥ 10, and ≈ 1st order when C/Km ≤ 0.1. Between these, the label is “Saturation”. Colour follows saturation C/(Km + C), without a separate transition colour.','التشبع ليس انتقالاً مفاجئاً بين مرتبتين. عند التركيز العالي يقترب الإطراح من كمية ثابتة، وعند التركيز المنخفض يقترب من نسبة ثابتة. تظهر ≈ المرتبة الصفرية عندما C/Km ≥ 10، و≈ المرتبة الأولى عندما C/Km ≤ 0.1. وبينهما تظهر «التشبع». يتبع اللون درجة التشبع C/(Km + C)، دون لون انتقالي مستقل.')));
 q('.kinetic-note').after(kineticsDetails);
-function kineticColor(p,c){if(c<=1e-9)return kineticColors.empty;if(p.kinetics!=='mm')return kineticColors[kineticRegion(p,c)];const s=c/(p.Km+c);return 'rgb('+[130,185,255].map((v,i)=>Math.round(v+([239,188,88][i]-v)*s)).join(',')+')';}
+function kineticColor(p,c){if(c<=1e-9)return kineticColors.empty;if(p.kinetics!=='mm')return kineticColors[kineticRegion(p,c)];const s=c/(p.Km+c);return 'rgb('+[38,198,255].map((v,i)=>Math.round(v+([255,176,0][i]-v)*s)).join(',')+')';}
 function drawKineticRegions(a){
  if(!a.kinetic){
   const svg=q('#comp-chart'),defs=el('defs',{},svg),gradient=el('linearGradient',{id:'comp-kinetic-gradient',gradientUnits:'userSpaceOnUse',x1:a.x(0),x2:a.x(comp.end),y1:0,y2:0},defs);
@@ -2182,6 +2219,7 @@ function drawKineticRegions(a){
   a.kinetic={strips,label};
  }
  a.central.setAttribute('stroke','url(#comp-kinetic-gradient)');
+ a.central.setAttribute('stroke-width','3.5');
  if(graphSelect.value==='particles')a.estimate.setAttribute('stroke','url(#comp-kinetic-gradient)');
  const state=kineticRegion(comp,compSol.at(comp.t).c1),label=(comp.kinetics==='mm'&&['zero','first'].includes(state)?'≈ ':'')+kineticNames[state];
  a.kinetic.label.textContent=window.PKTranslate?window.PKTranslate(label):label;
@@ -2216,7 +2254,7 @@ q('#comp-metrics').nextElementSibling.textContent=exText('320 partikler med lik 
 q('#comp-comparison').previousElementSibling.textContent=exText('Samme dose, CL og volum. Bare Q endres. Bruk grafskala øverst for lineær eller semilogaritmisk visning.','Same dose, CL and volumes; only Q changes. Use the graph scale above to switch between linear and semi-log.','الجرعة والتصفية والحجوم ثابتة؛ تتغير Q فقط. استخدم مقياس الرسم أعلاه للتبديل بين الخطي وشبه اللوغاريتمي.');
 
 // Trace the whole silhouette and brighten tissue pixels while excluding organ masks.
-const silhouette="M460 332 L628 332 L628 340 L644 356 L652 356 L656 364 L692 376 L696 384 L720 392 L724 400 L732 400 L732 404 L740 404 L756 416 L776 416 L784 424 L796 424 L796 428 L828 440 L848 460 L848 468 L860 476 L860 484 L868 492 L868 504 L872 504 L872 516 L876 516 L876 528 L880 528 L880 552 L884 552 L884 600 L880 600 L876 640 L880 640 L880 652 L888 660 L896 704 L900 704 L900 776 L904 776 L908 804 L912 804 L912 812 L916 812 L916 820 L920 820 L920 828 L924 828 L924 836 L928 836 L928 844 L940 860 L940 872 L948 880 L952 908 L956 908 L956 928 L960 928 L968 1052 L972 1052 L980 1116 L984 1116 L984 1128 L988 1128 L988 1140 L992 1140 L992 1152 L996 1152 L996 1236 L1000 1236 L1000 1256 L1004 1256 L1004 1272 L1008 1272 L1008 1292 L1004 1292 L1004 1304 L1000 1304 L1000 1316 L996 1316 L988 1356 L936 1408 L916 1404 L912 1376 L924 1368 L920 1348 L952 1316 L948 1276 L940 1268 L932 1268 L920 1320 L912 1328 L900 1328 L892 1320 L892 1288 L896 1288 L896 1272 L900 1272 L900 1216 L904 1216 L904 1204 L908 1204 L912 1188 L924 1180 L924 1160 L920 1160 L916 1132 L908 1124 L908 1112 L904 1112 L892 1080 L884 1076 L876 1052 L868 1048 L868 1040 L852 1024 L852 1016 L848 1016 L848 1008 L844 1008 L844 1000 L840 1000 L840 992 L828 976 L828 964 L824 964 L824 952 L820 952 L820 940 L816 940 L816 920 L812 920 L804 832 L800 832 L796 812 L788 804 L788 792 L780 784 L776 756 L768 752 L760 792 L756 792 L756 804 L752 804 L752 816 L748 816 L748 832 L744 832 L744 844 L740 844 L736 904 L740 904 L740 920 L744 920 L744 936 L748 936 L748 952 L752 952 L748 1020 L752 1020 L756 1040 L760 1040 L764 1060 L768 1060 L772 1100 L776 1100 L776 1132 L780 1132 L784 1164 L788 1164 L796 1204 L800 1204 L800 1216 L804 1216 L812 1276 L816 1276 L816 1376 L812 1376 L812 1416 L808 1416 L804 1456 L576 1456 L564 1404 L560 1404 L560 1384 L556 1384 L556 1364 L552 1364 L552 1340 L540 1336 L536 1340 L536 1364 L532 1364 L532 1388 L528 1388 L528 1404 L524 1404 L524 1420 L520 1420 L520 1436 L516 1436 L512 1456 L284 1456 L280 1416 L276 1416 L276 1376 L272 1376 L272 1284 L276 1284 L276 1256 L280 1256 L284 1220 L288 1220 L292 1192 L296 1192 L304 1152 L308 1152 L308 1136 L312 1136 L320 1064 L324 1064 L324 1052 L328 1052 L336 1020 L340 1020 L336 956 L340 956 L340 940 L344 940 L344 924 L348 924 L348 908 L352 908 L352 860 L348 860 L344 828 L340 828 L340 816 L336 816 L336 804 L332 804 L332 792 L328 792 L324 756 L312 760 L304 796 L300 796 L300 804 L292 812 L292 824 L284 832 L284 864 L280 864 L276 924 L272 924 L268 956 L260 964 L260 976 L256 976 L236 1024 L228 1028 L228 1036 L220 1040 L220 1048 L208 1060 L204 1076 L196 1080 L196 1088 L192 1088 L192 1096 L180 1112 L180 1124 L172 1132 L168 1160 L164 1160 L164 1180 L176 1188 L176 1196 L184 1204 L184 1216 L188 1216 L188 1276 L192 1276 L192 1292 L196 1292 L196 1320 L188 1328 L176 1328 L168 1320 L156 1268 L148 1268 L140 1276 L136 1316 L168 1348 L164 1368 L176 1376 L172 1404 L152 1408 L100 1356 L92 1316 L88 1316 L88 1304 L80 1296 L80 1272 L84 1272 L88 1236 L92 1236 L92 1152 L96 1152 L96 1140 L100 1140 L100 1128 L104 1128 L104 1116 L108 1116 L108 1100 L112 1100 L112 1080 L116 1080 L132 908 L136 908 L136 892 L140 892 L140 880 L148 872 L148 860 L152 860 L152 852 L156 852 L156 844 L160 844 L160 836 L164 836 L164 828 L168 828 L168 820 L180 804 L180 792 L184 792 L184 776 L188 776 L188 704 L192 704 L200 660 L204 660 L208 640 L212 640 L208 600 L204 600 L204 556 L208 556 L208 532 L212 532 L220 492 L232 480 L232 472 L240 468 L240 460 L260 440 L268 440 L268 436 L276 436 L276 432 L284 432 L300 420 L332 416 L332 412 L364 400 L368 392 L400 380 L404 372 L416 372 L416 368 L440 360 L444 352 L456 348 L460 332 Z";
+const silhouette="M460 332 L628 332 L628 340 L644 356 L652 356 L656 364 L692 376 L696 384 L720 392 L724 400 L732 400 L732 404 L740 404 L756 416 L776 416 L784 424 L796 424 L796 428 L828 440 L848 460 L848 468 L860 476 L860 484 L868 492 L868 504 L872 504 L872 516 L876 516 L876 528 L880 528 L880 552 L884 552 L884 600 L880 600 L876 640 L880 640 L880 652 L888 660 L896 704 L900 704 L900 776 L904 776 L908 804 L912 804 L912 812 L916 812 L916 820 L920 820 L920 828 L924 828 L924 836 L928 836 L928 844 L940 860 L940 872 L948 880 L952 908 L956 908 L956 928 L960 928 L968 1052 L972 1052 L980 1116 L984 1116 L984 1128 L988 1128 L988 1140 L992 1140 L992 1152 L996 1152 L996 1236 L1000 1236 L1000 1256 L1004 1256 L1004 1272 L1008 1272 L1008 1292 L1004 1292 L1004 1304 L1000 1304 L1000 1316 L996 1316 L988 1356 L936 1408 L916 1404 L912 1376 L924 1368 L920 1348 L952 1316 L948 1276 L940 1268 L932 1268 L920 1320 L912 1328 L900 1328 L892 1320 L892 1288 L896 1288 L896 1272 L900 1272 L900 1216 L904 1216 L904 1204 L908 1204 L912 1188 L924 1180 L924 1160 L920 1160 L916 1132 L908 1124 L908 1112 L904 1112 L892 1080 L884 1076 L876 1052 L868 1048 L868 1040 L852 1024 L852 1016 L848 1016 L848 1008 L844 1008 L844 1000 L840 1000 L840 992 L828 976 L828 964 L824 964 L824 952 L820 952 L820 940 L816 940 L816 920 L812 920 L804 832 L800 832 L796 812 L788 804 L788 792 L780 784 L776 756 L768 752 L760 792 L756 792 L756 804 L752 804 L752 816 L748 816 L748 832 L744 832 L744 844 L740 844 L736 904 L740 904 L740 920 L744 920 L744 936 L748 936 L748 952 L752 952 L748 1020 L752 1020 L756 1040 L760 1040 L764 1060 L768 1060 L772 1100 L776 1100 L776 1132 L780 1132 L784 1164 L788 1164 L796 1204 L800 1204 L800 1216 L804 1216 L812 1276 L816 1276 L816 1376 L812 1376 L812 1416 L808 1416 L804 1456 L576 1456 L564 1404 L560 1404 L560 1384 L556 1384 L556 1364 L552 1364 L552 1340 L540 1336 L536 1340 L536 1364 L532 1364 L532 1388 L528 1388 L528 1404 L524 1404 L524 1420 L520 1420 L520 1436 L516 1436 L512 1456 L284 1456 L280 1416 L276 1416 L276 1376 L272 1376 L272 1284 L276 1284 L276 1256 L280 1256 L284 1220 L288 1220 L292 1192 L296 1192 L304 1152 L308 1152 L308 1136 L312 1136 L320 1064 L324 1064 L324 1052 L328 1052 L336 1020 L340 1020 L336 956 L340 956 L340 940 L344 940 L344 924 L348 924 L348 908 L352 908 L352 860 L348 860 L344 828 L340 828 L340 816 L336 816 L336 804 L332 804 L332 792 L328 792 L324 756 L312 760 L304 796 L300 796 L300 804 L292 812 L292 824 L284 832 L284 864 L280 864 L276 924 L272 924 L268 956 L260 964 L260 976 L256 976 L236 1024 L228 1028 L228 1036 L220 1040 L220 1048 L208 1060 L204 1076 L196 1080 L196 1088 L192 1088 L192 1096 L180 1112 L180 1124 L172 1132 L168 1160 L164 1160 L164 1180 L176 1188 L176 1196 L184 1204 L184 1216 L188 1216 L188 1276 L192 1276 L192 1292 L196 1292 L196 1320 L188 1328 L176 1328 L168 1320 L156 1268 L148 1268 L140 1276 L136 1316 L168 1348 L164 1368 L176 1376 L172 1404 L152 1408 L100 1356 L92 1316 L88 1316 L88 1304 L80 1296 L80 1272 L84 1272 L88 1236 L92 1236 L92 1152 L96 1152 L96 1140 L100 1140 L100 1128 L104 1128 L104 1116 L108 1116 L108 1100 L112 1100 L112 1080 L116 1080 L132 908 L136 908 L136 892 L140 892 L140 880 L148 872 L148 860 L152 860 L152 852 L156 852 L156 844 L160 844 L160 836 L164 836 L164 828 L168 828 L168 820 L180 804 L180 792 L184 792 L184 776 L188 776 L188 704 L192 704 L200 660 L204 660 L208 640 L212 640 L208 600 L204 600 L204 556 L208 556 L208 532 L212 532 L220 492 L232 480 L232 472 L240 468 L240 460 L260 440 L268 440 L268 436 L276 436 L276 432 L284 432 L300 420 L332 416 L332 412 L364 400 L368 392 L400 380 L404 372 L416 372 L416 368 L440 360 L444 352 L456 348 L460 332 Z".replace('M460 332 L628 332','M460 332 C460 311 456 289 454 276 C476 303 508 317 544 319 C579 319 611 303 633 276 C631 295 628 314 628 332');
 // The reference's inner boundary surrounds the organ cavity, rather than outlining each organ.
 const organCavity='M548 469 C515 420 475 402 440 434 C394 484 356 549 349 631 C340 684 343 716 368 736 C353 772 360 812 385 832 C412 846 393 882 400 907 C383 951 389 984 393 1010 C378 1055 389 1098 421 1108 C459 1101 466 1160 479 1203 C487 1244 502 1264 522 1280 C526 1300 526 1320 542 1320 C560 1320 563 1293 571 1276 C590 1252 609 1227 610 1190 C623 1157 652 1163 673 1140 C711 1108 716 1069 705 1034 C715 1004 704 976 704 951 C709 918 696 894 704 870 C726 835 718 793 716 769 C708 749 713 739 731 717 C751 679 737 602 720 550 C692 476 648 416 611 427 C582 430 562 458 548 469 Z';
 const tissueGroup=glowSvg.querySelector('[data-organ="tissue"]');tissueGroup.replaceChildren();
@@ -2233,6 +2271,76 @@ window.PKLocalePairs=[...(window.PKLocalePairs||[]),...experiencePairs];
 const experienceChart=chart;chart=function(){experienceChart();root.classList.toggle('about-wide',view==='about');};
 // One complete workspace; the level switch and learning shortcuts have been removed.
 root.dataset.level='advanced';for(const tab of ['adme','pd','binding'])q('#'+tab+'-tab').hidden=false;for(const id of ['curve-controls','comp-settings'])q('#'+id).open=true;q('#comp-kinetics').closest('label').hidden=false;q('.binding-launch')?.remove();
+
+// Reproducible cases reset all model inputs, so a previous route or dose never leaks in.
+const presetLabels=[
+ ['fast','Rask distribusjon','Fast distribution','توزيع سريع'],
+ ['slow','Langsom distribusjon','Slow distribution','توزيع بطيء'],
+ ['first','1. orden · 20 % per time','1st order · 20% per hour','المرتبة الأولى · 20٪ كل ساعة'],
+ ['zero','0. orden · 20 mg per time','Zero order · 20 mg per hour','المرتبة الصفرية · 20 ملغ كل ساعة'],
+ ['saturated','Metning → 1. orden · i.v. · 24 t','Saturation → 1st order · IV · 24 h','التشبع ← المرتبة الأولى · وريدي · 24 ساعة'],
+ ['saturated-oral','Metning → 1. orden · oral · 24 t','Saturation → 1st order · oral · 24 h','التشبع ← المرتبة الأولى · فموي · 24 ساعة'],
+ ['low-mm','Lav dose · nesten 1. orden','Low dose · nearly 1st order','جرعة منخفضة · قريبة من المرتبة الأولى'],
+ ['slow-absorption','Langsom absorpsjon · flip-flop','Slow absorption · flip-flop','امتصاص بطيء · حركية الانقلاب'],
+ ['renal','Redusert clearance · lengre hale','Reduced clearance · longer tail','تصفية منخفضة · ذيل أطول']
+];
+const presetSelect=q('#comp-preset');presetSelect.replaceChildren(ex('option',exText('Egne innstillinger','Custom settings','إعدادات مخصصة'),{value:'custom'}));
+for(const [id,no,en,ar]of presetLabels)presetSelect.append(ex('option',exText(no,en,ar),{value:id}));
+function applyLabCase(key){compPause();Object.assign(comp,window.PKCompartmentPresets.get(key));q('#comp-speed').value='1';q('#comp-end').value=String(comp.end);q('#comp-show-particles').checked=true;graphSelect.value='plasma';q('#comp-import-note').textContent='';presetSelect.value=key||'custom';compBuild();}
+presetSelect.onchange=()=>{if(presetSelect.value!=='custom')applyLabCase(presetSelect.value);};
+q('.order-example.first').onclick=()=>applyLabCase('first');q('.order-example.zero').onclick=()=>applyLabCase('zero');
+const resetLab=exButton(exText('Nullstill lab','Reset lab','إعادة ضبط المختبر'),()=>{applyLabCase();setScale(false);});resetLab.id='comp-reset-all';resetLab.title=exText('Gjenopprett standardparametre, graf og tid i laben. Verkstedet beholdes.','Restore default lab parameters, graph and time. Workshop values are retained.','استعد معلمات المختبر والرسم والزمن الافتراضية. تبقى قيم الورشة كما هي.');q('#comp-restart').after(resetLab);
+scaleNote.textContent=exText('Semilog: y er logaritmisk. Null kan ikke vises. Kompartmentlab tilpasser den nedre grensen til metningskurvens hale; andre grafer bruker 1/1000 av maksimum.','Semi-log: y is logarithmic. Zero cannot be shown. The compartment lab adapts its lower limit to the saturation tail; other graphs use 1/1000 of the maximum.','شبه لوغاريتمي: محور y لوغاريتمي ولا يمكن عرض الصفر. يكيّف مختبر الحجرات الحد الأدنى مع ذيل منحنى التشبع؛ تستخدم الرسوم الأخرى 1/1000 من القيمة القصوى.');
+const phaseReadout=ex('p',null,{class:'model-note',id:'comp-phase-readout',hidden:''});q('.kinetic-note').after(phaseReadout);
+const phaseWords={early:exText('Tilnærmet 0. orden til omtrent','Approximately zero order until about','مرتبة صفرية تقريباً حتى نحو'),late:exText('tilnærmet 1. orden fra omtrent','approximately 1st order from about','مرتبة أولى تقريباً بدءاً من نحو'),gradual:exText('Skiftet er gradvis. Linjene viser C = 10Km og C = 0,1Km etter toppen, ikke et brått biologisk bytte.','The change is gradual. Lines mark C = 10Km and C = 0.1Km after the peak, not an abrupt biological switch.','التغير تدريجي. تحدد الخطوط C = 10Km وC = 0.1Km بعد القمة، وليس تحولاً بيولوجياً مفاجئاً.'),linear:exText('Lineær akse: nær metning blir fallet nesten rett.','Linear axis: near saturation, the decline is almost straight.','محور خطي: قرب التشبع يكون الانخفاض شبه مستقيم.'),log:exText('Semilog: den sene førsteordensdelen blir nesten rett.','Semi-log: the late first-order section becomes almost straight.','شبه لوغاريتمي: يصبح الجزء المتأخر من المرتبة الأولى شبه مستقيم.'),hour:exText('timer','hours','ساعة')};
+function phaseCrossing(rows,threshold,start=0){for(let i=Math.max(1,start);i<rows.length;i++)if(rows[i-1].c1>threshold&&rows[i].c1<=threshold){const a=rows[i-1],b=rows[i];return a.t+(b.t-a.t)*(a.c1-threshold)/(a.c1-b.c1);}return null;}
+const priorKineticDraw=drawKineticRegions;drawKineticRegions=function(a){priorKineticDraw(a);phaseReadout.hidden=comp.kinetics!=='mm';if(comp.kinetics!=='mm')return;
+ if(!a.phaseMarkers){const rows=compGraphRows,peakIndex=rows.reduce((best,r,i)=>r.c1>rows[best].c1?i:best,0),peak=rows[peakIndex],zeroEnd=phaseCrossing(rows,10*comp.Km,peakIndex),firstStart=phaseCrossing(rows,.1*comp.Km,peakIndex);a.phaseMarkers={zeroEnd,firstStart};
+  for(const [time,label,color]of [[zeroEnd,'10Km',kineticColors.zero],[firstStart,'0,1Km',kineticColors.first]])if(time!==null){el('line',{x1:a.x(time),x2:a.x(time),y1:a.T+20,y2:a.h-a.B,stroke:color,'stroke-width':1,'stroke-dasharray':'3 5',opacity:.45},q('#comp-chart'));el('text',{x:a.x(time),y:a.h-a.B-7,'text-anchor':'middle',fill:color,style:'font-size:10px'},q('#comp-chart'),label);}
+  if(comp.route==='oral'){el('circle',{cx:a.x(peak.t),cy:a.y(peak.c1),r:3,fill:'var(--ink)',opacity:.65},q('#comp-chart'));el('text',{x:a.x(peak.t)+6,y:a.y(peak.c1)-6,fill:'var(--ink)',style:'font-size:10px'},q('#comp-chart'),'Cmax');}
+ }
+ const {zeroEnd,firstStart}=a.phaseMarkers;phaseReadout.textContent=(zeroEnd!==null?phaseWords.early+' '+fmt(zeroEnd,1)+' '+phaseWords.hour+'. ':'')+(firstStart!==null?phaseWords.late+' '+fmt(firstStart,1)+' '+phaseWords.hour+'. ':'')+phaseWords.gradual+' '+(window.PKScale.log?phaseWords.log:phaseWords.linear);
+};
+
+// An optional heart easter egg, independently timed and never part of the PK model.
+const heartShape='M574 532 C611 539 642 574 641 614 C643 646 620 666 592 663 C553 654 525 637 520 607 C515 577 540 539 574 532 Z';
+const heartFx=el('svg',{viewBox:'0 0 1088 1456',preserveAspectRatio:'none',class:'heart-celebration','aria-hidden':'true'},q('.anatomy-figure'));
+const heartDefs=el('defs',{},heartFx),heartClip=el('clipPath',{id:'easter-heart-clip'},heartDefs);el('path',{d:heartShape},heartClip);
+el('image',{class:'heart-beat',href:q('.anatomy-figure img').getAttribute('src'),x:0,y:0,width:1088,height:1456,'clip-path':'url(#easter-heart-clip)'},heartFx);
+for(let i=0;i<3;i++)el('path',{class:'heart-shock',d:heartShape,style:'--delay:'+i*.28+'s'},heartFx);
+for(let i=0;i<3;i++)el('path',{class:'heart-air',d:`M${497-i*14} ${548+i*24} C${470-i*10} ${575+i*15} ${494-i*18} ${616+i*20} ${474-i*9} ${640+i*13} M${649+i*12} ${558+i*16} C${680+i*11} ${577+i*15} ${652+i*18} ${620+i*14} ${675+i*9} ${647+i*10}`,style:'--delay:'+i*.18+'s'},heartFx);
+const heartButton=ex('button',null,{class:'heart-secret',type:'button','aria-label':exText('Et lite hjerteslag','A little heartbeat','نبضة قلب صغيرة')});q('.anatomy-figure').append(heartButton);
+let heartTimer=0;const heartSky=ex('div',null,{class:'heart-sky','aria-hidden':'true'});document.body.append(heartSky);
+heartButton.onclick=()=>{clearTimeout(heartTimer);heartSky.replaceChildren();heartFx.classList.remove('playing');void heartFx.getBoundingClientRect();heartFx.classList.add('playing');const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(!reduced){const r=heartButton.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,tabBottom=q('.tabs').getBoundingClientRect().bottom,target=Math.max(20,Math.min(y-80,tabBottom));const order=Array.from({length:10},(_,i)=>i);for(let j=9;j>0;j--){const k=Math.floor(Math.random()*(j+1));[order[j],order[k]]=[order[k],order[j]];}const marked=new Set(order.slice(0,3));for(let i=0;i<10;i++){const h=ex('span','🤍',{class:'floating-heart'}),dx=Math.max(24-x,Math.min(innerWidth-x-30,(Math.random()-.5)*240));if(marked.has(i))h.append(ex('span','Z',{class:'heart-letter'}));h.style.cssText=`left:${x}px;top:${y}px;--dx:${dx}px;--dy:${target-y}px;--drift:${dx*.3+Math.sin(i)*25}px;--duration:${3.5+Math.random()*1.5}s;animation-delay:${i*.09}s`;heartSky.append(h);}}
+ heartTimer=setTimeout(()=>{heartFx.classList.remove('playing');heartSky.replaceChildren();},6500);
+};
+window.PKLocalePairs=[...(window.PKLocalePairs||[]),...experiencePairs];
+
+// Optional, isolated facial reaction. Removing this file leaves the heart effect intact.
+window.PKFaceReaction={enabled:true};
+(()=>{
+ const figure=q('.anatomy-figure'),source=figure.querySelector('img');
+ const layer=el('svg',{viewBox:'0 0 1088 1456',preserveAspectRatio:'none',class:'face-reaction','aria-hidden':'true'},figure);
+ const defs=el('defs',{},layer),filter=el('filter',{id:'heart-face-reaction',x:'0%',y:'0%',width:'100%',height:'100%','color-interpolation-filters':'sRGB'},defs);
+ // Neutral displacement maps only: the illustration itself is never changed or replaced.
+ function map(kind){const c=document.createElement('canvas');c.width=544;c.height=728;const ctx=c.getContext('2d'),im=ctx.createImageData(c.width,c.height);
+  for(let j=0;j<c.height;j++)for(let i=0;i<c.width;i++){const x=i*2,y=j*2;let dx=0,dy=0;
+   if(kind==='smile'){const g=Math.exp(-Math.pow((x-544)/49,4)-Math.pow((y-251)/23,4));dx=-(x-544)*.13*g;dy=6*(1-Math.exp(-Math.pow((x-544)/20,2)))*g;}
+   if(kind==='wink'){const ex=x-590,ey=y-162,g=Math.exp(-Math.pow(ex/29,4));dy=ey*4.6*Math.exp(-Math.pow(ey/9,2))*g;}
+   if(kind==='nod'){const g=Math.exp(-Math.pow((x-544)/148,8)-Math.pow((y-163)/170,8));dx=(-(y-330)*.017-2)*g;dy=((x-544)*.017+3)*g;}
+   const k=(j*c.width+i)*4;im.data[k]=Math.round(128+dx/40*255);im.data[k+1]=Math.round(128+dy/40*255);im.data[k+2]=128;im.data[k+3]=255;
+  }ctx.putImageData(im,0,0);return c.toDataURL();
+ }
+ const nodes={};let input='SourceGraphic';for(const kind of ['smile','wink','nod']){el('feImage',{href:map(kind),x:0,y:0,width:1088,height:1456,preserveAspectRatio:'none',result:kind+'Map'},filter);nodes[kind]=el('feDisplacementMap',{in:input,in2:kind+'Map',scale:0,xChannelSelector:'R',yChannelSelector:'G',result:kind+'Result'},filter);input=kind+'Result';}
+ el('image',{href:source.getAttribute('src'),x:0,y:0,width:1088,height:1456,filter:'url(#heart-face-reaction)'},layer);
+ let frame=0,start=0;
+ function finish(){cancelAnimationFrame(frame);frame=0;for(const n of Object.values(nodes))n.setAttribute('scale',0);figure.classList.remove('face-playing');}
+ function bell(t,from,to){if(t<=from||t>=to)return 0;return Math.sin(Math.PI*(t-from)/(to-from))**2;}
+ function tick(now){const t=(now-start)/1000;if(t>=4.2||!window.PKFaceReaction.enabled){finish();return;}nodes.smile.setAttribute('scale',40*bell(t,.15,3.8));nodes.wink.setAttribute('scale',40*bell(t,.85,1.55));nodes.nod.setAttribute('scale',40*bell(t,0,4.2));frame=requestAnimationFrame(tick);}
+ heartButton.addEventListener('click',()=>{finish();if(!window.PKFaceReaction.enabled||matchMedia('(prefers-reduced-motion: reduce)').matches)return;figure.classList.add('face-playing');start=performance.now();frame=requestAnimationFrame(tick);});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)finish();});
+})();
 
 // Translation operates on presentation text; calculation keys and option values stay stable.
 const localePairs=new Map(window.PKLocalePairs||[]);
@@ -2323,13 +2431,15 @@ q('#language-select').onchange=e=>{language=e.target.value;localeCache.clear();t
 translateDOM();
 
 function render(kick=false){const d=derive(p),active=inputs.find(a=>a.key===selected);for(const a of inputs){const input=q('#control-'+a.key);input.value=p[a.key];input.style.setProperty('--fill',((p[a.key]-a.min)/(a.max-a.min)*100)+'%');q('#value-'+a.key).textContent=(a.key==='F'?fmt(p.F*100):fmt(p[a.key]))+' '+a.unit;q(`[data-input="${a.key}"]`).classList.toggle('active',a.key===selected);q(`[data-select="${a.key}"]`).setAttribute('aria-pressed',String(a.key===selected));}
+ q('#reset').hidden=!workshopChanged(p,advanced);
  updateAnatomy(kick);
  for(const a of outputs){const e=effects[selected][a.key],row=q(`[data-result="${a.key}"]`);q('#out-'+a.key).textContent=fmt(d[a.key],a.key==='k'?3:2);row.classList.toggle('affected',!!e);row.classList.toggle('unaffected',!e);q('#direction-'+a.key).innerHTML=e?`<b aria-hidden="true">${e>0?'↑':'↓'}</b><span>${e>0?'Øker':'Minker'} når<br>${active.symbol} øker</span>`:'<span>Uendret</span>';}
  q('#explanation').innerHTML=`<strong>${active.symbol} øker →</strong> ${explanations[selected]}`;
  for(const tab of advancedPanels){q('#'+tab+'-panel').hidden=view!==tab;q('#'+tab+'-tab').setAttribute('aria-selected',String(view===tab));q('#'+tab+'-tab').tabIndex=view===tab?0:-1;}
  cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{ropes(kick);chart();});}
  for(const a of inputs){const input=q('#control-'+a.key);input.addEventListener('focus',()=>{if(selected!==a.key){selected=a.key;ropeSelectionSerial++;advanced.adme=null;render();}});input.addEventListener('input',()=>{selected=a.key;advanced.adme=null;p[a.key]=Number(input.value);render(true);});input.addEventListener('change',()=>{save();q('#live').textContent=`${a.name}: ${q('#value-'+a.key).textContent}. ${outputs.filter(o=>effects[selected][o.key]).map(o=>o.symbol+' '+fmt(derive(p)[o.key])+' '+o.unit).join(', ')}`;});q(`[data-select="${a.key}"]`).addEventListener('click',()=>{selected=a.key;ropeSelectionSerial++;advanced.adme=null;render(true);save();});}
- q('#reset').addEventListener('click',()=>{p={...defaults};selected='CL';advanced.renal=advanced.hepatic=1;advanced.adme=null;q('#renal-function').value=q('#hepatic-function').value=100;render(true);save();});
+ function workshopChanged(values,extra){return Object.keys(defaults).some(k=>Math.abs(values[k]-defaults[k])>1e-9)||['renal','hepatic','fr'].some(k=>Math.abs(extra[k]-advancedDefaults[k])>1e-9);}
+ q('#reset').addEventListener('click',()=>{p={...defaults};selected='CL';advanced.renal=advanced.hepatic=1;advanced.fr=advancedDefaults.fr;advanced.adme=null;q('#renal-function').value=q('#hepatic-function').value=100;q('#renal-fraction').value=advanced.fr*100;persistExtra();render(true);save();});
  for(const v of advancedPanels)q('#'+v+'-tab').addEventListener('click',()=>{view=v;render();save();});
  root.querySelector('.tabs').addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();const tabs=advancedPanels.filter(v=>!q('#'+v+'-tab').hidden);view=tabs[(tabs.indexOf(view)+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length];render();q('#'+view+'-tab').focus();save();}});
  window.addEventListener('openai:set_globals',e=>{if(e.detail?.globals?.widgetState){restore(e.detail.globals.widgetState);render();}});
