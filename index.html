@@ -1,4 +1,4 @@
-<!doctype html><html lang="nb"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-6Qd+mmtXiITU0whB5CqzwV/syUHTvySmH0TOV+Prg6c=' 'sha256-y4C9+oUzH7N9OYgGCggvwW6yCFR2cgr4dxF0IXLLUX4='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
+<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-yZjHj0Omki4qYvvMiyLbRyYnOD/ioJZ8smkVuwHhB0k='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
 <meta name="author" content="Mohanad Taiy">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#7655dc">
@@ -13,7 +13,18 @@
 <meta property="og:site_name" content="PK-lab">
 <meta name="twitter:card" content="summary">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"PK-lab","url":"https://anadtaiy.github.io/pk-lab/","description":"An interactive pharmacokinetics and pharmacodynamics learning app with compartment models, dosing calculators, formulas and quizzes.","inLanguage":["nb","en","ar"],"isAccessibleForFree":true,"learningResourceType":"Interactive simulation","educationalLevel":"Higher education","about":["Pharmacokinetics","Pharmacodynamics","Pharmacy"],"author":{"@type":"Person","name":"Mohanad Taiy","url":"https://github.com/AnadTaiy"},"dateCreated":"2026"}</script>
-<style>
+<style>html.pk-booting #pk-lab{visibility:hidden}
+html.pk-booting,html.pk-booting body{overflow:hidden}
+#pk-startup{position:fixed;inset:0;z-index:9999;display:grid;place-content:center;justify-items:center;gap:18px;background:#101527;color:#eef1ff;font:16px/1.5 'Segoe UI',sans-serif;text-align:center}
+#pk-startup[hidden]{display:none}
+#pk-startup strong{font-size:36px;letter-spacing:-1.5px}
+#pk-startup p{margin:0;color:#b9b6cf}
+#pk-startup .boot-orbit{width:44px;height:44px;border:2px solid #a18af52b;border-top-color:#bca6ff;border-radius:50%;animation:boot-turn 1.4s linear infinite}
+#pk-startup a{color:#c8b7ff}
+@keyframes boot-turn{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#pk-startup .boot-orbit{animation:none;border-color:#a18af5}}
+
+
   #pk-lab { --ink:#101e49; --muted-ink:#52648d; --purple:#7455e8; --teal:#079c99; --coral:#e97c62; color:var(--ink); background:#fff; font:16px/1.5 'Segoe UI',sans-serif; border-radius:24px; padding:28px 32px; max-width:1440px; margin:auto; }
   #pk-lab * {box-sizing:border-box;}
   #pk-lab h1,#pk-lab h2,#pk-lab h3,#pk-lab p {margin:0; color:inherit;}
@@ -473,7 +484,57 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 @keyframes heartAir{0%,100%{opacity:0;transform:translateY(5px)}25%{opacity:.6}70%{opacity:.15;transform:translateY(-13px)}}
 @keyframes heartFloat{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}12%{opacity:.85}45%{transform:translate(calc(-50% + var(--drift)),calc(-50% + var(--dy)*.45)) scale(.65)}75%{opacity:.7}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.2)}}
 @media(prefers-reduced-motion:reduce){#pk-lab .playing .heart-beat,.floating-heart{animation:none;display:none}#pk-lab .playing .heart-shock,#pk-lab .playing .heart-air{animation:none}#pk-lab .playing .heart-shock:first-of-type{opacity:.3}}
-</style></head><body class="dark"><script>window.openai={widgetState:null,setWidgetState:async function(state){this.widgetState=state;try{localStorage.setItem('pk-lab-state-v2',JSON.stringify(state));}catch{}}};try{window.openai.widgetState=JSON.parse(localStorage.getItem('pk-lab-state-v2')||'null');}catch{}
+
+/* A dedicated connection corridor, with anatomy underneath on medium screens. */
+@media(min-width:561px) and (max-width:1250px){
+ #pk-lab .app-body{grid-template-columns:minmax(0,1fr);gap:24px}
+ #pk-lab .workshop{grid-template-columns:minmax(0,1fr) clamp(120px,18vw,190px) minmax(0,1fr)}
+ #pk-lab .inputs,#pk-lab .results{min-width:0}
+ #pk-lab .input-row,#pk-lab .result{height:124px;min-height:124px;margin-bottom:12px;gap:6px 10px;padding:12px;align-content:center}
+ #pk-lab .input-row{grid-template-columns:34px minmax(0,1fr)}
+ #pk-lab .input-row label{grid-column:2;grid-row:1 / span 2;min-width:0}
+ #pk-lab .input-row output{grid-column:1 / -1;grid-row:3;font-size:14px}
+ #pk-lab .symbol{width:34px;height:34px;font-size:14px}
+ #pk-lab .result{grid-template-columns:34px minmax(0,1fr)}
+ #pk-lab .result .direction{grid-column:1 / -1;display:flex;align-items:center;gap:6px;font-size:11px;line-height:1.3;min-height:30px}
+ #pk-lab .direction br{display:none}
+ #pk-lab .result strong{font-size:19px}
+ #pk-lab .anatomy-panel{display:grid;grid-template-columns:minmax(240px,360px) minmax(0,1fr);column-gap:28px;align-items:start;position:static}
+ #pk-lab .anatomy-panel h2{grid-column:1 / -1}
+ #pk-lab .anatomy-figure{grid-column:1;grid-row:2 / span 4;width:100%}
+ #pk-lab .organ-names,#pk-lab .organ-detail,#pk-lab .anatomy-note{grid-column:2}
+ #pk-lab .comp-floating{max-width:calc(100vw - 32px);min-width:0}
+}
+/* Pausing preserves the orbit phase; invisible raster glows do no animation work. */
+#pk-lab .organ-glows g:not(.active) .organ-lit-pixels,
+#pk-lab .organ-glows g:not(.active) .organ-orbit,
+#pk-lab.anatomy-idle .organ-glows .organ-lit-pixels,
+#pk-lab.anatomy-idle .organ-glows .organ-orbit{animation-play-state:paused}
+@media(max-width:1250px),(pointer:coarse){
+ #pk-lab .organ-glows .organ-orbit,#pk-lab .organ-glows .organ-aura,#pk-lab .rope-light{filter:none}
+}
+</style></head><body class="dark"><div id="pk-startup" role="status" aria-live="polite"><strong>PK-lab</strong><span class="boot-orbit" aria-hidden="true"></span><p id="pk-startup-message">Loading · Laster · جارٍ التحميل</p><a id="pk-startup-retry" href="" hidden>Reload · Last på nytt</a><noscript>Enable JavaScript to open PK-lab.</noscript></div><script>// The app keeps its layout while hidden, so SVG and canvas measurements are valid.
+window.PKBoot={failed:false};
+window.addEventListener('error',function(event){
+ if(!document.documentElement.classList.contains('pk-booting')||!event.message)return;
+ window.PKBoot.failed=true;
+ const message=document.getElementById('pk-startup-message'),retry=document.getElementById('pk-startup-retry');
+ if(message)message.textContent='PK-lab could not start. Please reload.';
+ if(retry)retry.hidden=false;
+});
+window.PKBoot.finish=async function(){
+ const image=document.querySelector('.anatomy-figure img');
+ if(image){try{await image.decode();}catch{}}
+ if(document.fonts){try{await document.fonts.ready;}catch{}}
+ // Allow the initial charts, translations and resize observers to settle before reveal.
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  if(window.PKBoot.failed)return;
+  document.documentElement.classList.remove('pk-booting');
+  document.getElementById('pk-startup').hidden=true;
+ }));
+};
+
+window.openai={widgetState:null,setWidgetState:async function(state){this.widgetState=state;try{localStorage.setItem('pk-lab-state-v2',JSON.stringify(state));}catch{}}};try{window.openai.widgetState=JSON.parse(localStorage.getItem('pk-lab-state-v2')||'null');}catch{}
 /* Local preference inference only: no location permission or IP lookup. */
 (function(g){
  const arabRegions=new Set('DZ BH KM DJ EG IQ JO KW LB LY MR MA OM PS QA SA SO SD SY TN AE YE'.split(' '));
@@ -1482,15 +1543,20 @@ restore(window.openai?.widgetState);
 q('#input-list').innerHTML=inputs.map(a=>`<div class="input-row" data-input="${a.key}" style="--tone:${a.color}"><button class="symbol" type="button" aria-label="Vis forbindelser for ${a.name}" data-select="${a.key}">${a.symbol}</button><label for="control-${a.key}"><span class="track-label"><span>${a.name}</span><span class="drag-cue" aria-hidden="true">↔ Dra</span></span><input type="range" id="control-${a.key}" min="${a.min}" max="${a.max}" step="${a.step}" aria-label="${a.name}"><span class="range-extents" aria-hidden="true"><span>${fmt(a.key==='F'?a.min*100:a.min)}</span><span>${fmt(a.key==='F'?a.max*100:a.max)} ${a.unit}</span></span></label><output id="value-${a.key}" for="control-${a.key}"></output></div>`).join('');
 q('#result-list').innerHTML=outputs.map(a=>`<div class="result" data-result="${a.key}" style="--tone:${a.color}"><span class="symbol" aria-hidden="true">${a.symbol}</span><div><strong id="out-${a.key}"></strong><small>${a.unit}</small><span class="sr">${a.name}</span></div><span class="direction" id="direction-${a.key}"></span></div>`).join('');
 function el(tag,attrs,parent,text){const n=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs||{}))n.setAttribute(k,v);if(text!==undefined)n.textContent=text;if(parent)parent.appendChild(n);return n;}
+const lightMotion=matchMedia('(max-width:1250px), (pointer:coarse)');
+let tabletRopeKey='';
 let ropeSelectionSerial=0,ropeSignalSerial=0,ropeSignalAt=-Infinity;
 const ropeSpring={offset:0,velocity:0,last:0};
 function ropes(kick=false){
  if(ropeMotion)cancelAnimationFrame(ropeMotion);if(view!=='workshop')return;
- const svg=q('.ropes'),box=q('.workshop').getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${box.width} ${box.height}`);svg.replaceChildren();
+ const svg=q('.ropes'),box=q('.workshop').getBoundingClientRect();const cacheKey=[selected,ropeSelectionSerial,box.width,box.height,language].join('|');
+ if(lightMotion.matches&&tabletRopeKey===cacheKey&&svg.childElementCount)return;
+ tabletRopeKey=lightMotion.matches?cacheKey:'';
+ svg.setAttribute('viewBox',`0 0 ${box.width} ${box.height}`);svg.replaceChildren();
  const source=q(`[data-input="${selected}"]`).getBoundingClientRect(),a=inputs.find(a=>a.key===selected),now=performance.now(),newSelection=ropeSignalSerial!==ropeSelectionSerial,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  if(newSelection){ropeSignalSerial=ropeSelectionSerial;ropeSignalAt=now;ropeSpring.velocity=55;}
  else if(kick)ropeSpring.velocity=Math.min(70,ropeSpring.velocity+18);
- if(reduced){ropeSpring.offset=0;ropeSpring.velocity=0;}
+ if(reduced||lightMotion.matches){ropeSpring.offset=0;ropeSpring.velocity=0;}
  const defs=el('defs',{},svg),m=el('marker',{id:'rope-arrow',markerUnits:'userSpaceOnUse',markerWidth:12,markerHeight:12,refX:6,refY:6,orient:'0',overflow:'visible'},defs);
  el('path',{d:'M 1 1 Q 0 6 1 11 L 11 6 Z',fill:a.color,opacity:.6},m);
  const sx=source.right-box.left-3,sy=source.top-box.top+source.height/2,elapsed=now-ropeSignalAt;
@@ -1503,7 +1569,7 @@ function ropes(kick=false){
  const draw=()=>{for(const l of links){const d=ropeGeometry(sx,sy,l.tx,l.ty,ropeSpring.offset);l.path.setAttribute('d',d);l.light?.setAttribute('d',d);}};
  draw();ropeSpring.last=now;
  const tick=t=>{if(view!=='workshop')return;const dt=Math.min(.033,Math.max(0,(t-ropeSpring.last)/1000));ropeSpring.last=t;ropeSpring.velocity+=(-80*ropeSpring.offset-10*ropeSpring.velocity)*dt;ropeSpring.offset+=ropeSpring.velocity*dt;draw();if(Math.abs(ropeSpring.offset)>.02||Math.abs(ropeSpring.velocity)>.08)ropeMotion=requestAnimationFrame(tick);else{ropeSpring.offset=ropeSpring.velocity=0;draw();}};
- if(!reduced&&(kick||newSelection||Math.abs(ropeSpring.offset)>.02||Math.abs(ropeSpring.velocity)>.08))ropeMotion=requestAnimationFrame(tick);
+ if(!reduced&&!lightMotion.matches&&(kick||newSelection||Math.abs(ropeSpring.offset)>.02||Math.abs(ropeSpring.velocity)>.08))ropeMotion=requestAnimationFrame(tick);
 }
 // The final segment and its incoming tangent are fixed; only the middle can sway.
 function ropeGeometry(sx,sy,tx,ty,bend){const dx=tx-sx,tail=tx-Math.min(18,dx*.18),mx=sx+dx*.48,my=(sy+ty)/2+bend;return `M${sx},${sy} C${sx+dx*.22},${sy} ${mx-dx*.18},${my} ${mx},${my} C${mx+dx*.18},${my} ${tail-dx*.18},${ty} ${tail},${ty} L${tx},${ty}`;}
@@ -1906,7 +1972,7 @@ const flowEase=v=>{const u=Math.max(0,Math.min(1,v));return u*u*u*(u*(u*6-15)+10
 // Gather at one outlet, follow a smooth channel, then disperse inside the destination.
 function channelFlow(start,target,outlet,c1,c2,inlet,f){const mix=(a,b,u)=>({x:a.x+(b.x-a.x)*u,y:a.y+(b.y-a.y)*u});if(f<.3)return mix(start,outlet,flowEase(f/.3));if(f>=.7)return mix(inlet,target,flowEase((f-.7)/.3));const u=flowEase((f-.3)/.4),v=1-u;return{x:v*v*v*outlet.x+3*v*v*u*c1.x+3*v*u*u*c2.x+u*u*u*inlet.x,y:v*v*v*outlet.y+3*v*v*u*c1.y+3*v*u*u*c2.y+u*u*u*inlet.y};}
 function compDrawParticles(){
- const w=compCanvas.clientWidth,stack=w<430&&comp.two,h=stack?495:comp.float?310:370,offset=comp.route==='oral'?100:0,canvasH=h+offset;compCanvas.style.height=canvasH+'px';const dpr=Math.min(2,devicePixelRatio||1);if(compCanvas.width!==Math.round(w*dpr)||compCanvas.height!==canvasH*dpr){compCanvas.width=Math.round(w*dpr);compCanvas.height=canvasH*dpr;}
+ const w=compCanvas.clientWidth,stack=w<430&&comp.two,h=stack?495:comp.float?310:370,offset=comp.route==='oral'?100:0,canvasH=h+offset;compCanvas.style.height=canvasH+'px';const dpr=Math.min(lightMotion.matches?1.25:2,devicePixelRatio||1);if(compCanvas.width!==Math.round(w*dpr)||compCanvas.height!==canvasH*dpr){compCanvas.width=Math.round(w*dpr);compCanvas.height=canvasH*dpr;}
  const ctx=compCtx;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,canvasH);ctx.translate(0,offset);const style=getComputedStyle(root),ink=style.getPropertyValue('--ink').trim(),muted=style.getPropertyValue('--muted-ink').trim(),blue=style.getPropertyValue('--blue').trim(),teal=style.getPropertyValue('--teal').trim(),coral=style.getPropertyValue('--coral').trim(),soft=style.getPropertyValue('--soft').trim();
  const bh=comp.float?100:150;const box1=comp.two?(stack?{x:50,y:28,w:w-60,h:115}:{x:8,y:30,w:(w-82)/2,h:bh}):{x:w*.14,y:30,w:w*.72,h:bh};const box2=stack?{x:50,y:195,w:w-60,h:115}:{x:w/2+34,y:30,w:(w-82)/2,h:bh};const n=CM.counts(compPaths,comp.t);
  const text=(str,x,y,color=ink,size=13)=>{ctx.fillStyle=color;ctx.font=`600 ${size}px 'Segoe UI',sans-serif`;ctx.fillText(window.PKTranslate?window.PKTranslate(str):str,x,y);};
@@ -1934,7 +2000,7 @@ function compDrawParticles(){
    if(f<1){const previous=part.events[ei-1].s,before=pos(part,previous,ev.t);if(previous===3&&ev.s===0){xy=channelFlow(before,xy,oralOut,oralC1,oralC2,oralIn,age/duration);radius=2;}else{const bend=10*Math.sin(Math.PI*f);xy={x:before.x+(xy.x-before.x)*f,y:before.y+(xy.y-before.y)*f-bend};}}}
   ctx.globalAlpha=a*.67;ctx.fillStyle=ev.s===2?coral:state===0?blue:state===1?teal:'#b896ff';ctx.beginPath();ctx.arc(xy.x,xy.y,radius,0,Math.PI*2);ctx.fill();
  }ctx.globalAlpha=1;
- compCanvas.setAttribute('aria-label',`Ved ${fmt(comp.t,1)} timer: ${n[0]} partikler sentralt, ${n[1]} perifert, ${n[2]} eliminert${comp.route==='oral'?', '+n[3]+' i depot, '+n[4]+' ikke systemisk tilgjengelig':''}. Sum 320.`);
+ if(!comp.playing||performance.now()-compInfoPaint>=120)compCanvas.setAttribute('aria-label',`Ved ${fmt(comp.t,1)} timer: ${n[0]} partikler sentralt, ${n[1]} perifert, ${n[2]} eliminert${comp.route==='oral'?', '+n[3]+' i depot, '+n[4]+' ikke systemisk tilgjengelig':''}. Sum 320.`);
 }
 function compDrawInfo(){
  const v=compModelParams(),s=compSol.at(comp.t),r=CM.constants(v),rate=CM.rate(s.c1,v);
@@ -1949,8 +2015,9 @@ function compDrawInfo(){
  if(view==='compartments')compDrawReferences();
  }
 }
-function compDraw(force=false){if(!compVisible()||!compSol)return;compDrawParticles();compDrawChart(force);compDrawInfo();}
-function compTick(now){if(!comp.playing)return;const dt=Math.min(.1,(now-compLast)/1000);compLast=now;if(!document.hidden){comp.t=Math.min(comp.end,comp.t+dt*comp.speed);if(now-compPaint>16){compPaint=now;compDraw();}}if(comp.t>=comp.end){compPause();compDraw();q('#comp-play').textContent='▶ Spill på nytt';return;}compFrame=requestAnimationFrame(compTick);}
+let compInfoPaint=-Infinity;
+function compDraw(force=false){if(!compVisible()||!compSol)return;compDrawParticles();compDrawChart(force);const now=performance.now();if(force||!comp.playing||now-compInfoPaint>=120){compInfoPaint=now;compDrawInfo();}}
+function compTick(now){if(!comp.playing)return;const dt=Math.min(.1,(now-compLast)/1000);compLast=now;if(!document.hidden){comp.t=Math.min(comp.end,comp.t+dt*comp.speed);if(now-compPaint>(lightMotion.matches?32:16)){compPaint=now;compDraw();}}if(comp.t>=comp.end){compPause();compDraw();q('#comp-play').textContent='▶ Spill på nytt';return;}compFrame=requestAnimationFrame(compTick);}
 q('#comp-play').onclick=()=>{if(comp.playing){compPause();return;}if(comp.t>=comp.end)comp.t=0;comp.playing=true;compLast=performance.now();q('#comp-play').textContent='Ⅱ Pause';compFrame=requestAnimationFrame(compTick);};
 q('#comp-restart').onclick=()=>{compPause();comp.t=0;compDraw();};q('#comp-step').onclick=()=>{compPause();comp.t=Math.min(comp.end,comp.t+1);compDraw();};q('#comp-time-slider').oninput=e=>{compPause();comp.t=+e.target.value;compDraw();};
 q('#comp-speed').onchange=e=>{comp.speed=+e.target.value;};q('#comp-end').onchange=e=>{comp.end=+e.target.value;compBuild();};
@@ -2405,15 +2472,30 @@ function T(text){if(language==='nb'||!text)return text;const raw=String(text),ke
 window.PKTranslate=text=>T(text);
 q('.header').insertAdjacentHTML('beforeend','<label class="language-control" data-no-translate><span aria-hidden="true">🌐</span><select id="language-select" aria-label="Språk / Language / اللغة"><option value="nb">Norsk</option><option value="en">English</option><option value="ar">العربية</option></select></label>');
 const sourceText=new WeakMap(),sourceAttrs=new WeakMap();let translateScheduled=false;
-function translateDOM(){
- translationObserver.disconnect();document.documentElement.lang=language;root.lang=language;root.dir=language==='ar'?'rtl':'ltr';root.dataset.language=language;q('#language-select').value=language;
- root.querySelectorAll('option').forEach(option=>{if(!option.hasAttribute('value'))option.setAttribute('value',option.textContent);});
- const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;
+const translationDirty=new Set();
+function translateScope(scope){
+ if(!scope.isConnected)return;
+ scope.querySelectorAll('option').forEach(option=>{if(!option.hasAttribute('value'))option.setAttribute('value',option.textContent);});
+ const walker=document.createTreeWalker(scope,NodeFilter.SHOW_TEXT);let node;
  while(node=walker.nextNode()){if(node.parentElement?.closest('script,style,[data-no-translate]'))continue;const record=sourceText.get(node),original=record&&node.nodeValue===record.translated?record.original:node.nodeValue;const translated=T(original);sourceText.set(node,{original,translated});if(node.nodeValue!==translated)node.nodeValue=translated;}
- root.querySelectorAll('[aria-label],[title],[placeholder],[alt]').forEach(element=>{if(element.closest('[data-no-translate]'))return;let records=sourceAttrs.get(element)||{};for(const attr of ['aria-label','title','placeholder','alt']){if(!element.hasAttribute(attr))continue;const value=element.getAttribute(attr),record=records[attr],original=record&&value===record.translated?record.original:value,translated=T(original);records[attr]={original,translated};if(value!==translated)element.setAttribute(attr,translated);}sourceAttrs.set(element,records);});
+ [scope,...scope.querySelectorAll('[aria-label],[title],[placeholder],[alt]')].forEach(element=>{if(element.closest('[data-no-translate]'))return;let records=sourceAttrs.get(element)||{};for(const attr of ['aria-label','title','placeholder','alt']){if(!element.hasAttribute(attr))continue;const value=element.getAttribute(attr),record=records[attr],original=record&&value===record.translated?record.original:value,translated=T(original);records[attr]={original,translated};if(value!==translated)element.setAttribute(attr,translated);}sourceAttrs.set(element,records);});
+}
+function translateDOM(full=true){
+ translationObserver.disconnect();
+ if(full){document.documentElement.lang=language;root.lang=language;root.dir=language==='ar'?'rtl':'ltr';root.dataset.language=language;q('#language-select').value=language;translateScope(root);}
+ else{const scopes=[...translationDirty];for(const scope of scopes)if(!scopes.some(other=>other!==scope&&other.contains(scope)))translateScope(scope);}
+ translationDirty.clear();
  translationObserver.observe(root,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-label','title','placeholder','alt']});translateScheduled=false;
 }
-const translationObserver=new MutationObserver(()=>{if(!translateScheduled){translateScheduled=true;queueMicrotask(translateDOM);}});
+const translationObserver=new MutationObserver(records=>{
+ // Norwegian is the source language. Animate paths without rescanning presentation text.
+ if(language==='nb')return;
+ for(const record of records){const scope=record.target.nodeType===Node.TEXT_NODE?record.target.parentElement:record.target;if(!scope||scope.closest('script,style,[data-no-translate]'))continue;
+  if(record.type==='childList'&&!Array.from(record.addedNodes).some(n=>n.textContent?.trim()||n.nodeType===1&&(n.matches('[aria-label],[title],[placeholder],[alt]')||n.querySelector('[aria-label],[title],[placeholder],[alt]'))))continue;
+  translationDirty.add(scope);
+ }
+ if(translationDirty.size&&!translateScheduled){translateScheduled=true;queueMicrotask(()=>translateDOM(false));}
+});
 q('#language-select').onchange=e=>{language=e.target.value;localeCache.clear();try{localStorage.setItem('pk-lab-language',language);}catch{}translateDOM();if(compVisible())compDraw();window.dispatchEvent(new CustomEvent('pk-language',{detail:language}));};
 translateDOM();
 
@@ -2432,6 +2514,11 @@ function render(kick=false){const d=derive(p),active=inputs.find(a=>a.key===sele
  window.addEventListener('openai:set_globals',e=>{if(e.detail?.globals?.widgetState){restore(e.detail.globals.widgetState);render();}});
  new ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{ropes();chart();});}).observe(root);
  render();
+ let anatomyVisible=true;
+ const syncAnatomyMotion=()=>root.classList.toggle('anatomy-idle',document.hidden||!anatomyVisible);
+ new IntersectionObserver(entries=>{anatomyVisible=entries[0].isIntersecting;syncAnatomyMotion();}).observe(q('.anatomy-figure'));
+ document.addEventListener('visibilitychange',syncAnatomyMotion);
+ window.PKBoot?.finish();
 })();
 </script>
 </body></html>
