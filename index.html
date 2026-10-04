@@ -1,4 +1,4 @@
-<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-yZjHj0Omki4qYvvMiyLbRyYnOD/ioJZ8smkVuwHhB0k='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
+<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-ov/BOIDAEPAUU1H2K3ngYMqtzV8RsJHeh5vUoWtg404='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
 <meta name="author" content="Mohanad Taiy">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#7655dc">
@@ -513,6 +513,26 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 @media(max-width:1250px),(pointer:coarse){
  #pk-lab .organ-glows .organ-orbit,#pk-lab .organ-glows .organ-aura,#pk-lab .rope-light{filter:none}
 }
+
+#pk-lab .km-learning{margin:22px 0;padding:22px;border:1px solid #69548c;border-radius:16px;background:linear-gradient(140deg,#24233a,#182538)}
+#pk-lab .km-learning h3{font-size:23px;color:#f5efff;margin-bottom:8px}
+#pk-lab .km-learning p{font-size:14px;line-height:1.65;margin:10px 0}
+#pk-lab .km-regions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+#pk-lab .km-region{padding:13px;border:1px solid var(--km-color);border-radius:12px;background:#141c2e}
+#pk-lab .km-region strong{display:block;color:var(--km-color);font-size:15px}
+#pk-lab .km-region p{font-size:12px;margin:6px 0}
+#pk-lab .km-region button{margin-top:6px;width:100%;white-space:normal;min-height:40px}
+#pk-lab .km-rate-chart{display:block;width:100%;height:280px;direction:ltr}
+#pk-lab .km-rate-chart text{font:12px 'Segoe UI',sans-serif;fill:#dbe3f7}
+#pk-lab .km-probe{display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center;margin:14px 0;--tone:#c5a0ed}
+#pk-lab .km-probe input{grid-column:1/-1}
+#pk-lab .km-probe output{font-size:13px}
+#pk-lab .km-formula{padding:12px;background:#101827;border-radius:10px;font-size:18px;direction:ltr;text-align:center;color:#f3edff}
+#pk-lab .km-example{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:12px;border-top:1px solid #48526d}
+#pk-lab .km-example button{flex-shrink:0;max-width:100%;white-space:normal}
+#pk-lab .km-threshold{font-size:12px;font-weight:650}
+@media(max-width:700px){#pk-lab .km-learning{padding:14px}#pk-lab .km-regions{grid-template-columns:1fr}#pk-lab .km-example{flex-direction:column;align-items:stretch}#pk-lab .km-probe{grid-template-columns:1fr}#pk-lab .km-probe output{text-align:start}}
+#pk-lab .comp-floating .km-regions{grid-template-columns:1fr}
 </style></head><body class="dark"><div id="pk-startup" role="status" aria-live="polite"><strong>PK-lab</strong><span class="boot-orbit" aria-hidden="true"></span><p id="pk-startup-message">Loading · Laster · جارٍ التحميل</p><a id="pk-startup-retry" href="" hidden>Reload · Last på nytt</a><noscript>Enable JavaScript to open PK-lab.</noscript></div><script>// The app keeps its layout while hidden, so SVG and canvas measurements are valid.
 window.PKBoot={failed:false};
 window.addEventListener('error',function(event){
@@ -1946,27 +1966,30 @@ function compBuild(){
  compGraphRows=Array.from({length:481},(_,i)=>{const t=i*comp.end/480,s=compSol.at(t),n=CM.counts(compPaths,t);return{t,...s,estimate:n[0]/320*comp.dose/comp.V1};});compSize='';compSignature='';compDraw(true);
 }
 function compAxis(svg,end,max,log=window.PKScale.log,height=265){
- const w=Math.max(260,svg.getBoundingClientRect().width),h=height,L=56,R=16,T=28,B=42;
+ const mm=svg.id==='comp-chart'&&comp.kinetics==='mm';
+ const w=Math.max(260,svg.getBoundingClientRect().width),h=height,L=56,R=mm?106:16,T=28,B=42;
  const tail=svg.id==='comp-chart'&&comp.kinetics==='mm'&&compSol?compSol.at(end).c1:max;
  const floor=log?Math.max(max/1e8,Math.min(max/1000,tail>1e-9?tail*.5:max/1000)):max/1000,logSpan=Math.log10(max/floor);
  svg.replaceChildren();svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
  const x=t=>L+t/end*(w-L-R),y=c=>h-B-(log?(Math.log10(Math.max(floor,c))-Math.log10(floor))/logSpan:c/max)*(h-B-T);
- const ys=log?Array.from({length:5},(_,i)=>floor*Math.pow(max/floor,i/4)):[0,max/3,2*max/3,max];
+ const ys=log&&mm?Array.from({length:Math.max(0,Math.floor(Math.log10(max))-Math.ceil(Math.log10(floor))+1)},(_,i)=>10**(Math.ceil(Math.log10(floor))+i)):log?Array.from({length:5},(_,i)=>floor*Math.pow(max/floor,i/4)):[0,max/3,2*max/3,max];
  for(const v of ys){el('line',{x1:L,x2:w-R,y1:y(v),y2:y(v),stroke:'var(--grid)'},svg);el('text',{x:L-7,y:y(v)+4,'text-anchor':'end'},svg,v<.01&&v>0?v.toExponential(0):fmt(v,2));}
  for(let i=0;i<=3;i++)el('text',{x:x(end*i/3),y:h-B+19,'text-anchor':i===0?'start':i===3?'end':'middle'},svg,fmt(end*i/3,1));
  el('text',{x:L,y:15},svg,'Konsentrasjon · mg/L'+(log?' · log':''));el('text',{x:(L+w-R)/2,y:h-4,'text-anchor':'middle'},svg,'Tid · timer');
- return{x,y,w,h,L,R,T,B,floor};
+ return{x,y,w,h,L,R,T,B,floor,max};
 }
 function compLine(rows,key,x,y){return rows.map((r,i)=>(i?'L':'M')+x(r.t).toFixed(2)+','+y(r[key]).toFixed(2)).join(' ');}
 function compDrawChart(rebuild=false){
- const svg=q('#comp-chart'),height=comp.float?180:265,size=svg.clientWidth+'|'+comp.log+'|'+comp.two+'|'+height;
+ const svg=q('#comp-chart'),height=comp.kinetics==='mm'?(comp.float?280:380):comp.float?180:265,size=svg.clientWidth+'|'+comp.log+'|'+comp.two+'|'+height;
+ svg.style.height=height+'px';
  if(rebuild||size!==compSize||!compChartNodes){compSize=size;const ax=compAxis(svg,comp.end,Math.max(.001,...compGraphRows.map(r=>Math.max(r.c1,r.c2,r.estimate||0)))*1.12,comp.log,height),g=el('g',{},svg);
   const central=el('path',{fill:'none',stroke:'var(--blue)','stroke-width':3},g),peripheral=el('path',{fill:'none',stroke:'var(--teal)','stroke-width':3},g),estimate=el('path',{fill:'none',stroke:'var(--muted-ink)','stroke-width':1.5,'stroke-dasharray':'3 5',opacity:.8},g);
   const guide=el('line',{y1:ax.T,y2:ax.h-ax.B,stroke:'var(--purple)','stroke-dasharray':'3 3'},g),dot=el('circle',{r:5,fill:'var(--blue)'},g);compChartNodes={...ax,central,peripheral,estimate,guide,dot};
  }
  const a=compChartNodes,now=compSol.at(comp.t),n=CM.counts(compPaths,comp.t),rows=compGraphRows.filter(r=>r.t<comp.t);rows.push({t:comp.t,...now,estimate:n[0]/320*comp.dose/comp.V1});
  a.central.setAttribute('d',compLine(rows,'c1',a.x,a.y));a.peripheral.setAttribute('d',comp.two?compLine(rows,'c2',a.x,a.y):'');a.estimate.setAttribute('d',comp.particles?compLine(rows,'estimate',a.x,a.y):'');a.guide.setAttribute('x1',a.x(comp.t));a.guide.setAttribute('x2',a.x(comp.t));a.dot.setAttribute('cx',a.x(comp.t));a.dot.setAttribute('cy',a.y(now.c1));
- q('#comp-readout').textContent=`t = ${fmt(comp.t,2)} t · Csentral ${fmt(now.c1,3)} mg/L${comp.two?' · Cperifer '+fmt(now.c2,3)+' mg/L':''}. ${comp.log?'Null og verdier under '+fmt(a.floor,4)+' mg/L vises ved nedre aksegrense.':''}`;
+ const concentrationText=c=>c>0&&c<.001?c.toExponential(2):fmt(c,3),floorText=a.floor<.0001?a.floor.toExponential(1):fmt(a.floor,4);
+ q('#comp-readout').textContent=`t = ${fmt(comp.t,2)} t · Csentral ${concentrationText(now.c1)} mg/L${comp.two?' · Cperifer '+concentrationText(now.c2)+' mg/L':''}. ${comp.log?'Null og verdier under '+floorText+' mg/L vises ved nedre aksegrense.':''}`;
 }
 const flowEase=v=>{const u=Math.max(0,Math.min(1,v));return u*u*u*(u*(u*6-15)+10);};
 // Gather at one outlet, follow a smooth channel, then disperse inside the destination.
@@ -2374,11 +2397,7 @@ function absorptionRuns(rows,key='c'){const runs=[];let run=[];for(let i=1;i<row
 function absorptionBands(svg,a,rows,key='c'){const runs=absorptionRuns(rows,key);for(const run of runs)el('rect',{class:'absorption-band',x:a.x(run[0].t),y:a.T,width:a.x(run.at(-1).t)-a.x(run[0].t),height:a.h-a.T-a.B,fill:'#4ee39a',opacity:.065,'pointer-events':'none'},svg);return runs;}
 const priorKineticDraw=drawKineticRegions;drawKineticRegions=function(a){priorKineticDraw(a);absorptionLegend.hidden=absorptionNote.hidden=comp.route!=='oral';
  if(comp.route==='oral'&&!a.absorptionMarked){a.absorptionMarked=true;absorptionBands(q('#comp-chart'),a,compGraphRows,'c1');const peak=compGraphRows.reduce((best,r)=>r.c1>best.c1?r:best,compGraphRows[0]);el('circle',{cx:a.x(peak.t),cy:a.y(peak.c1),r:3,fill:'#4ee39a'},q('#comp-chart'));el('text',{x:a.x(peak.t)+6,y:Math.max(a.T+12,a.y(peak.c1)-6),fill:'#4ee39a',style:'font-size:10px'},q('#comp-chart'),'Cmax');}
- phaseReadout.hidden=comp.kinetics!=='mm';if(comp.kinetics!=='mm')return;
- if(!a.phaseMarkers){const rows=compGraphRows,peakIndex=rows.reduce((best,r,i)=>r.c1>rows[best].c1?i:best,0),peak=rows[peakIndex],zeroEnd=phaseCrossing(rows,10*comp.Km,peakIndex),firstStart=phaseCrossing(rows,.1*comp.Km,peakIndex);a.phaseMarkers={zeroEnd,firstStart};
-  for(const [time,label,color]of [[zeroEnd,'10Km',kineticColors.zero],[firstStart,'0,1Km',kineticColors.first]])if(time!==null){el('line',{x1:a.x(time),x2:a.x(time),y1:a.T+20,y2:a.h-a.B,stroke:color,'stroke-width':1,'stroke-dasharray':'3 5',opacity:.45},q('#comp-chart'));el('text',{x:a.x(time),y:a.h-a.B-7,'text-anchor':'middle',fill:color,style:'font-size:10px'},q('#comp-chart'),label);}
- }
- const {zeroEnd,firstStart}=a.phaseMarkers;phaseReadout.textContent=(zeroEnd!==null?phaseWords.early+' '+fmt(zeroEnd,1)+' '+phaseWords.hour+'. ':'')+(firstStart!==null?phaseWords.late+' '+fmt(firstStart,1)+' '+phaseWords.hour+'. ':'')+phaseWords.gradual+' '+(window.PKScale.log?phaseWords.log:phaseWords.linear);
+ phaseReadout.hidden=true;
 };
 
 // An optional heart easter egg, independently timed and never part of the PK model.
@@ -2393,6 +2412,82 @@ let heartTimer=0;const heartSky=ex('div',null,{class:'heart-sky','aria-hidden':'
 heartButton.onclick=()=>{clearTimeout(heartTimer);heartSky.replaceChildren();heartFx.classList.remove('playing');void heartFx.getBoundingClientRect();heartFx.classList.add('playing');const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  if(!reduced){const r=heartButton.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,tabBottom=q('.tabs').getBoundingClientRect().bottom,target=Math.max(20,Math.min(y-80,tabBottom));const order=Array.from({length:10},(_,i)=>i);for(let j=9;j>0;j--){const k=Math.floor(Math.random()*(j+1));[order[j],order[k]]=[order[k],order[j]];}const marked=new Set(order.slice(0,3));for(let i=0;i<10;i++){const h=ex('span','🤍',{class:'floating-heart'}),dx=Math.max(24-x,Math.min(innerWidth-x-30,(Math.random()-.5)*240));if(marked.has(i))h.append(ex('span','Z',{class:'heart-letter'}));h.style.cssText=`left:${x}px;top:${y}px;--dx:${dx}px;--dy:${target-y}px;--drift:${dx*.3+Math.sin(i)*25}px;--duration:${3.5+Math.random()*1.5}s;animation-delay:${i*.09}s`;heartSky.append(h);}}
  heartTimer=setTimeout(()=>{heartFx.classList.remove('playing');heartSky.replaceChildren();},6500);
+};
+window.PKLocalePairs=[...(window.PKLocalePairs||[]),...experiencePairs];
+
+// A rate–concentration view explains the same model used by the time simulation.
+const kmText={
+ title:exText('Hva betyr Km?','What does Km mean?','ما معنى Km؟'),
+ intro:exText('Km er konsentrasjonen der eliminasjonsraten er halvparten av Vmax. Km måles i mg/L; Vmax måles i mg/time. Km er verken en tid eller en brå metningsgrense.','Km is the concentration at which elimination is half of Vmax. Km is measured in mg/L; Vmax in mg/hour. Km is neither a time nor an abrupt saturation threshold.','Km هو التركيز الذي يبلغ عنده معدل الإطراح نصف Vmax. وحدة Km هي ملغ/لتر ووحدة Vmax ملغ/ساعة. ليس Km زمناً ولا عتبة تشبع مفاجئة.'),
+ axes:exText('Over: konsentrasjon mot tid. Under: eliminasjonsrate mot konsentrasjon, med lineære akser. Dette er to ulike perspektiver på samme modell.','Above: concentration versus time. Below: elimination rate versus concentration, with linear axes. These are two views of the same model.','أعلى: التركيز مقابل الزمن. أسفل: معدل الإطراح مقابل التركيز بمحورين خطيين. هذان منظوران للنموذج نفسه.'),
+ zero:exText('Metning · tilnærmet 0. orden','Saturation · approximately zero order','تشبع · مرتبة صفرية تقريباً'),
+ mixed:exText('Overgangsområde','Transition region','منطقة انتقالية'),
+ first:exText('Tilnærmet 1. orden','Approximately first order','مرتبة أولى تقريباً'),
+ zeroNote:exText('C ≥ 10Km: raten er minst 90,9 % av Vmax. Omtrent samme mengde elimineres per time.','C ≥ 10Km: the rate is at least 90.9% of Vmax. Approximately the same amount is eliminated per hour.','C ≥ 10Km: المعدل لا يقل عن 90.9٪ من Vmax. تُطرح كمية متقاربة كل ساعة.'),
+ mixedNote:exText('0,1Km < C < 10Km: gradvis overgang. Ved C = Km er raten nøyaktig 50 % av Vmax.','0.1Km < C < 10Km: a gradual transition. At C = Km the rate is exactly 50% of Vmax.','0.1Km < C < 10Km: انتقال تدريجي. عند C = Km يساوي المعدل تماماً 50٪ من Vmax.'),
+ firstNote:exText('C ≤ 0,1Km: raten ≈ (Vmax/Km) × C. Omtrent samme andel elimineres per time.','C ≤ 0.1Km: rate ≈ (Vmax/Km) × C. Approximately the same fraction is eliminated per hour.','C ≤ 0.1Km: المعدل ≈ (Vmax/Km) × C. تُطرح نسبة متقاربة كل ساعة.'),
+ continuity:exText('Grensene 10Km og 0,1Km er pedagogiske tilnærminger. Hele kurven følger Michaelis–Menten; ingen biologisk bryter slår av eller på. Ved lav C blir en én-kompartmentkurve nesten rett på semilog når det ikke lenger er vesentlig tilførsel eller distribusjon.','The 10Km and 0.1Km boundaries are teaching approximations. The entire curve follows Michaelis–Menten; there is no biological switch. At low C a one-compartment curve becomes nearly straight on semi-log when input or distribution is no longer substantial.','الحدان 10Km و0.1Km تقريبيان للتعليم. يتبع المنحنى كله مايكلس–منتن دون تحول بيولوجي مفاجئ. عند انخفاض C يصبح منحنى الحجرة الواحدة شبه مستقيم على الرسم شبه اللوغاريتمي عندما لا يبقى امتصاص أو توزيع مهم.'),
+ rate:exText('Eliminasjonsrate · mg/time','Elimination rate · mg/hour','معدل الإطراح · ملغ/ساعة'),
+ concentration:exText('Konsentrasjon C · mg/L','Concentration C · mg/L','التركيز C · ملغ/لتر'),
+ probe:exText('Utforsk konsentrasjonen i rategrafen','Explore concentration on the rate graph','استكشف التركيز في رسم المعدل'),
+ guide:exText('Dra markøren: dosen og simuleringstiden endres ikke. Den hvite ringen følger simuleringen.','Move the probe: dose and simulation time stay unchanged. The white ring follows the simulation.','حرّك المؤشر دون تغيير الجرعة أو زمن المحاكاة. تتبع الحلقة البيضاء المحاكاة.'),
+ jump:exText('Gå til','Go to','انتقل إلى'),
+ missing:exText('Ingen fallende passering i valgt tidsrom','No downward crossing in this time span','لا يوجد عبور هابط خلال هذه الفترة'),
+ example:exText('Vis 12-timerseksemplet','Show the 12-hour example','اعرض مثال 12 ساعة'),
+ exampleNote:exText('I.v. bolus · 1 kompartment · 200 mg · V = 10 L · Vmax = 30 mg/time · Km = 1 mg/L. C₀ = 20 mg/L = 20Km.','IV bolus · 1 compartment · 200 mg · V = 10 L · Vmax = 30 mg/hour · Km = 1 mg/L. C₀ = 20 mg/L = 20Km.','دفعة وريدية · حجرة واحدة · 200 ملغ · V = 10 لتر · Vmax = 30 ملغ/ساعة · Km = 1 ملغ/لتر. C₀ = 20 ملغ/لتر = 20Km.'),
+ analytic:exText('Én-kompartment i.v. bolus: t = (V/Vmax) × [C₀ − C + Km × ln(C₀/C)]. Tidene regnes fra valgt modell og oppdateres når parametrene endres.','One-compartment IV bolus: t = (V/Vmax) × [C₀ − C + Km × ln(C₀/C)]. Times are calculated from the selected model and update when parameters change.','دفعة وريدية في حجرة واحدة: t = (V/Vmax) × [C₀ − C + Km × ln(C₀/C)]. تُحسب الأزمنة من النموذج المختار وتتحدث عند تغيير المعلمات.'),
+ numeric:exText('Tidene viser første fallende passering etter høyeste topp og beregnes fra simuleringen. Absorpsjon og distribusjon kan påvirke kurveformen; fargen beskriver eliminasjonen.','Times mark the first downward crossing after the highest peak and are calculated from the simulation. Absorption and distribution can affect the curve shape; colour describes elimination.','تحدد الأزمنة أول عبور هابط بعد أعلى قمة وتُحسب من المحاكاة. قد يغير الامتصاص والتوزيع شكل المنحنى؛ اللون يصف الإطراح.'),
+ half:exText('C = Km → rate = Vmax/2','C = Km → rate = Vmax/2','C = Km ← المعدل = Vmax/2'),
+ outside:exText('C i simuleringen > 20Km (utenfor rategrafen)','Simulation C > 20Km (outside rate graph)','C في المحاكاة > 20Km (خارج رسم المعدل)')
+};
+kineticNames.mixed=kmText.mixed;
+kineticsDetails.querySelector('p').textContent=kmText.continuity;
+const kmSection=ex('section',null,{class:'km-learning',id:'km-learning',hidden:'','aria-labelledby':'km-title'});
+kmSection.append(ex('h3',kmText.title,{id:'km-title'}),ex('p',kmText.intro),ex('div','rate = Vmax × C / (Km + C)',{class:'km-formula','data-no-translate':''}),ex('p',kmText.axes));
+const kmChart=el('svg',{class:'km-rate-chart',role:'img','aria-label':kmText.axes},kmSection);
+const kmProbe=ex('label',null,{class:'km-probe',for:'km-probe'}),kmSlider=ex('input',null,{id:'km-probe',type:'range',min:0,max:20,step:.05,value:1}),kmOutput=ex('output',null,{for:'km-probe','data-no-translate':''});kmProbe.append(ex('span',kmText.probe),kmOutput,kmSlider);kmSection.append(kmProbe,ex('p',kmText.guide,{class:'muted'}));
+const kmCards=ex('div',null,{class:'km-regions'}),kmCrossings=[];
+for(const [ratio,title,note,color]of [[10,kmText.zero,kmText.zeroNote,kineticColors.zero],[1,kmText.mixed,kmText.mixedNote,kineticColors.mixed],[.1,kmText.first,kmText.firstNote,kineticColors.first]]){
+ const card=ex('article',null,{class:'km-region',style:'--km-color:'+color});const b=exButton('',()=>{if(b.dataset.time){compPause();comp.t=+b.dataset.time;compDraw();}});card.append(ex('strong',title),ex('p',note),b);kmCards.append(card);kmCrossings.push({ratio,button:b,color});
+}
+const kmTimesNote=ex('p',null,{class:'muted'});kmSection.append(kmCards,kmTimesNote,ex('p',kmText.continuity,{class:'muted'}));
+const kmExample=ex('div',null,{class:'km-example'});kmExample.append(ex('p',kmText.exampleNote),exButton(kmText.example,()=>{applyLabCase('saturated');setScale(true);comp.t=12;compDraw(true);}));kmSection.append(kmExample);
+phaseReadout.after(kmSection);
+let kmRateNodes=null,kmRateSignature='';
+function kmCrossingTime(ratio){const target=ratio*comp.Km;if(comp.route==='iv'&&!comp.two){const c0=comp.dose/comp.V1;if(c0<target)return null;const t=comp.V1/comp.vmax*(c0-target+comp.Km*Math.log(c0/target));return t<=comp.end?t:null;}const peak=compGraphRows.reduce((best,r,i)=>r.c1>compGraphRows[best].c1?i:best,0);return phaseCrossing(compGraphRows,target,peak);}
+function kmDrawRate(){
+ const width=Math.max(280,kmChart.getBoundingClientRect().width),signature=[width,comp.Km,comp.vmax,comp.dose,comp.V1,comp.route,comp.two,comp.end,comp.ka,comp.F,comp.Q,comp.V2].join('|');
+ if(signature!==kmRateSignature){kmRateSignature=signature;kmChart.replaceChildren();const h=280,L=58,R=18,T=30,B=47,x=c=>L+c/(20*comp.Km)*(width-L-R),y=rate=>h-B-rate/(comp.vmax*1.12)*(h-T-B);kmChart.setAttribute('viewBox',`0 0 ${width} ${h}`);
+  for(const ratio of [0,.5,1]){const yy=y(ratio*comp.vmax);el('line',{x1:L,x2:width-R,y1:yy,y2:yy,stroke:'#8290ad','stroke-dasharray':ratio?'5 5':'none',opacity:.55},kmChart);el('text',{x:L-7,y:yy+4,'text-anchor':'end'},kmChart,fmt(ratio*comp.vmax,1));}
+  el('text',{x:width-R,y:y(comp.vmax)-7,'text-anchor':'end'},kmChart,'Vmax');el('text',{x:width-R,y:y(comp.vmax/2)-7,'text-anchor':'end'},kmChart,'½ Vmax');
+  el('line',{x1:L,x2:L,y1:T,y2:h-B,stroke:'#8290ad'},kmChart);
+  for(const ratio of [0,1,10,20]){el('line',{x1:x(ratio*comp.Km),x2:x(ratio*comp.Km),y1:h-B,y2:h-B+5,stroke:'#8290ad'},kmChart);el('text',{x:x(ratio*comp.Km),y:h-B+20,'text-anchor':ratio===20?'end':'middle'},kmChart,ratio===1?'Km':fmt(ratio*comp.Km,1));}
+  el('text',{x:L,y:16},kmChart,kmText.rate);el('text',{x:(L+width-R)/2,y:h-3,'text-anchor':'middle'},kmChart,kmText.concentration);
+  const points=Array.from({length:241},(_,i)=>({c:i/240*20*comp.Km}));
+  for(let i=1;i<points.length;i++){const c0=points[i-1].c,c1=points[i].c;el('path',{d:`M${x(c0)} ${y(comp.vmax*c0/(comp.Km+c0))} L${x(c1)} ${y(comp.vmax*c1/(comp.Km+c1))}`,fill:'none',stroke:kineticColor(comp,(c0+c1)/2),'stroke-width':3.5},kmChart);}
+  el('line',{x1:x(comp.Km),x2:x(comp.Km),y1:y(0),y2:y(comp.vmax/2),stroke:kineticColors.mixed,'stroke-dasharray':'4 4'},kmChart);
+  el('circle',{cx:x(comp.Km),cy:y(comp.vmax/2),r:5,fill:kineticColors.mixed},kmChart);
+  el('text',{x:Math.min(x(comp.Km)+14,width-200),y:y(comp.vmax/2)+25},kmChart,kmText.half);
+  const probe=el('circle',{r:6,fill:'#c5a0ed',stroke:'#101527','stroke-width':2},kmChart),current=el('circle',{r:8,fill:'none',stroke:'#fff','stroke-width':2},kmChart);kmRateNodes={x,y,probe,current};
+  for(const item of kmCrossings){const t=kmCrossingTime(item.ratio),label=item.ratio===1?'Km':(item.ratio===.1?'0,1':item.ratio)+'Km';item.button.disabled=t===null;item.button.dataset.time=t===null?'':String(t);item.button.textContent=t===null?label+' · '+kmText.missing:kmText.jump+' '+label+' · '+fmt(t,1)+' h';}
+  kmTimesNote.textContent=comp.route==='iv'&&!comp.two?kmText.analytic:kmText.numeric;
+ }
+ const a=kmRateNodes,c=+kmSlider.value*comp.Km,rate=comp.vmax*c/(comp.Km+c),currentC=compSol.at(comp.t).c1;
+ a.probe.setAttribute('cx',a.x(c));a.probe.setAttribute('cy',a.y(rate));a.current.style.display=currentC>20*comp.Km?'none':'';a.current.setAttribute('cx',a.x(Math.min(currentC,20*comp.Km)));a.current.setAttribute('cy',a.y(comp.vmax*currentC/(comp.Km+currentC)));
+ const output='C = '+fmt(c,2)+' mg/L · '+fmt(rate,2)+' mg/h ('+fmt(rate/comp.vmax*100,1)+' % Vmax)';if(kmOutput.textContent!==output)kmOutput.textContent=output;kmSlider.style.setProperty('--fill',+kmSlider.value/20*100+'%');const aria=kmText.axes+(currentC>20*comp.Km?' · '+kmText.outside:'');if(kmChart.getAttribute('aria-label')!==aria)kmChart.setAttribute('aria-label',aria);
+}
+kmSlider.oninput=()=>kmDrawRate();
+const kmPreviousDraw=drawKineticRegions;drawKineticRegions=function(a){
+ kmPreviousDraw(a);kmSection.hidden=comp.kinetics!=='mm';
+ const legends=kineticLegend.querySelectorAll(':scope > span > span');
+ for(const [i,key]of ['zero','first'].entries()){const label=(comp.kinetics==='mm'?'≈ ':'')+kineticNames[key];const translated=window.PKTranslate?window.PKTranslate(label):label;if(legends[i+1]&&legends[i+1].textContent!==translated)legends[i+1].textContent=translated;}
+ if(comp.kinetics!=='mm')return;
+ if(!a.kmLines){a.kmLines=true;const svg=q('#comp-chart');
+  for(const [low,high,color]of [[10*comp.Km,a.max,kineticColors.zero],[.1*comp.Km,10*comp.Km,kineticColors.mixed],[window.PKScale.log?a.floor:0,.1*comp.Km,kineticColors.first]]){const lo=Math.max(window.PKScale.log?a.floor:0,low),hi=Math.min(a.max,high);if(hi<=lo)continue;const band=el('rect',{x:a.L,y:a.y(hi),width:a.w-a.R-a.L,height:a.y(lo)-a.y(hi),fill:color,opacity:.045,'pointer-events':'none'});svg.insertBefore(band,svg.firstChild);}
+  for(const {ratio,color}of kmCrossings){const value=ratio*comp.Km;if(value<a.floor&&window.PKScale.log||value>a.max)continue;const yy=a.y(value);el('line',{class:'km-threshold-line',x1:a.L,x2:a.w-a.R,y1:yy,y2:yy,stroke:color,'stroke-width':1.2,'stroke-dasharray':'6 5',opacity:.8},svg);el('text',{class:'km-threshold',x:a.w-a.R+8,y:yy+4,style:'fill:'+color},svg,(ratio===1?'Km':(ratio===.1?'0,1':ratio)+'Km')+' = '+fmt(value,2));}
+ }
+ // Keep the main time plot uncluttered; detailed crossing times live in the cards below.
+ phaseReadout.hidden=true;kmDrawRate();
 };
 window.PKLocalePairs=[...(window.PKLocalePairs||[]),...experiencePairs];
 
