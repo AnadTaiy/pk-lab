@@ -1,4 +1,4 @@
-<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-pznjN3uoxf/79zhDKxTJ8t7L2ej4CQDuE7S+ee1MnxA='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
+<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-lIcEqlFymCj4OCK8fagn2r03zznl2EYawz+68s2Qubc='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
 <meta name="author" content="Mohanad Taiy">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#7655dc">
@@ -393,16 +393,13 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 #pk-lab .formula-workings li{margin:18px 0;font-size:13px;line-height:1.6}
 #pk-lab .formula-workings .formula-equation{font-size:20px;padding:12px}
 
-#pk-lab .language-control{position:relative;display:flex;align-items:center;gap:6px;margin-inline-start:auto;padding:4px 0;border:0;background:transparent;font-size:21px;overflow:visible}
+#pk-lab .language-control{display:flex;align-items:center;gap:6px;margin-inline-start:auto;padding:4px 0;border:0;background:transparent;font-size:21px}
 #pk-lab .language-control select{font:600 14px 'Segoe UI',Tahoma,sans-serif;background:transparent;color:var(--ink);border:0;padding:10px 5px;min-height:44px;max-width:135px;cursor:pointer}
 #pk-lab .language-control select:focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:5px}
 #pk-lab .language-control option{background:var(--surface);color:var(--ink)}
-#pk-lab .language-icon{width:21px;height:21px;flex:none;color:#596b8e}
-@media(hover:hover) and (prefers-reduced-motion:no-preference){
- #pk-lab .language-control::after{content:"";position:absolute;left:0;top:8px;width:25px;height:2px;border-radius:999px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0) 12%,rgba(255,255,255,.95) 50%,rgba(255,255,255,0) 88%,transparent 100%);opacity:0;pointer-events:none;transform:translateX(-13px) rotate(-18deg)}
- #pk-lab .language-control:hover::after{animation:globeSweep .9s ease-out 1}
-}
-@keyframes globeSweep{0%{opacity:0;transform:translateX(-13px) rotate(-18deg)}22%{opacity:.9}100%{opacity:0;transform:translateX(23px) rotate(-18deg)}}
+#pk-lab .language-icon{width:21px;height:21px;flex:none;color:#596b8e;transform-origin:center}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){#pk-lab .language-control:hover .language-icon{animation:globePulse .75s ease-out 1}}
+@keyframes globePulse{0%{opacity:.72;transform:scale(1)}42%{opacity:1;transform:scale(1.08)}100%{opacity:.78;transform:scale(1)}}
 #pk-lab[dir=rtl]{font-family:'Segoe UI',Tahoma,Arial,sans-serif}
 #pk-lab[dir=rtl] .formula-equation,#pk-lab[dir=rtl] svg,#pk-lab[dir=rtl] canvas,#pk-lab[dir=rtl] input[type=number],#pk-lab[dir=rtl] input[type=range]{direction:ltr;unicode-bidi:isolate}
 #pk-lab[dir=rtl] .workshop{direction:ltr}#pk-lab[dir=rtl] .input-row,#pk-lab[dir=rtl] .result{direction:rtl}
@@ -2543,6 +2540,7 @@ if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
   const cleanup = () => {
     clearTimeout(cleanupTimer);
     if (active) { active.sky.remove(); active = null; }
+    heartFx.classList.remove('playing');
   };
   const surprise = () => {
     if (active || document.hidden) return;
@@ -2552,6 +2550,9 @@ if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
     suppressUntil=performance.now()+140;
     const pink = surpriseCount++ > 0;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // The first large-heart surprise keeps the existing white shock-line
+    // celebration, while the removed blue electric mesh stays absent.
+    if (!pink) { void heartFx.getBoundingClientRect(); heartFx.classList.add('playing'); }
     const rect = heartButton.getBoundingClientRect();
     const sky = ex('div', null, {class:'red-heart-sky','aria-hidden':'true'});
     const x = rect.left + rect.width/2, y = rect.top + rect.height/2;
