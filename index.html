@@ -1,4 +1,4 @@
-<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-i7S4LgXvsJ+S2XKwKqaROfOi8e4zxcAgqQ3RXOwZ8Z4='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
+<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-qttiIcYcJ8z+JZ+6yfmuK7EjJphU7rJeAvGjzfhGQzY='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
 <meta name="author" content="Mohanad Taiy">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#7655dc">
@@ -207,7 +207,7 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 #pk-lab .organ-glows g[data-organ=tissue] .organ-orbit{stroke-dasharray:9 41;animation-duration:32s}
 #pk-lab .organ-glows g[data-organ=tissue] .organ-orbit.inner-contour{animation-duration:22s;animation-delay:-8s}
 #pk-lab .organ-glows g[data-organ=tissue] .organ-lit-pixels{animation:bodyPixelBreathe 7s ease-in-out infinite}
-@keyframes organPixelBreathe{0%,100%{opacity:.24}50%{opacity:.54}}
+@keyframes organPixelBreathe{0%,100%{opacity:.42}50%{opacity:.76}}
 @keyframes bodyPixelBreathe{0%,100%{opacity:var(--body-glow-low,.12)}50%{opacity:var(--body-glow-high,.28)}}
 @keyframes organOrbit{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
 @media(prefers-reduced-motion:reduce){#pk-lab .organ-glows g.active .organ-lit-pixels,#pk-lab .organ-glows g.active .organ-orbit{animation:none!important}#pk-lab .organ-glows g.active .organ-lit-pixels{opacity:.15}#pk-lab .organ-glows g.active .organ-orbit{stroke-dasharray:none;opacity:.35}}
@@ -393,17 +393,23 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 #pk-lab .formula-workings li{margin:18px 0;font-size:13px;line-height:1.6}
 #pk-lab .formula-workings .formula-equation{font-size:20px;padding:12px}
 
-#pk-lab .language-control{position:relative;display:flex;align-items:center;gap:6px;margin-inline-start:auto;padding:5px 0;border:0;background:transparent;font-size:21px}
-#pk-lab .language-control select{font:600 14px 'Segoe UI',Tahoma,sans-serif;background:transparent;color:var(--ink);border:0;padding:10px 5px;min-height:44px;max-width:135px;cursor:pointer}
-#pk-lab .language-control select:focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:5px}
-#pk-lab .language-control option{background:var(--surface);color:var(--ink)}
-#pk-lab .language-icon{width:21px;height:21px;flex:none;color:#596b8e}
-@media(hover:hover) and (prefers-reduced-motion:no-preference){
- #pk-lab .language-control::before,#pk-lab .language-control::after{content:"";position:absolute;left:0;width:0;height:2px;border-radius:999px;background:linear-gradient(90deg,transparent,#55c7ff 34%,#2c9fff 66%,transparent);box-shadow:0 0 7px rgba(52,173,255,.72);opacity:0;transition:width .36s cubic-bezier(.22,.7,.24,1),opacity .2s ease;pointer-events:none}
- #pk-lab .language-control::before{top:0}
- #pk-lab .language-control::after{bottom:0}
- #pk-lab .language-control:hover::before,#pk-lab .language-control:hover::after{width:25px;opacity:1}
-}
+/* Opaque popup: no backdrop blur or gradient shadow on older iPads. */
+#pk-lab .language-control{position:relative;margin-inline-start:auto;z-index:30}
+#pk-lab .language-trigger{display:flex;align-items:center;gap:5px;min-height:44px;padding:0 2px;border:0;border-radius:0;box-shadow:none;background:transparent;color:var(--ink);font:600 14px 'Segoe UI',Tahoma,sans-serif;cursor:pointer}
+#pk-lab .language-globe{display:grid;place-items:center;position:relative;width:40px;height:40px;flex:none}
+#pk-lab .language-icon{width:22px;height:22px;color:#72809f}
+#pk-lab .language-halo{position:absolute;inset:0;width:40px;height:40px;opacity:0;pointer-events:none}
+#pk-lab .language-halo circle{fill:none;stroke:url(#globe-ring-gradient);stroke-width:1.7;stroke-dasharray:68 32;stroke-linecap:round}
+#pk-lab .language-trigger:focus-visible{outline:2px solid #ae7cff;outline-offset:3px;border-radius:8px}
+#pk-lab .language-chevron{font-size:17px;padding-inline-start:5px}
+#pk-lab .language-menu{position:absolute;inset-inline-end:0;top:calc(100% + 7px);min-width:154px;padding:6px;border:1px solid #46506a;border-radius:12px;background:#20283c;box-shadow:none;filter:none;backdrop-filter:none;-webkit-backdrop-filter:none;overflow:hidden}
+#pk-lab .language-menu[hidden],#pk-lab #language-select[hidden]{display:none!important}
+#pk-lab .language-menu button{display:block;width:100%;min-height:44px;padding:10px 14px;border:0;border-radius:7px;background:#20283c;color:#eef1ff;text-align:start;font:600 14px 'Segoe UI',Tahoma,sans-serif;box-shadow:none;cursor:pointer}
+#pk-lab .language-menu button[aria-checked=true]{background:#393452}
+#pk-lab .language-menu button:hover,#pk-lab .language-menu button:focus-visible{background:#353f58;outline:1px solid #798aac;outline-offset:-2px}
+@media(hover:hover){#pk-lab .language-globe:hover .language-halo{opacity:1;animation:globeRingOrbit 2.8s linear infinite}}
+@keyframes globeRingOrbit{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#pk-lab .language-globe:hover .language-halo{animation:none}}
 #pk-lab[dir=rtl]{font-family:'Segoe UI',Tahoma,Arial,sans-serif}
 #pk-lab[dir=rtl] .formula-equation,#pk-lab[dir=rtl] svg,#pk-lab[dir=rtl] canvas,#pk-lab[dir=rtl] input[type=number],#pk-lab[dir=rtl] input[type=range]{direction:ltr;unicode-bidi:isolate}
 #pk-lab[dir=rtl] .workshop{direction:ltr}#pk-lab[dir=rtl] .input-row,#pk-lab[dir=rtl] .result{direction:rtl}
@@ -557,8 +563,8 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 .glossy-red-heart{display:block;width:100%;height:100%}
 .rising-red-heart.pink-heart{width:clamp(64px,12vw,100px)}
 @keyframes redHeartRise{
- 0%,12%{opacity:0;transform:translate(-50%,-50%) scale(.09) rotate(-7deg)}
- 22%{opacity:1;transform:translate(calc(-50% + var(--heart-drift,0px)*.08),calc(-50% + var(--heart-rise)*.08)) scale(.26) rotate(-4deg)}
+ 0%{opacity:.85;transform:translate(-50%,-50%) scale(.14) rotate(-7deg)}
+ 12%{opacity:1;transform:translate(calc(-50% + var(--heart-drift,0px)*.08),calc(-50% + var(--heart-rise)*.08)) scale(.36) rotate(-4deg)}
  65%{opacity:1}
  100%{opacity:0;transform:translate(calc(-50% + var(--heart-drift,0px)),calc(-50% + var(--heart-rise))) scale(1.12) rotate(5deg)}
 }
@@ -575,6 +581,10 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 #pk-lab .heart-celebration.heart-cropped{inset:auto;left:42.739%;top:34.34%;width:21.599%;height:13.736%}
 #pk-lab .heart-cropped .heart-beat,#pk-lab .heart-cropped .heart-shock{transform-box:fill-box;transform-origin:center}
 @media(prefers-reduced-motion:reduce){#pk-lab .organ-raster-pixels{animation:none!important;opacity:.25;will-change:auto}}
+
+/* Keep the anatomical pixels visible under a warm, restrained outline. */
+#pk-lab .organ-glows .organ-aura{opacity:.38}
+#pk-lab .organ-glows .organ-orbit{opacity:.64}
 </style></head><body class="dark"><div id="pk-startup" role="status" aria-live="polite"><strong>PK-lab</strong><span class="boot-orbit" aria-hidden="true"></span><p id="pk-startup-message">Loading · Laster · جارٍ التحميل</p><a id="pk-startup-retry" href="" hidden>Reload · Last på nytt</a><noscript>Enable JavaScript to open PK-lab.</noscript></div><script>// The app keeps its layout while hidden, so SVG and canvas measurements are valid.
 window.PKBoot={failed:false};
 window.addEventListener('error',function(event){
@@ -1751,8 +1761,8 @@ applyTheme();
 // Anatomy uses brightened copies of the original pixels, clipped to each organ.
 const organPaths={
  liver:'M378 833 C371 810 369 785 369 758 C369 722 386 696 417 680 C442 667 466 667 493 674 C530 672 566 676 595 688 C580 711 553 731 526 743 C508 751 493 754 483 754 C479 768 454 777 434 794 C416 808 395 820 378 833 Z',
- kidneys:'M450 817 C430 818 419 836 416 856 C411 875 417 895 433 903 C450 913 468 903 475 888 C481 875 474 861 464 857 C455 853 465 846 475 842 C484 838 486 830 479 824 C471 817 460 814 450 817 Z M683 814 C702 810 713 825 715 846 C719 867 711 887 695 897 C680 906 661 897 658 883 C653 870 660 860 670 855 C678 851 670 846 663 842 C653 837 663 821 673 818 C677 816 680 815 683 814 Z',
- stomach:'M602 686 C598 678 592 670 583 664 C575 667 571 678 576 689 C583 704 597 712 600 728 C604 746 594 764 575 774 C565 780 552 781 541 787 C529 794 523 804 524 816 C531 801 539 795 550 801 C571 813 592 824 620 818 C646 812 666 797 675 776 C684 755 684 730 668 711 C654 694 636 684 613 694 C608 696 605 691 602 686 Z',
+ kidneys:'M450 817 C430 818 419 836 416 856 C411 875 417 895 433 903 C450 913 468 903 475 888 C481 875 474 861 464 857 C455 853 465 846 475 842 C484 838 486 830 479 824 C471 817 460 814 450 817 Z M688 809 C705 807 716 825 718 846 C721 869 712 890 696 899 C681 908 664 900 660 885 C657 872 662 861 671 855 C678 851 672 846 665 842 C657 837 665 820 678 813 C681 811 685 809 688 809 Z',
+ stomach:'M602 686 C596 676 591 667 585 662 C579 658 573 655 570 654 C575 673 583 691 592 705 C599 715 602 721 603 732 C604 746 594 764 575 774 C565 780 552 781 541 787 C529 794 523 804 524 816 C531 801 539 795 550 801 C571 813 592 824 620 818 C646 812 666 797 675 776 C684 755 684 730 668 711 C654 694 636 684 613 694 C608 696 605 691 602 686 Z',
  gut:'M425 902 C446 900 459 918 477 924 C520 940 569 940 609 926 C632 918 651 897 673 902 C691 907 696 925 693 947 C690 967 700 983 694 1001 C703 1020 699 1040 699 1058 C698 1095 679 1124 653 1144 C631 1161 607 1166 579 1155 C572 1176 574 1201 565 1218 C564 1237 554 1258 540 1257 C526 1251 520 1230 519 1209 C511 1191 516 1169 522 1152 C494 1146 466 1135 448 1113 C425 1115 401 1096 393 1075 C386 1054 393 1037 392 1019 C390 996 396 981 398 961 C395 938 400 910 425 902 Z',
  tissue:'M301 490 C278 558 264 652 249 721 L273 723 C294 648 316 568 333 505 Z M779 494 C804 554 825 650 839 719 L812 727 C797 643 776 554 754 511 Z M374 1250 L457 1250 L458 1450 L359 1450 Z M631 1250 L708 1250 L727 1450 L631 1450 Z',
  entry:'M544 317 C549 317 553 321 553 327 L553 424 C553 454 562 488 563 520 L571 599 C579 628 595 661 602 686 C605 695 590 703 583 692 C574 666 557 632 550 607 L542 522 C541 488 535 456 535 426 L535 327 C535 321 539 317 544 317 Z'
@@ -2453,10 +2463,14 @@ for(let i=0;i<3;i++)el('path',{class:'heart-shock',d:heartShape,style:'--delay:'
 for(let i=0;i<3;i++)el('path',{class:'heart-air',d:`M${497-i*14} ${548+i*24} C${470-i*10} ${575+i*15} ${494-i*18} ${616+i*20} ${474-i*9} ${640+i*13} M${649+i*12} ${558+i*16} C${680+i*11} ${577+i*15} ${652+i*18} ${620+i*14} ${675+i*9} ${647+i*10}`,style:'--delay:'+i*.18+'s'},heartFx);
 const heartButton=ex('button',null,{class:'heart-secret',type:'button','aria-label':exText('Et lite hjerteslag','A little heartbeat','نبضة قلب صغيرة')});q('.anatomy-figure').append(heartButton);
 let heartTimer=0;const heartSky=ex('div',null,{class:'heart-sky','aria-hidden':'true'});document.body.append(heartSky);
-heartButton.onclick=()=>{clearTimeout(heartTimer);heartSky.replaceChildren();heartFx.classList.remove('playing');void heartFx.getBoundingClientRect();heartFx.classList.add('playing');const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function pulseHeart(){clearTimeout(heartTimer);heartFx.classList.remove('playing');void heartFx.getBoundingClientRect();heartFx.classList.add('playing');heartTimer=setTimeout(()=>heartFx.classList.remove('playing'),6200);}
+heartButton.onclick=()=>{if(document.hidden)return;pulseHeart();const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  if(!reduced){const r=heartButton.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,tabBottom=q('.tabs').getBoundingClientRect().bottom,target=Math.max(20,Math.min(y-80,tabBottom));const order=Array.from({length:10},(_,i)=>i);for(let j=9;j>0;j--){const k=Math.floor(Math.random()*(j+1));[order[j],order[k]]=[order[k],order[j]];}const marked=new Set(order.slice(0,3));for(let i=0;i<10;i++){const h=ex('span','🤍',{class:'floating-heart'}),dx=Math.max(24-x,Math.min(innerWidth-x-30,(Math.random()-.5)*240));if(marked.has(i))h.append(ex('span','Z',{class:'heart-letter'}));h.style.cssText=`left:${x}px;top:${y}px;--dx:${dx}px;--dy:${target-y}px;--drift:${dx*.3+Math.sin(i)*25}px;--duration:${3.5+Math.random()*1.5}s;animation-delay:${i*.09}s`;heartSky.append(h);}}
- heartTimer=setTimeout(()=>{heartFx.classList.remove('playing');heartSky.replaceChildren();},6500);
+ // Each heart owns its lifetime: a new click never clears an earlier batch.
+ while(heartSky.childElementCount>40)heartSky.firstElementChild.remove();
+ for(const h of heartSky.querySelectorAll(':not([data-cleanup])')){if(!h.classList.contains('floating-heart'))continue;h.dataset.cleanup='';h.addEventListener('animationend',()=>h.remove(),{once:true});}
 };
+document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(heartTimer);heartFx.classList.remove('playing');heartSky.replaceChildren();}});
 window.PKLocalePairs=[...(window.PKLocalePairs||[]),...experiencePairs];
 
 // A rate–concentration view explains the same model used by the time simulation.
@@ -2539,29 +2553,20 @@ window.PKLocalePairs=[...(window.PKLocalePairs||[]),...experiencePairs];
 const ENABLE_DOUBLE_HEART_SURPRISE = true;
 if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
   const ordinaryHeartbeat = heartButton.onclick;
-  let lastTap = -Infinity, active = null, cleanupTimer = 0, surpriseCount = 0, suppressUntil = -Infinity;
+  let lastTap = -Infinity, surpriseCount = 0;
+  const batches = new Set();
   const artwork = new Map();
   const cleanup = () => {
-    clearTimeout(cleanupTimer);
-    if (active) { active.sky.remove(); active = null; }
-    heartFx.classList.remove('playing');
+    for(const batch of batches){clearTimeout(batch.timer);batch.sky.remove();}
+    batches.clear();
   };
   const surprise = () => {
     if (document.hidden) return;
-    // Replace an earlier surprise immediately so a second double-click can
-    // flow straight into the pink-heart sequence without a dead interval.
-    clearTimeout(cleanupTimer);
-    if (active) { active.sky.remove(); active = null; }
-    heartFx.classList.remove('playing');
-    // A double tap replaces the in-flight single-tap celebration. An intentional
-    // later single tap may restart it without stacking another surprise.
-    clearTimeout(heartTimer);heartFx.classList.remove('playing');heartSky.replaceChildren();
-    suppressUntil=performance.now()+140;
+    pulseHeart();
     const pink = surpriseCount++ > 0;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     // The first large-heart surprise keeps the existing white shock-line
     // celebration, while the removed blue electric mesh stays absent.
-    if (!pink) { void heartFx.getBoundingClientRect(); heartFx.classList.add('playing'); }
     const rect = heartButton.getBoundingClientRect();
     const sky = ex('div', null, {class:'red-heart-sky','aria-hidden':'true'});
     const x = rect.left + rect.width/2, y = rect.top + rect.height/2;
@@ -2591,30 +2596,31 @@ if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
     }
     const count=pink&&!reduced?8:1;
     let remaining=count;
+    const batch={sky,timer:0};
+    const finish=()=>{clearTimeout(batch.timer);sky.remove();batches.delete(batch);};
     for(let i=0;i<count;i++){
       const rising=ex('div',null,{class:'rising-red-heart'+(pink?' pink-heart':'')+(reduced?' reduced':'')});
       const spread=Math.min(155,innerWidth*.31),fan=count===1?0:((i/(count-1))*2-1)*spread;
       const drift=Math.max(55-x,Math.min(innerWidth-x-55,fan+(Math.random()-.5)*16));
-      rising.style.cssText=`left:${x}px;top:${y}px;--heart-rise:${Math.min(-100,destination-y+(pink?(i%3)*18:0))}px;--heart-drift:${pink?drift:0}px;animation-duration:${reduced?1.2:pink?4.2+(i%3)*.22:4.4}s;animation-delay:${pink&&!reduced?i*.09:0}s`;
+      rising.style.cssText=`left:${x}px;top:${y}px;--heart-rise:${Math.min(-100,destination-y+(pink?(i%3)*18:0))}px;--heart-drift:${pink?drift:0}px;animation-duration:${reduced?1.2:pink?4.2+(i%3)*.22:4.4}s;animation-delay:0s`;
       rising.append(ex('img',null,{src:artwork.get(key),class:'glossy-red-heart',alt:'',draggable:'false'}));
-      rising.addEventListener('animationend',()=>{rising.remove();if(--remaining===0)cleanup();},{once:true});
+      rising.addEventListener('animationend',()=>{rising.remove();if(--remaining===0)finish();},{once:true});
       sky.append(rising);
     }
     document.body.append(sky);
-    active = {sky};
-    cleanupTimer = setTimeout(cleanup, reduced ? 1500 : 6000);
+    batches.add(batch);
+    batch.timer=setTimeout(finish,reduced?1500:6000);
+    // Bound compositor layers during sustained tapping on older tablets.
+    while(batches.size>3){const oldest=batches.values().next().value;clearTimeout(oldest.timer);oldest.sky.remove();batches.delete(oldest);}
   };
   heartButton.onclick = event => {
-    if(performance.now()<suppressUntil)return;
     const now = performance.now();
     if (now-lastTap <= 420) {
       lastTap = -Infinity;
       surprise();
     } else {
       lastTap = now;
-      // During an existing surprise, hold the first tap as the start of a
-      // second double-click instead of inserting a single-click pause.
-      if (!active) ordinaryHeartbeat(event);
+      ordinaryHeartbeat(event);
     }
   };
   document.addEventListener('visibilitychange', () => { if(document.hidden) { lastTap=-Infinity; cleanup(); } });
@@ -2762,7 +2768,22 @@ function T(text){if(language==='nb'||!text)return text;const raw=String(text),ke
  let pos=0;result='';while(pos<raw.length){let best=null,index=raw.length;for(const k of localeKeys){let at=raw.indexOf(k,pos);const word=c=>!!c&&/[\p{L}\p{N}_]/u.test(c);while(at>=0&&((word(k[0])&&word(raw[at-1]))||(word(k[k.length-1])&&word(raw[at+k.length]))))at=raw.indexOf(k,at+1);if(at>=0&&(at<index||(at===index&&k.length>(best?.length||0)))){best=k;index=at;}}if(best===null){result+=raw.slice(pos);break;}result+=raw.slice(pos,index)+localePairs.get(best)[language==='en'?0:1];pos=index+best.length;}
  }if(localeCache.size>10000)localeCache.clear();localeCache.set(key,result);return result;}
 window.PKTranslate=text=>T(text);
-q('.header').insertAdjacentHTML('beforeend','<label class="language-control" data-no-translate><svg class="language-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg><select id="language-select" aria-label="Språk / Language / اللغة"><option value="nb">Norsk</option><option value="en">English</option><option value="ar">العربية</option></select></label>');
+q('.header').insertAdjacentHTML('beforeend',`<div class="language-control" data-no-translate>
+<button type="button" class="language-trigger" aria-label="Språk / Language / اللغة" aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu"><span class="language-globe"><svg class="language-halo" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="globe-ring-gradient" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ae7cff"/><stop offset="1" stop-color="#31e0cb"/></linearGradient></defs><circle cx="20" cy="20" r="16" pathLength="100"/></svg><svg class="language-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg></span><span class="language-current"></span><span aria-hidden="true" class="language-chevron">⌄</span></button>
+<select hidden id="language-select" aria-label="Språk / Language / اللغة"><option value="nb">Norsk</option><option value="en">English</option><option value="ar">العربية</option></select>
+<div class="language-menu" id="language-menu" role="menu" aria-label="Språk / Language / اللغة" hidden><button type="button" role="menuitemradio" data-locale="nb" lang="nb">Norsk</button><button type="button" role="menuitemradio" data-locale="en" lang="en">English</button><button type="button" role="menuitemradio" data-locale="ar" lang="ar">العربية</button></div></div>`);
+const languageTrigger=q('.language-trigger'),languageMenu=q('#language-menu');
+const languageOptions=[...languageMenu.querySelectorAll('button')];
+function syncLanguageMenu(){q('.language-current').textContent={nb:'Norsk',en:'English',ar:'العربية'}[language];languageOptions.forEach(b=>b.setAttribute('aria-checked',String(b.dataset.locale===language)));}
+function closeLanguageMenu(restore=false){languageMenu.hidden=true;languageTrigger.setAttribute('aria-expanded','false');if(restore)languageTrigger.focus();}
+function openLanguageMenu(){languageMenu.hidden=false;languageTrigger.setAttribute('aria-expanded','true');languageOptions.find(b=>b.dataset.locale===language).focus();}
+languageTrigger.onclick=()=>languageMenu.hidden?openLanguageMenu():closeLanguageMenu();
+languageTrigger.onkeydown=e=>{if(e.key==='ArrowDown'){e.preventDefault();openLanguageMenu();}};
+languageOptions.forEach(b=>b.onclick=()=>{const select=q('#language-select');select.value=b.dataset.locale;select.dispatchEvent(new Event('change'));closeLanguageMenu(true);});
+languageMenu.onkeydown=e=>{const i=languageOptions.indexOf(document.activeElement);if(e.key==='Escape'){e.preventDefault();closeLanguageMenu(true);}else if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();languageOptions[e.key==='Home'?0:e.key==='End'?2:(i+(e.key==='ArrowDown'?1:2))%3].focus();}};
+document.addEventListener('pointerdown',e=>{if(!q('.language-control').contains(e.target))closeLanguageMenu();});
+q('.language-control').addEventListener('focusout',e=>{if(!e.currentTarget.contains(e.relatedTarget))closeLanguageMenu();});
+window.addEventListener('pk-language',syncLanguageMenu);syncLanguageMenu();
 const sourceText=new WeakMap(),sourceAttrs=new WeakMap();let translateScheduled=false;
 const translationDirty=new Set();
 function translateScope(scope){
