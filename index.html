@@ -1,4 +1,4 @@
-<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-73JgYKV7im7KP+lwFfQ9FwoO1KI4uzITvkKV6Zj0FaY='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
+<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-5I1CkpQxzHKv3QupXeC+INJDW4MGv4ErkT3hjM+OpZg='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
 <meta name="author" content="Mohanad Taiy">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#7655dc">
@@ -207,7 +207,7 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 #pk-lab .organ-glows g[data-organ=tissue] .organ-orbit{stroke-dasharray:9 41;animation-duration:32s}
 #pk-lab .organ-glows g[data-organ=tissue] .organ-orbit.inner-contour{animation-duration:22s;animation-delay:-8s}
 #pk-lab .organ-glows g[data-organ=tissue] .organ-lit-pixels{animation:bodyPixelBreathe 7s ease-in-out infinite}
-@keyframes organPixelBreathe{0%,100%{opacity:.18}50%{opacity:.42}}
+@keyframes organPixelBreathe{0%,100%{opacity:.24}50%{opacity:.54}}
 @keyframes bodyPixelBreathe{0%,100%{opacity:var(--body-glow-low,.12)}50%{opacity:var(--body-glow-high,.28)}}
 @keyframes organOrbit{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
 @media(prefers-reduced-motion:reduce){#pk-lab .organ-glows g.active .organ-lit-pixels,#pk-lab .organ-glows g.active .organ-orbit{animation:none!important}#pk-lab .organ-glows g.active .organ-lit-pixels{opacity:.15}#pk-lab .organ-glows g.active .organ-orbit{stroke-dasharray:none;opacity:.35}}
@@ -398,6 +398,8 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 #pk-lab .language-control select:focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:5px}
 #pk-lab .language-control option{background:var(--surface);color:var(--ink)}
 #pk-lab .language-icon{width:21px;height:21px;flex:none;color:#7889ab}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){#pk-lab .language-icon:hover{animation:globeTurn 1.2s ease-in-out 1}}
+@keyframes globeTurn{0%{transform:perspective(80px) rotateY(0)}100%{transform:perspective(80px) rotateY(360deg)}}
 #pk-lab[dir=rtl]{font-family:'Segoe UI',Tahoma,Arial,sans-serif}
 #pk-lab[dir=rtl] .formula-equation,#pk-lab[dir=rtl] svg,#pk-lab[dir=rtl] canvas,#pk-lab[dir=rtl] input[type=number],#pk-lab[dir=rtl] input[type=range]{direction:ltr;unicode-bidi:isolate}
 #pk-lab[dir=rtl] .workshop{direction:ltr}#pk-lab[dir=rtl] .input-row,#pk-lab[dir=rtl] .result{direction:rtl}
@@ -554,12 +556,13 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 .red-heart-sky{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:1501}
 .rising-red-heart{position:absolute;width:clamp(130px,23vw,220px);aspect-ratio:1;opacity:0;animation:redHeartRise 4.4s cubic-bezier(.22,.65,.3,1) both;will-change:transform,opacity}
 .glossy-red-heart{display:block;width:100%;height:100%}
+.rising-red-heart.pink-heart{width:clamp(64px,12vw,100px)}
 @keyframes heartCharge{0%{opacity:0}22%{opacity:.9}48%{opacity:.65}68%{opacity:.8}100%{opacity:0}}
 @keyframes redHeartRise{
  0%,12%{opacity:0;transform:translate(-50%,-50%) scale(.09) rotate(-7deg)}
- 22%{opacity:1;transform:translate(-50%,calc(-50% + var(--heart-rise)*.08)) scale(.26) rotate(-4deg)}
+ 22%{opacity:1;transform:translate(calc(-50% + var(--heart-drift,0px)*.08),calc(-50% + var(--heart-rise)*.08)) scale(.26) rotate(-4deg)}
  65%{opacity:1}
- 100%{opacity:0;transform:translate(-50%,calc(-50% + var(--heart-rise))) scale(1.12) rotate(5deg)}
+ 100%{opacity:0;transform:translate(calc(-50% + var(--heart-drift,0px)),calc(-50% + var(--heart-rise))) scale(1.12) rotate(5deg)}
 }
 .rising-red-heart.reduced{animation:redHeartStill 1.2s ease-out both}
 #pk-lab .heart-electric.reduced{animation:none;opacity:0}
@@ -1750,12 +1753,12 @@ applyTheme();
 
 // Anatomy uses brightened copies of the original pixels, clipped to each organ.
 const organPaths={
- liver:'M377 823 C365 789 360 748 381 715 C403 676 451 664 494 674 C534 673 570 675 596 689 C573 713 537 739 489 751 C478 769 429 771 404 794 Z',
- kidneys:'M450 814 C420 809 407 835 413 866 C414 891 433 909 452 901 C471 893 477 875 461 862 C455 854 479 840 475 832 C470 821 460 815 450 814 Z M678 809 C703 809 716 835 711 863 C708 889 692 902 675 896 C660 892 650 879 654 866 C669 854 651 843 654 831 C656 820 668 812 678 809 Z',
- stomach:'M580 659 C588 681 597 696 608 713 C622 709 643 703 660 723 C681 746 680 775 660 795 C638 822 603 831 573 817 C550 808 529 817 529 843 L516 834 C514 808 531 790 554 784 C575 779 594 761 598 743 C598 721 578 693 576 676 Z',
- gut:'M416 901 C447 914 473 929 528 935 C580 943 618 925 649 904 L667 928 C659 966 663 1004 657 1049 C669 1090 650 1126 609 1146 C588 1161 561 1162 546 1145 L533 1183 L509 1179 L520 1150 C482 1144 458 1125 443 1101 C412 1103 398 1091 394 1064 C390 1022 391 981 400 946 Z',
+ liver:'M378 833 C371 810 369 785 369 758 C369 722 386 696 417 680 C442 667 466 667 493 674 C530 672 566 676 595 688 C580 711 553 731 526 743 C508 751 493 754 483 754 C479 768 454 777 434 794 C416 808 395 820 378 833 Z',
+ kidneys:'M450 817 C430 818 419 836 416 856 C411 875 417 895 433 903 C450 913 468 903 475 888 C481 875 474 861 464 857 C455 853 465 846 475 842 C484 838 486 830 479 824 C471 817 460 814 450 817 Z M683 814 C702 810 713 825 715 846 C719 867 711 887 695 897 C680 906 661 897 658 883 C653 870 660 860 670 855 C678 851 670 846 663 842 C653 837 663 821 673 818 C677 816 680 815 683 814 Z',
+ stomach:'M550 655 C564 663 575 667 580 676 C586 692 598 699 613 694 C636 684 654 694 668 711 C684 730 684 755 675 776 C666 797 646 812 620 818 C592 824 570 813 548 802 C537 795 529 801 524 810 C523 799 530 785 545 780 C570 778 593 765 599 747 C607 728 596 714 582 702 C567 689 557 674 550 655 Z',
+ gut:'M425 902 C446 900 459 918 477 924 C520 940 569 940 609 926 C632 918 651 897 673 902 C691 907 696 925 693 947 C690 967 700 983 694 1001 C703 1020 699 1040 699 1058 C698 1095 679 1124 653 1144 C631 1161 607 1166 579 1155 C572 1176 574 1201 565 1218 C564 1237 554 1258 540 1257 C526 1251 520 1230 519 1209 C511 1191 516 1169 522 1152 C494 1146 466 1135 448 1113 C425 1115 401 1096 393 1075 C386 1054 393 1037 392 1019 C390 996 396 981 398 961 C395 938 400 910 425 902 Z',
  tissue:'M301 490 C278 558 264 652 249 721 L273 723 C294 648 316 568 333 505 Z M779 494 C804 554 825 650 839 719 L812 727 C797 643 776 554 754 511 Z M374 1250 L457 1250 L458 1450 L359 1450 Z M631 1250 L708 1250 L727 1450 L631 1450 Z',
- entry:'M525 290 L547 290 L547 430 L560 515 L568 600 L600 688 L584 698 L550 605 L545 520 L527 431 Z'
+ entry:'M544 317 C549 317 553 321 553 327 L553 424 C553 454 562 488 563 520 L571 599 C579 628 595 661 602 686 C605 695 590 703 583 692 C574 666 557 632 550 607 L542 522 C541 488 535 456 535 426 L535 327 C535 321 539 317 544 317 Z'
 };
 const glowSvg=q('.organ-glows'),defs=glowSvg.querySelector('defs');defs.innerHTML='<filter id="organ-light" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="linear" slope="1.72"/><feFuncG type="linear" slope="1.72"/><feFuncB type="linear" slope="1.72"/></feComponentTransfer></filter>';
 // Resample the outline, soften corners locally, then close with a continuous tangent.
@@ -1772,7 +1775,9 @@ for(const [name,path] of Object.entries(organPaths)){
  const clip=el('clipPath',{id:'organ-clip-'+name,clipPathUnits:'userSpaceOnUse'},defs);el('path',{d:path},clip);
  const g=glowSvg.querySelector('[data-organ="'+name+'"]');g.replaceChildren();el('image',{class:'organ-lit-pixels',href:q('.anatomy-figure img').getAttribute('src'),x:0,y:0,width:1088,height:1456,'clip-path':'url(#organ-clip-'+name+')',filter:'url(#organ-light)'},g);
  // Separate closed contours let each kidney or tissue region have its own orbit.
- for(const contour of path.match(/M[^M]+/g)||[]){const d=flowingContour(contour);el('path',{class:'organ-aura',d,pathLength:100},g);el('path',{class:'organ-orbit',d,pathLength:100},g);}
+ // These hand-traced Bezier contours already have smooth tangents. Re-smoothing
+ // shrinks concave edges and pulls the moving line away from the organ boundary.
+ for(const contour of path.match(/M[^M]+/g)||[]){const d=name==='tissue'?flowingContour(contour):contour;el('path',{class:'organ-aura',d,pathLength:100},g);el('path',{class:'organ-orbit',d,pathLength:100},g);}
 }
 
 const definitions={
@@ -2391,7 +2396,7 @@ q('#comp-comparison').previousElementSibling.textContent=exText('Samme dose, CL 
 // Trace the whole silhouette and brighten tissue pixels while excluding organ masks.
 const silhouette="M460 332 L628 332 L628 340 L644 356 L652 356 L656 364 L692 376 L696 384 L720 392 L724 400 L732 400 L732 404 L740 404 L756 416 L776 416 L784 424 L796 424 L796 428 L828 440 L848 460 L848 468 L860 476 L860 484 L868 492 L868 504 L872 504 L872 516 L876 516 L876 528 L880 528 L880 552 L884 552 L884 600 L880 600 L876 640 L880 640 L880 652 L888 660 L896 704 L900 704 L900 776 L904 776 L908 804 L912 804 L912 812 L916 812 L916 820 L920 820 L920 828 L924 828 L924 836 L928 836 L928 844 L940 860 L940 872 L948 880 L952 908 L956 908 L956 928 L960 928 L968 1052 L972 1052 L980 1116 L984 1116 L984 1128 L988 1128 L988 1140 L992 1140 L992 1152 L996 1152 L996 1236 L1000 1236 L1000 1256 L1004 1256 L1004 1272 L1008 1272 L1008 1292 L1004 1292 L1004 1304 L1000 1304 L1000 1316 L996 1316 L988 1356 L936 1408 L916 1404 L912 1376 L924 1368 L920 1348 L952 1316 L948 1276 L940 1268 L932 1268 L920 1320 L912 1328 L900 1328 L892 1320 L892 1288 L896 1288 L896 1272 L900 1272 L900 1216 L904 1216 L904 1204 L908 1204 L912 1188 L924 1180 L924 1160 L920 1160 L916 1132 L908 1124 L908 1112 L904 1112 L892 1080 L884 1076 L876 1052 L868 1048 L868 1040 L852 1024 L852 1016 L848 1016 L848 1008 L844 1008 L844 1000 L840 1000 L840 992 L828 976 L828 964 L824 964 L824 952 L820 952 L820 940 L816 940 L816 920 L812 920 L804 832 L800 832 L796 812 L788 804 L788 792 L780 784 L776 756 L768 752 L760 792 L756 792 L756 804 L752 804 L752 816 L748 816 L748 832 L744 832 L744 844 L740 844 L736 904 L740 904 L740 920 L744 920 L744 936 L748 936 L748 952 L752 952 L748 1020 L752 1020 L756 1040 L760 1040 L764 1060 L768 1060 L772 1100 L776 1100 L776 1132 L780 1132 L784 1164 L788 1164 L796 1204 L800 1204 L800 1216 L804 1216 L812 1276 L816 1276 L816 1376 L812 1376 L812 1416 L808 1416 L804 1456 L576 1456 L564 1404 L560 1404 L560 1384 L556 1384 L556 1364 L552 1364 L552 1340 L540 1336 L536 1340 L536 1364 L532 1364 L532 1388 L528 1388 L528 1404 L524 1404 L524 1420 L520 1420 L520 1436 L516 1436 L512 1456 L284 1456 L280 1416 L276 1416 L276 1376 L272 1376 L272 1284 L276 1284 L276 1256 L280 1256 L284 1220 L288 1220 L292 1192 L296 1192 L304 1152 L308 1152 L308 1136 L312 1136 L320 1064 L324 1064 L324 1052 L328 1052 L336 1020 L340 1020 L336 956 L340 956 L340 940 L344 940 L344 924 L348 924 L348 908 L352 908 L352 860 L348 860 L344 828 L340 828 L340 816 L336 816 L336 804 L332 804 L332 792 L328 792 L324 756 L312 760 L304 796 L300 796 L300 804 L292 812 L292 824 L284 832 L284 864 L280 864 L276 924 L272 924 L268 956 L260 964 L260 976 L256 976 L236 1024 L228 1028 L228 1036 L220 1040 L220 1048 L208 1060 L204 1076 L196 1080 L196 1088 L192 1088 L192 1096 L180 1112 L180 1124 L172 1132 L168 1160 L164 1160 L164 1180 L176 1188 L176 1196 L184 1204 L184 1216 L188 1216 L188 1276 L192 1276 L192 1292 L196 1292 L196 1320 L188 1328 L176 1328 L168 1320 L156 1268 L148 1268 L140 1276 L136 1316 L168 1348 L164 1368 L176 1376 L172 1404 L152 1408 L100 1356 L92 1316 L88 1316 L88 1304 L80 1296 L80 1272 L84 1272 L88 1236 L92 1236 L92 1152 L96 1152 L96 1140 L100 1140 L100 1128 L104 1128 L104 1116 L108 1116 L108 1100 L112 1100 L112 1080 L116 1080 L132 908 L136 908 L136 892 L140 892 L140 880 L148 872 L148 860 L152 860 L152 852 L156 852 L156 844 L160 844 L160 836 L164 836 L164 828 L168 828 L168 820 L180 804 L180 792 L184 792 L184 776 L188 776 L188 704 L192 704 L200 660 L204 660 L208 640 L212 640 L208 600 L204 600 L204 556 L208 556 L208 532 L212 532 L220 492 L232 480 L232 472 L240 468 L240 460 L260 440 L268 440 L268 436 L276 436 L276 432 L284 432 L300 420 L332 416 L332 412 L364 400 L368 392 L400 380 L404 372 L416 372 L416 368 L440 360 L444 352 L456 348 L460 332 Z".replace('M460 332 L628 332','M460 332 C461 314 463 296 471 280 C487 302 516 316 544 317 C575 316 601 301 618 280 C625 297 627 315 628 332');
 // The reference's inner boundary surrounds the organ cavity, rather than outlining each organ.
-const organCavity='M548 469 C515 420 475 402 440 434 C394 484 356 549 349 631 C340 684 343 716 368 736 C353 772 360 812 385 832 C412 846 393 882 400 907 C383 951 389 984 393 1010 C378 1055 389 1098 421 1108 C459 1101 466 1160 479 1203 C487 1244 502 1264 522 1280 C526 1300 526 1320 542 1320 C560 1320 563 1293 571 1276 C590 1252 609 1227 610 1190 C623 1157 652 1163 673 1140 C711 1108 716 1069 705 1034 C715 1004 704 976 704 951 C709 918 696 894 704 870 C726 835 718 793 716 769 C708 749 713 739 731 717 C751 679 737 602 720 550 C692 476 648 416 611 427 C582 430 562 458 548 469 Z';
+const organCavity='M548 475 C534 453 521 435 505 429 C477 418 457 433 435 456 C387 503 358 573 354 632 C350 674 351 706 359 725 C365 719 370 713 378 708 C366 739 364 789 379 832 C397 838 402 852 400 875 C395 890 397 899 400 907 C383 951 389 984 393 1010 C378 1055 389 1098 421 1108 C459 1101 466 1160 479 1203 C487 1244 502 1264 522 1280 C526 1300 526 1320 542 1320 C560 1320 563 1293 571 1276 C590 1252 609 1227 610 1190 C623 1157 652 1163 673 1140 C711 1108 716 1069 705 1034 C715 1004 704 976 704 951 C709 918 696 894 704 870 C726 835 718 793 716 769 C708 749 713 739 731 724 C741 700 738 669 735 646 C730 583 705 517 672 472 C650 443 624 422 606 430 C579 435 562 458 548 475 Z';
 const tissueGroup=glowSvg.querySelector('[data-organ="tissue"]');tissueGroup.replaceChildren();
 const bodyMask=el('mask',{id:'tissue-body-mask',maskUnits:'userSpaceOnUse',x:0,y:0,width:1088,height:1456},defs);el('path',{d:silhouette,fill:'white'},bodyMask);for(const key of ['liver','kidneys','stomach','gut','entry'])el('path',{d:organPaths[key],fill:'black',stroke:'black','stroke-width':16},bodyMask);
 el('ellipse',{cx:540,cy:118,rx:112,ry:96,fill:'black'},bodyMask);el('path',{d:'M370 440 Q461 405 509 510 L508 666 Q407 693 355 741 Q313 574 370 440Z M610 443 Q702 439 731 512 Q777 614 717 744 L609 683 L571 528Z M574 532 Q652 568 639 645 Q576 696 524 625Z',fill:'black'},bodyMask);
@@ -2537,13 +2542,18 @@ window.PKLocalePairs=[...(window.PKLocalePairs||[]),...experiencePairs];
 const ENABLE_DOUBLE_HEART_SURPRISE = true;
 if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
   const ordinaryHeartbeat = heartButton.onclick;
-  let lastTap = -Infinity, active = null, cleanupTimer = 0;
+  let lastTap = -Infinity, active = null, cleanupTimer = 0, surpriseCount = 0;
+  const artwork = new Map();
   const cleanup = () => {
     clearTimeout(cleanupTimer);
     if (active) { active.electric.remove(); active.sky.remove(); active = null; }
   };
   const surprise = () => {
     if (active || document.hidden) return;
+    // A double tap replaces the in-flight single-tap celebration. An intentional
+    // later single tap may restart it without stacking another surprise.
+    clearTimeout(heartTimer);heartFx.classList.remove('playing');heartSky.replaceChildren();
+    const pink = surpriseCount++ > 0;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const rect = heartButton.getBoundingClientRect();
     const electric = el('svg', {viewBox:'485 505 190 180', class:'heart-electric', 'aria-hidden':'true'}, q('.anatomy-figure'));
@@ -2558,19 +2568,19 @@ if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
       el('circle', {cx,cy,r:3.2,fill:'#e5feff'}, mesh);
     el('path', {d:'M512 590 Q497 577 508 561 M646 592 Q666 608 650 624 M554 538 Q565 517 582 529',class:'electric-arcs'}, electric);
     const sky = ex('div', null, {class:'red-heart-sky','aria-hidden':'true'});
-    const rising = ex('div', null, {class:'rising-red-heart'});
     const x = rect.left + rect.width/2, y = rect.top + rect.height/2;
     const tabs = q('.tabs').getBoundingClientRect();
     const destination = Math.max(55, Math.min(y-130, tabs.bottom > 0 ? tabs.bottom-35 : 65));
-    rising.style.cssText = `left:${x}px;top:${y}px;--heart-rise:${Math.min(-100,destination-y)}px`;
-    const svg = el('svg', {viewBox:'0 0 240 240',class:'glossy-red-heart'}, rising);
+    const key=pink?'pink':'red';
+    if(!artwork.has(key)){
+    const svg = el('svg', {viewBox:'0 0 240 240',width:240,height:240});
     const rd = el('defs', {}, svg);
     const gradient = (id,attrs,stops) => {
       const g = el('radialGradient', {id,...attrs}, rd);
       stops.forEach(([offset,color]) => el('stop', {offset,'stop-color':color},g));
     };
-    gradient('surprise-red-body',{cx:'34%',cy:'25%',r:'85%'},[['0%','#ff776b'],['28%','#f32e39'],['62%','#bd092d'],['87%','#720d30'],['100%','#3f1030']]);
-    gradient('surprise-red-rim',{cx:'38%',cy:'18%',r:'100%'},[['0%','#ffd5c4'],['34%','#e95057'],['70%','#8d1639'],['100%','#ee756d']]);
+    gradient('surprise-red-body',{cx:'34%',cy:'25%',r:'85%'},pink?[['0%','#ffd3eb'],['28%','#ff89c7'],['62%','#e64d9a'],['87%','#a52f77'],['100%','#632752']]:[['0%','#ff776b'],['28%','#f32e39'],['62%','#bd092d'],['87%','#720d30'],['100%','#3f1030']]);
+    gradient('surprise-red-rim',{cx:'38%',cy:'18%',r:'100%'},pink?[['0%','#ffecf6'],['34%','#ffa0d1'],['70%','#ba4b91'],['100%','#ffd0e7']]:[['0%','#ffd5c4'],['34%','#e95057'],['70%','#8d1639'],['100%','#ee756d']]);
     const gloss = el('linearGradient',{id:'surprise-red-gloss',x1:'0',y1:'0',x2:'.5',y2:'1'},rd);
     el('stop',{offset:'0%','stop-color':'#fff7ee','stop-opacity':'.94'},gloss);
     el('stop',{offset:'100%','stop-color':'#fff7ee','stop-opacity':'0'},gloss);
@@ -2580,14 +2590,28 @@ if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
     el('path',{d:'M134 66 C164 33 195 49 199 76 C182 60 162 63 145 76 C137 81 125 78 134 66 Z',fill:'url(#surprise-red-gloss)',opacity:'.76'},svg);
     el('path',{d:'M32 98 C35 145 78 178 118 203',fill:'none',stroke:'#ffb5a0','stroke-width':2,opacity:'.48','stroke-linecap':'round'},svg);
     el('path',{d:'M205 84 C210 125 174 165 137 190',fill:'none',stroke:'#640524','stroke-width':7,opacity:'.22','stroke-linecap':'round'},svg);
-    sky.append(rising); document.body.append(sky);
+    if(pink)el('text',{x:120,y:145,'text-anchor':'middle','font-family':'Arial, sans-serif','font-size':48,'font-weight':700,fill:'#fff',opacity:'.4'},svg,'Z');
+    artwork.set(key,'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(svg)));
+    }
+    const count=pink&&!reduced?8:1;
+    let remaining=count;
+    for(let i=0;i<count;i++){
+      const rising=ex('div',null,{class:'rising-red-heart'+(pink?' pink-heart':'')+(reduced?' reduced':'')});
+      const spread=Math.min(155,innerWidth*.31),fan=count===1?0:((i/(count-1))*2-1)*spread;
+      const drift=Math.max(55-x,Math.min(innerWidth-x-55,fan+(Math.random()-.5)*16));
+      rising.style.cssText=`left:${x}px;top:${y}px;--heart-rise:${Math.min(-100,destination-y+(pink?(i%3)*18:0))}px;--heart-drift:${pink?drift:0}px;animation-duration:${reduced?1.2:pink?4.2+(i%3)*.22:4.4}s;animation-delay:${pink&&!reduced?i*.09:0}s`;
+      rising.append(ex('img',null,{src:artwork.get(key),class:'glossy-red-heart',alt:'',draggable:'false'}));
+      rising.addEventListener('animationend',()=>{rising.remove();if(--remaining===0)cleanup();},{once:true});
+      sky.append(rising);
+    }
+    document.body.append(sky);
     active = {electric,sky};
     electric.addEventListener('animationend',()=>electric.remove(),{once:true});
-    if (reduced) { electric.classList.add('reduced'); rising.classList.add('reduced'); }
-    rising.addEventListener('animationend', cleanup, {once:true});
-    cleanupTimer = setTimeout(cleanup, reduced ? 1500 : 5000);
+    if (reduced) electric.classList.add('reduced');
+    cleanupTimer = setTimeout(cleanup, reduced ? 1500 : 6000);
   };
   heartButton.onclick = event => {
+    if(active){lastTap=-Infinity;ordinaryHeartbeat(event);return;}
     const now = performance.now();
     if (now-lastTap <= 420 && !active) {
       lastTap = -Infinity;
