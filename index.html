@@ -1,4 +1,4 @@
-<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-tpYQ3pe0BMnQKYwDj+fN8QlEV4ztRIJrEAPzPYv8GWE='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
+<!doctype html><html lang="nb" class="pk-booting"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-9hhjek0QMf1mVDwz5UvE/r/1+ExDfu08zTG1LGHeq4k=' 'sha256-czmT8e/VINAXCbYpzu8I2WAFhxtAKkob30jSBZTsykE=' 'sha256-73JgYKV7im7KP+lwFfQ9FwoO1KI4uzITvkKV6Zj0FaY='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><style>html,body{background:#101527;color:#eef1ff;color-scheme:dark}</style><title>PK-lab — Pharmacokinetics · Mohanad Taiy</title><meta name="description" content="PK-lab by Mohanad Taiy: a free interactive pharmacokinetics and pharmacodynamics learning app. Explore compartments, dosing, formulas and quizzes in Norwegian, English and Arabic.">
 <meta name="author" content="Mohanad Taiy">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#7655dc">
@@ -397,6 +397,7 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 #pk-lab .language-control select{font:600 14px 'Segoe UI',Tahoma,sans-serif;background:transparent;color:var(--ink);border:0;padding:10px 5px;min-height:44px;max-width:135px;cursor:pointer}
 #pk-lab .language-control select:focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:5px}
 #pk-lab .language-control option{background:var(--surface);color:var(--ink)}
+#pk-lab .language-icon{width:21px;height:21px;flex:none;color:#7889ab}
 #pk-lab[dir=rtl]{font-family:'Segoe UI',Tahoma,Arial,sans-serif}
 #pk-lab[dir=rtl] .formula-equation,#pk-lab[dir=rtl] svg,#pk-lab[dir=rtl] canvas,#pk-lab[dir=rtl] input[type=number],#pk-lab[dir=rtl] input[type=range]{direction:ltr;unicode-bidi:isolate}
 #pk-lab[dir=rtl] .workshop{direction:ltr}#pk-lab[dir=rtl] .input-row,#pk-lab[dir=rtl] .result{direction:rtl}
@@ -545,7 +546,7 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 
 /* Only mounted during the surprise: transforms/opacity, no per-frame JS or blur. */
 #pk-lab .heart-secret{touch-action:manipulation}
-#pk-lab .heart-electric{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;animation:heartCharge 1.2s ease-out both}
+#pk-lab .heart-electric{position:absolute;left:44.577%;top:34.684%;width:17.463%;height:12.363%;z-index:4;pointer-events:none;animation:heartCharge 1.2s ease-out both}
 #pk-lab .heart-electric path{fill:none;stroke-linecap:round;stroke-linejoin:round}
 #pk-lab .electric-outline{stroke:#57e5ff;stroke-width:2.2}
 #pk-lab .electric-mesh{stroke:#a1f5ff;stroke-width:1.4;opacity:.9}
@@ -563,6 +564,17 @@ html{background:#101527;color-scheme:dark}body{margin:0;padding:20px;background:
 .rising-red-heart.reduced{animation:redHeartStill 1.2s ease-out both}
 #pk-lab .heart-electric.reduced{animation:none;opacity:0}
 @keyframes redHeartStill{0%,100%{opacity:0;transform:translate(-50%,-50%) scale(.45)}25%,70%{opacity:.85;transform:translate(-50%,-50%) scale(.45)}}
+
+#pk-lab .organ-raster{position:absolute;pointer-events:none;opacity:0;transition:opacity .65s ease;contain:layout style}
+#pk-lab .organ-raster.active{opacity:1}
+#pk-lab .organ-raster-pixels{display:block;width:100%;height:100%;animation:organPixelBreathe 5s ease-in-out infinite;animation-play-state:paused;transform:translateZ(0)}
+#pk-lab .organ-raster[data-raster-organ=tissue] .organ-raster-pixels{animation-name:bodyPixelBreathe;animation-duration:7s}
+#pk-lab .organ-raster.active .organ-raster-pixels{animation-play-state:running;will-change:opacity}
+#pk-lab.anatomy-idle .organ-raster .organ-raster-pixels{animation-play-state:paused;will-change:auto}
+#pk-lab .heart-celebration:not(.playing){display:none}
+#pk-lab .heart-celebration.heart-cropped{inset:auto;left:42.739%;top:34.34%;width:21.599%;height:13.736%}
+#pk-lab .heart-cropped .heart-beat,#pk-lab .heart-cropped .heart-shock{transform-box:fill-box;transform-origin:center}
+@media(prefers-reduced-motion:reduce){#pk-lab .organ-raster-pixels{animation:none!important;opacity:.25;will-change:auto}}
 </style></head><body class="dark"><div id="pk-startup" role="status" aria-live="polite"><strong>PK-lab</strong><span class="boot-orbit" aria-hidden="true"></span><p id="pk-startup-message">Loading · Laster · جارٍ التحميل</p><a id="pk-startup-retry" href="" hidden>Reload · Last på nytt</a><noscript>Enable JavaScript to open PK-lab.</noscript></div><script>// The app keeps its layout while hidden, so SVG and canvas measurements are valid.
 window.PKBoot={failed:false};
 window.addEventListener('error',function(event){
@@ -2534,7 +2546,7 @@ if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
     if (active || document.hidden) return;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const rect = heartButton.getBoundingClientRect();
-    const electric = el('svg', {viewBox:'0 0 1088 1456', class:'heart-electric', 'aria-hidden':'true'}, q('.anatomy-figure'));
+    const electric = el('svg', {viewBox:'485 505 190 180', class:'heart-electric', 'aria-hidden':'true'}, q('.anatomy-figure'));
     // A small fixed mesh, clipped to the existing heart. No filters or animation loop.
     const defs = el('defs', {}, electric), clip = el('clipPath', {id:'double-heart-clip'}, defs);
     el('path', {d:heartShape}, clip);
@@ -2570,6 +2582,7 @@ if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
     el('path',{d:'M205 84 C210 125 174 165 137 190',fill:'none',stroke:'#640524','stroke-width':7,opacity:'.22','stroke-linecap':'round'},svg);
     sky.append(rising); document.body.append(sky);
     active = {electric,sky};
+    electric.addEventListener('animationend',()=>electric.remove(),{once:true});
     if (reduced) { electric.classList.add('reduced'); rising.classList.add('reduced'); }
     rising.addEventListener('animationend', cleanup, {once:true});
     cleanupTimer = setTimeout(cleanup, reduced ? 1500 : 5000);
@@ -2585,6 +2598,74 @@ if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
     }
   };
   document.addEventListener('visibilitychange', () => { if(document.hidden) { lastTap=-Infinity; cleanup(); } });
+})();
+
+// Rasterize masks and brightness once. Opacity then animates small HTML layers,
+// independently of the SVG contour repaint (important on older WebKit devices).
+(() => {
+ const layers = new Map(), figure=q('.anatomy-figure'), source=figure.querySelector('img');
+ const sync = () => {
+  for(const [name,{wrapper,canvas,group}] of layers){
+   wrapper.classList.toggle('active',group.classList.contains('active'));
+   if(name==='tissue')for(const key of ['--body-glow-low','--body-glow-high']){
+    const value=group.style.getPropertyValue(key);
+    if(canvas.style.getPropertyValue(key)!==value)canvas.style.setProperty(key,value);
+   }
+  }
+ };
+ const before=updateAnatomy;updateAnatomy=function(){before();sync();};
+ const priorChart=chart;chart=function(){priorChart();sync();};
+ const prepare = () => {
+  let measure;
+  try {
+   const scale=.75, bright=document.createElement('canvas');
+   bright.width=816;bright.height=1092;
+   const b=bright.getContext('2d');b.drawImage(source,0,0,816,1092);
+   const pixels=b.getImageData(0,0,816,1092);
+   for(let i=0;i<pixels.data.length;i+=4)for(let c=0;c<3;c++)pixels.data[i+c]=Math.min(255,pixels.data[i+c]*1.72);
+   b.putImageData(pixels,0,0);
+   // Measure outside panels: an initially hidden anatomy tab must still cache correctly.
+   measure=el('svg',{width:0,height:0,'aria-hidden':'true',style:'position:absolute;visibility:hidden;overflow:hidden'},document.body);
+   for(const group of glowSvg.querySelectorAll('g[data-organ]')){
+    const original=group.querySelector('.organ-lit-pixels');if(!original)continue;
+    const name=group.dataset.organ;
+    // Organ paths, not the full-size image, define the small drawing surface.
+    const path= name==='tissue'?bodyMask.querySelector('path'):defs.querySelector('#organ-clip-'+name+' path');
+    const guide=el('path',{d:path.getAttribute('d')},measure),box=guide.getBBox();guide.remove();
+    const x=Math.max(0,Math.floor(box.x-10)),y=Math.max(0,Math.floor(box.y-10));
+    const width=Math.min(1088-x,Math.ceil(box.width+20)),height=Math.min(1456-y,Math.ceil(box.height+20));
+    const wrapper=ex('div',null,{class:'organ-raster','data-raster-organ':name,'aria-hidden':'true'});
+    wrapper.style.cssText=`left:${x/1088*100}%;top:${y/1456*100}%;width:${width/1088*100}%;height:${height/1456*100}%`;
+    const canvas=document.createElement('canvas');canvas.width=Math.ceil(width*scale);canvas.height=Math.ceil(height*scale);
+    canvas.className='organ-raster-pixels';const ctx=canvas.getContext('2d');
+    ctx.scale(scale,scale);ctx.translate(-x,-y);
+    ctx.save();ctx.clip(new Path2D(path.getAttribute('d')));ctx.drawImage(bright,0,0,1088,1456);ctx.restore();
+    if(name==='tissue'){
+     ctx.globalCompositeOperation='destination-out';
+     for(const cut of [...bodyMask.children].slice(1)){
+      if(cut.tagName.toLowerCase()==='path'){
+       const shape=new Path2D(cut.getAttribute('d'));ctx.fill(shape);
+       if(cut.hasAttribute('stroke-width')){ctx.lineWidth=Number(cut.getAttribute('stroke-width'));ctx.stroke(shape);}
+      }else if(cut.tagName.toLowerCase()==='ellipse'){
+       ctx.beginPath();ctx.ellipse(+cut.getAttribute('cx'),+cut.getAttribute('cy'),+cut.getAttribute('rx'),+cut.getAttribute('ry'),0,0,Math.PI*2);ctx.fill();
+      }
+     }
+    }
+    wrapper.append(canvas);figure.insertBefore(wrapper,glowSvg);layers.set(name,{wrapper,canvas,group});original.remove();
+   }
+   // The original heartbeat also only needs a tiny cropped layer, not a full-body SVG image.
+   const beat=heartFx.querySelector('.heart-beat');
+   if(beat){
+    const crop=document.createElement('canvas');crop.width=150;crop.height=160;
+    const ctx=crop.getContext('2d');ctx.translate(-508,-523);ctx.clip(new Path2D(heartShape));ctx.drawImage(source,0,0,1088,1456);
+    beat.setAttribute('href',crop.toDataURL('image/png'));beat.setAttribute('x',508);beat.setAttribute('y',523);beat.setAttribute('width',150);beat.setAttribute('height',160);beat.removeAttribute('clip-path');
+    heartFx.setAttribute('viewBox','465 500 235 200');heartFx.classList.add('heart-cropped');
+   }
+   sync();bright.width=bright.height=0;
+  }catch(error){ console.warn('Anatomy cache unavailable; retaining original glow rendering.',error); }
+  finally{measure?.remove();}
+ };
+ if(source.complete&&source.naturalWidth)prepare();else source.addEventListener('load',prepare,{once:true});
 })();
 
 // Translation operates on presentation text; calculation keys and option values stay stable.
@@ -2661,7 +2742,7 @@ function T(text){if(language==='nb'||!text)return text;const raw=String(text),ke
  let pos=0;result='';while(pos<raw.length){let best=null,index=raw.length;for(const k of localeKeys){let at=raw.indexOf(k,pos);const word=c=>!!c&&/[\p{L}\p{N}_]/u.test(c);while(at>=0&&((word(k[0])&&word(raw[at-1]))||(word(k[k.length-1])&&word(raw[at+k.length]))))at=raw.indexOf(k,at+1);if(at>=0&&(at<index||(at===index&&k.length>(best?.length||0)))){best=k;index=at;}}if(best===null){result+=raw.slice(pos);break;}result+=raw.slice(pos,index)+localePairs.get(best)[language==='en'?0:1];pos=index+best.length;}
  }if(localeCache.size>10000)localeCache.clear();localeCache.set(key,result);return result;}
 window.PKTranslate=text=>T(text);
-q('.header').insertAdjacentHTML('beforeend','<label class="language-control" data-no-translate><span aria-hidden="true">🌐</span><select id="language-select" aria-label="Språk / Language / اللغة"><option value="nb">Norsk</option><option value="en">English</option><option value="ar">العربية</option></select></label>');
+q('.header').insertAdjacentHTML('beforeend','<label class="language-control" data-no-translate><svg class="language-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg><select id="language-select" aria-label="Språk / Language / اللغة"><option value="nb">Norsk</option><option value="en">English</option><option value="ar">العربية</option></select></label>');
 const sourceText=new WeakMap(),sourceAttrs=new WeakMap();let translateScheduled=false;
 const translationDirty=new Set();
 function translateScope(scope){
