@@ -2542,7 +2542,7 @@ window.PKLocalePairs=[...(window.PKLocalePairs||[]),...experiencePairs];
 const ENABLE_DOUBLE_HEART_SURPRISE = true;
 if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
   const ordinaryHeartbeat = heartButton.onclick;
-  let lastTap = -Infinity, active = null, cleanupTimer = 0, surpriseCount = 0;
+  let lastTap = -Infinity, active = null, cleanupTimer = 0, surpriseCount = 0, suppressUntil = -Infinity;
   const artwork = new Map();
   const cleanup = () => {
     clearTimeout(cleanupTimer);
@@ -2553,6 +2553,7 @@ if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
     // A double tap replaces the in-flight single-tap celebration. An intentional
     // later single tap may restart it without stacking another surprise.
     clearTimeout(heartTimer);heartFx.classList.remove('playing');heartSky.replaceChildren();
+    suppressUntil=performance.now()+140;
     const pink = surpriseCount++ > 0;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const rect = heartButton.getBoundingClientRect();
@@ -2611,6 +2612,7 @@ if (ENABLE_DOUBLE_HEART_SURPRISE) (() => {
     cleanupTimer = setTimeout(cleanup, reduced ? 1500 : 6000);
   };
   heartButton.onclick = event => {
+    if(performance.now()<suppressUntil)return;
     if(active){lastTap=-Infinity;ordinaryHeartbeat(event);return;}
     const now = performance.now();
     if (now-lastTap <= 420 && !active) {
