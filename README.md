@@ -1,6 +1,6 @@
 # PK-lab
 
-An interactive learning app in Norwegian, English and Arabic for pharmacokinetics and pharmacodynamics. Open `index.html` in a modern browser. The entire app, including the anatomical illustration, is contained in this single file and works without installation or external libraries.
+An interactive learning app in Norwegian, English and Arabic for pharmacokinetics and pharmacodynamics. The hosted version uses `index.html` plus two locally hosted image files in `assets/`. Its HTML stays comfortably below Googlebot’s 2 MB crawl limit, while browsers can cache the images across updates. It works without installation or external libraries. A separate standalone HTML export embeds the images for offline sharing.
 
 ## Contents
 
@@ -22,7 +22,6 @@ An interactive learning app in Norwegian, English and Arabic for pharmacokinetic
 - A shared linear/semi-log graph setting, with semi-log selected by default. The compartment lab defaults to a single plasma concentration curve; a particle-derived curve and the full comparison are optional.
 - Oral absorption and elimination use the same smooth particle movement: gather at an outlet, follow a channel, then disperse in the destination box. The underlying kinetic events are unchanged.
 - Vd and D illuminate the body below the chin and the boundary around the organ cavity, excluding the face and organs. The illuminated body area becomes less transparent as Vd increases and more transparent as Vd decreases. A soft illuminated area accompanies the translucent gold contours, which keep their animation phase when switching selections.
-- Click the anatomical heart for a small easter egg: a heartbeat, white air ripples and floating white hearts that fade near the tabs. Exactly 30% carry a slightly translucent dark Z. The face and head remain still. Reduced-motion preferences are respected.
 - Reset the entire compartment lab or just its timeline. The workshop reset button appears only when its parameters differ from their defaults.
 - Nine reproducible compartment examples cover rapid/slow distribution, fixed-fraction and fixed-amount elimination, low-dose saturation, slow absorption, reduced clearance, and high-dose IV/oral saturation. The two 12-hour saturation cases move from approximately zero-order elimination to approximately first-order elimination at around 8.4 hours, with reference markers on the curve. Semi-log scaling reveals the low-concentration tail.
 - Simple kinetic-order experiments compare 100 → 80 → 64 mg (20% per hour) with 100 → 80 → 60 mg (20 mg per hour). Each uses one compartment and an IV bolus, with the amount eliminated during the last complete hour shown alongside the simulation.
